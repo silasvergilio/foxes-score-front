@@ -1,0 +1,184 @@
+@use "@angular/material" as mat;
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.card-overrides(
+    (
+      subtitle-text-color: orange,
+      elevated-container-color: red,
+    )
+  );
+}
+
+.score-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.score-header {
+  display: flex;
+  color: black;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 2rem;
+  margin: 0.5rem 1rem 1rem 1rem;
+
+}
+.score-outside {
+  margin-top: 2rem;
+  background-color: orange;
+}
+
+.hide {
+  visibility: hidden;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}
+.score-card {
+  border-radius: 2rem;
+  padding-top: 2rem;
+  font-family: sans-serif;
+  background: repeating-linear-gradient(
+    135deg,
+    #3a923a,
+    #3a923a 20px,
+    #4caf50 20px,
+    #4caf50 40px
+  );
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+  background: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: 5px;
+}
+
+.inning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.inning .arrow {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.inning .number {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.diamond {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(to bottom right, #a0522d, #9c775d);
+  border-radius: 10px;
+  transform: rotate(45deg);
+  border-top-left-radius: 75%;
+}
+
+.diamond-2 {
+  border-top-left-radius: 75%;
+  transform: rotate(45deg);
+  border: 1px solid black;
+  overflow: hidden;
+}
+
+.base {
+  width: 40px;
+  height: 40px;
+  background-color: lightgray;
+  border: 2px solid black;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: black;
+  position: absolute;
+}
+
+#second {
+  top: 30px;
+  left: 30px;
+}
+#first {
+  top: 0px;
+  left: 160px;
+}
+#third {
+  top: 160px;
+  left: 0;
+}
+#home {
+  top: 160px;
+  left: 80px;
+}
+
+.active {
+  background-color: yellow;
+}
+
+.inactive {
+  background-color: white;
+}
+
+.tracker {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  width: 300px;
+  text-align: center;
+  padding-top: 2rem;
+}
+
+.tracker div {
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  flex: 1;
+}
+
+.tracker h3 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+}
+
+.tracker .count {
+  font-size: 18px;
+  font-weight: bold;
+}

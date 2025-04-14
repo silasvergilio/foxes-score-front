@@ -1,0 +1,20 @@
+/* animate-line.component.css */
+.line-container {
+    position: relative;
+    width: 5rem;
+    height: 4px;
+    background-color: #eee;
+    overflow: hidden;
+    border-radius: 2rem;
+  }
+  
+  .line {
+    position: absolute;
+    top: 0;
+    width: 50px;
+    height: 100%;
+    background-color: #3f51b5;
+    transition: left 0.01s linear;
+    border: 5px solid #0097a7;
+    width: 300px;
+  }
