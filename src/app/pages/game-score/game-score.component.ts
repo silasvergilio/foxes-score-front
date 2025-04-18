@@ -4,11 +4,13 @@ import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { BalLGame } from '../../interfaces/game.interface';
 import { MatIconModule } from '@angular/material/icon';
-import { LineAnimationComponent } from '../line-animation/line-animation.component';
+import { LineAnimationComponent } from '../../components/line-animation/line-animation.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { GameIndicatorComponent } from '../../components/game-indicator/game-indicator.component';
 
 @Component({
   selector: 'game-score',
-  imports: [MatCardModule, CommonModule, MatIconModule, LineAnimationComponent],
+  imports: [MatCardModule, CommonModule, MatIconModule, LineAnimationComponent,MatProgressSpinnerModule, GameIndicatorComponent],
   templateUrl: './game-score.component.html',
   styleUrl: './game-score.component.scss',
 })
@@ -20,7 +22,7 @@ export class GameScoreComponent {
     location: "ANC",
     date: "13/04/2025",
     startedTime: "09:00",
-    status: "Em andamento",
+    status: "finalizado",
     startOffense: "Foxes",
     startDefense: "Furai Banzai",
     startOffenseScore: 5,
@@ -32,7 +34,7 @@ export class GameScoreComponent {
     strikes: 2,
     outs: 1,
     inning: 1,
-    inningHalf: false
+    inningHalf: true
   }
 
 

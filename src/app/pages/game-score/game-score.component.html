@@ -6,6 +6,7 @@
       <div class="score-header">
         <div class="score-header-content">
           <mat-card-title>{{ game.tournament }}</mat-card-title>
+          <app-game-indicator [status]="game.status"></app-game-indicator>
           <mat-card-subtitle style="color: black"
             ><mat-icon
               aria-hidden="false"
@@ -31,33 +32,35 @@
       <div class="scoreboard">
         <div class="team">
           <img src="foxes.jpeg" alt="Away Team Logo" class="team-logo" />
-          <app-animate-line [class.hide]="game.inningHalf" [width]="50"></app-animate-line>
-          <h3 style="border-width: 2rem; margin: 0.5rem;">{{ game.startOffense }}</h3>
-          <div style="font-size: x-large; font-family: Orbitron;" id="homeScore">
+          <app-animate-line *ngIf="game.status != 'finalizado'"
+            [class.hide]="game.inningHalf"
+            [width]="50"
+          ></app-animate-line>
+          <h3 style="border-width: 2rem; margin: 0.5rem">
+            {{ game.startOffense }}
+          </h3>
+          <div style="font-size: x-large; font-family: Orbitron" id="homeScore">
             {{ game.startOffenseScore }}
           </div>
         </div>
 
         <div class="inning">
-          <div *ngIf="!game.inningHalf" class="arrow" id="inningArrow">
-            ▲
-          </div>
-          <div
-            *ngIf="game.inningHalf"
-            class="arrow"
-            id="inningArrow"
-          >
-            ▼
-          </div>
+          <div *ngIf="!game.inningHalf" class="arrow" id="inningArrow">▲</div>
+          <div *ngIf="game.inningHalf" class="arrow" id="inningArrow">▼</div>
           <div class="number" id="inningNumber">{{ game.inning }}</div>
         </div>
 
         <div class="team">
           <img src="underdogs.jpg" alt="Home Team Logo" class="team-logo" />
-          <app-animate-line [class.hide]="!game.inningHalf" [width]="50"></app-animate-line>
+          <app-animate-line *ngIf="game.status != 'finalizado'"
+            [class.hide]="!game.inningHalf"
+            [width]="50"
+          ></app-animate-line>
 
-          <h3 style="border-width: 2rem; margin: 0.5rem;">{{ game.startDefense }}</h3>
-          <div style="font-size: x-large; font-family: Orbitron;" id="awayScore">
+          <h3 style="border-width: 2rem; margin: 0.5rem">
+            {{ game.startDefense }}
+          </h3>
+          <div style="font-size: x-large; font-family: Orbitron" id="awayScore">
             {{ game.startDefenseScore }}
           </div>
         </div>
@@ -99,9 +102,4 @@
       </div>
     </mat-card-content>
   </mat-card>
-
-  <script>
-    // Set inning number and arrow (▲ for top, ▼ for bottom)
-    document.getElementById("inningArrow").textContent = isTop ? "▲" : "▼";
-  </script>
 </body>

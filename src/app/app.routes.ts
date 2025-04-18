@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { GameScoreComponent } from './components/game-score/game-score.component';
+import { GameScoreComponent } from './pages/game-score/game-score.component';
 
 export const routes: Routes = [
   {
