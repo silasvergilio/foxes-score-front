@@ -1,105 +1,37 @@
-<body>
-  <!-- Scoreboard with Logos -->
+<div class="page-container">
+  <div class="form">
+    <mat-form-field class="select-input">
+      <mat-label>Torneio</mat-label>
+      <mat-select>
+        <mat-option value="one">CBA A</mat-option>
+        <mat-option value="two">CBA AA</mat-option>
+        <mat-option value="three">Inter Foxes</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-card class="score-outside" appearance="outlined">
-    <mat-card-header class="score-header">
-      <div class="score-header">
-        <div class="score-header-content">
-          <mat-card-title>{{ game.tournament }}</mat-card-title>
-          <app-game-indicator [status]="game.status"></app-game-indicator>
-          <mat-card-subtitle style="color: black"
-            ><mat-icon
-              aria-hidden="false"
-              aria-label="Stadium Icon"
-              fontIcon="stadium"
-            ></mat-icon>
-            {{ game.location }}
-          </mat-card-subtitle>
-        </div>
-        <div>
-          <mat-card-subtitle style="color: black"
-            ><mat-icon
-              aria-hidden="false"
-              aria-label="Date Icon"
-              fontIcon="calendar_month"
-            ></mat-icon>
-            {{ game.date }}
-          </mat-card-subtitle>
-        </div>
-      </div>
-    </mat-card-header>
-    <mat-card-content class="score-card">
-      <div class="scoreboard">
-        <div class="team">
-          <img src="foxes.jpeg" alt="Away Team Logo" class="team-logo" />
-          <app-animate-line *ngIf="game.status != 'finalizado'"
-            [class.hide]="game.inningHalf"
-            [width]="50"
-          ></app-animate-line>
-          <h3 style="border-width: 2rem; margin: 0.5rem">
-            {{ game.startOffense }}
-          </h3>
-          <div style="font-size: x-large; font-family: Orbitron" id="homeScore">
-            {{ game.startOffenseScore }}
-          </div>
-        </div>
+    <mat-form-field>
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="picker" />
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
-        <div class="inning">
-          <div *ngIf="!game.inningHalf" class="arrow" id="inningArrow">▲</div>
-          <div *ngIf="game.inningHalf" class="arrow" id="inningArrow">▼</div>
-          <div class="number" id="inningNumber">{{ game.inning }}</div>
-        </div>
+    <mat-form-field>
+      <mat-label>Status</mat-label>
+      <mat-select>
+        <mat-option value="one">Em andamento</mat-option>
+        <mat-option value="two">Finalizado</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-        <div class="team">
-          <img src="underdogs.jpg" alt="Home Team Logo" class="team-logo" />
-          <app-animate-line *ngIf="game.status != 'finalizado'"
-            [class.hide]="!game.inningHalf"
-            [width]="50"
-          ></app-animate-line>
+    <div class="action-button">
+      <button mat-fab color="primary" aria-label="Pesquisar">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+  </div>
 
-          <h3 style="border-width: 2rem; margin: 0.5rem">
-            {{ game.startDefense }}
-          </h3>
-          <div style="font-size: x-large; font-family: Orbitron" id="awayScore">
-            {{ game.startDefenseScore }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Baseball Diamond -->
-      <div class="diamond">
-        <div
-          [ngClass]="game.firstBaseRunner ? 'active' : 'inactive'"
-          class="base"
-          id="first"
-        ></div>
-        <div
-          [ngClass]="game.secondBaseRunner ? 'active' : 'inactive'"
-          class="base"
-          id="second"
-        ></div>
-        <div
-          [ngClass]="game.thirdBaseRunner ? 'active' : 'inactive'"
-          class="base"
-          id="third"
-        ></div>
-      </div>
-
-      <!-- At Bat Count -->
-      <div class="tracker">
-        <div>
-          <h3>Balls</h3>
-          <div class="count" id="balls">{{ game.balls }}</div>
-        </div>
-        <div>
-          <h3>Strikes</h3>
-          <div class="count" id="strikes">{{ game.strikes }}</div>
-        </div>
-        <div>
-          <h3>Outs</h3>
-          <div class="count" id="outs">{{ game.outs }}</div>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</body>
+  <div class="cards-container">
+    <game-card-preview *ngFor="let game of games" [game]="game"></game-card-preview>
+  </div>
+</div>

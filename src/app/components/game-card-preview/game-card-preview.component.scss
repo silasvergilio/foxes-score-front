@@ -1,0 +1,57 @@
+@use '@angular/material' as mat;
+
+
+
+.game-card {
+    width: 320px;
+    margin: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.stadium-image {
+    height: 160px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 16px;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.stadium-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.game-time {
+    font-size: 0.9rem;
+    color: gray;
+}
+
+.teams {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.action-buttons {
+    @include mat.fab-overrides((small-container-color: #424242,
+            small-foreground-color: orange,
+        ));
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    /* ⬅️ Faz os botões irem para os lados */
+    width: 100%;
+    /* ⬅️ Ocupar toda largura do card */
+    padding: 0 16px;
+    /* ⬅️ Um espacinho nas bordas */
+    box-sizing: border-box;
+}

@@ -1,0 +1,255 @@
+@use "@angular/material" as mat;
+
+.adm-button {
+    @include mat.fab-overrides((container-color: #424242,
+            small-foreground-color: orange,
+        ));
+}
+
+.statusButton {
+    @include mat.button-overrides((container-color: #fff8e1,
+            label-text-color: black // cor do texto (label)
+        ));
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.score-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap; // Adiciona flexibilidade
+    gap: 8px;
+}
+
+.score-header-content-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    flex-wrap: wrap; // Adiciona flexibilidade
+    gap: 8px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.score-header {
+    display: flex;
+    color: black;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 2rem;
+    margin: 0.5rem 1rem 1rem 1rem;
+}
+
+.score-outside {
+    margin-top: 2rem;
+    background-color: orange;
+    width: 100%;
+    max-width: 960px;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-content: center;
+    max-height: 60%;
+    padding: 3rem;
+}
+
+.score-card {
+    border-radius: 2rem;
+    padding-top: 2rem;
+    font-family: sans-serif;
+    background: repeating-linear-gradient(135deg,
+            #3a923a,
+            #3a923a 20px,
+            #4caf50 20px,
+            #4caf50 40px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    padding: 0.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+}
+
+.team-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.inning {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.inning .arrow {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.inning .number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.diamond {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(to bottom right, #a0522d, #9c775d);
+    border-radius: 10px;
+    transform: rotate(45deg);
+    border-top-left-radius: 75%;
+}
+
+.diamond-2 {
+    border-top-left-radius: 75%;
+    transform: rotate(45deg);
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.base {
+    width: 40px;
+    height: 40px;
+    background-color: lightgray;
+    border: 2px solid black;
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: black;
+    position: absolute;
+}
+
+#second {
+    top: 30px;
+    left: 30px;
+}
+
+#first {
+    top: 0px;
+    left: 160px;
+}
+
+#third {
+    top: 160px;
+    left: 0;
+}
+
+#home {
+    top: 160px;
+    left: 80px;
+}
+
+.active {
+    background-color: yellow;
+}
+
+.inactive {
+    background-color: white;
+}
+
+.tracker {
+    display: flex;
+    justify-content: center;
+    //flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    padding-top: 2rem;
+}
+
+.tracker div {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    flex: 1 1 80px;
+}
+
+.tracker h3 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+}
+
+.tracker .count {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+// ===== RESPONSIVO PARA TELAS PEQUENAS =====
+@media (max-width: 420px) {
+    .score-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .scoreboard {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tracker {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .team-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    body {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .score-card {
+        padding: 10px;
+        gap: 16px;
+    }
+
+    .score-outside {
+        margin: 1rem;
+    }
+}

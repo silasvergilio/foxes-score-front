@@ -8,5 +8,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './game-indicator.component.scss',
 })
 export class GameIndicatorComponent {
-  @Input() status: string = 'ativo'
+  @Input() status: boolean | undefined = false
 }

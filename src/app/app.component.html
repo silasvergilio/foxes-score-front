@@ -1,13 +1,50 @@
-<mat-toolbar style="background-color: #ef6c00 ;">
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+<mat-toolbar style="background-color: #ef6c00">
+  <button
+    (click)="drawer.toggle()"
+    mat-icon-button
+    class="example-icon"
+    aria-label="Example icon-button with menu icon"
+  >
     <mat-icon>menu</mat-icon>
   </button>
   <span>Foxes Score</span>
   <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+  <button
+    mat-icon-button
+    class="example-icon favorite-icon"
+    aria-label="Example icon-button with heart icon"
+  >
     <mat-icon>sports_baseball</mat-icon>
   </button>
 </mat-toolbar>
-
-
-<router-outlet> </router-outlet>
+<mat-drawer-container class="container">
+  <mat-drawer class="drawer" #drawer [mode]="'over'">
+    <button (click)="navigate('/add-game')" class="menu-button" mat-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Add Button"
+        fontIcon="add"
+      ></mat-icon
+      >Adicionar Jogo
+    </button>
+    <button (click)="navigate('/game-view')" class="menu-button" mat-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="View Button"
+        fontIcon="tv"
+      ></mat-icon
+      >Acompanhar Jogos
+    </button>
+    <button (click)="navigate('/adm-game')" class="menu-button" mat-button>
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Manage Button"
+        fontIcon="settings"
+      ></mat-icon
+      >Gerenciar Jogos
+    </button>
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet> </router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

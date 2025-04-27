@@ -1,10 +1,10 @@
-export interface BalLGame {
-  id: string;
+export interface BallGame {
+  _id: string;
   tournament: string;
   location: string;
   date: string;
   startedTime: string;
-  status: string;
+  status: boolean;
   startOffense: string;
   startDefense: string;
   startOffenseScore: number;

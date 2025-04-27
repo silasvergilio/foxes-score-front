@@ -2,52 +2,50 @@ import { Component } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import { BalLGame } from '../../interfaces/game.interface';
+import { BallGame } from '../../interfaces/game.interface';
 import { MatIconModule } from '@angular/material/icon';
-import { LineAnimationComponent } from '../../components/line-animation/line-animation.component';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { GameIndicatorComponent } from '../../components/game-indicator/game-indicator.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_DATE_LOCALE,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { ApiService } from '../../services/api.service';
+import { GameCardPreviewComponent } from '../../components/game-card-preview/game-card-preview.component';
 
 @Component({
   selector: 'game-score',
-  imports: [MatCardModule, CommonModule, MatIconModule, LineAnimationComponent,MatProgressSpinnerModule, GameIndicatorComponent],
+  imports: [
+    MatCardModule,
+    CommonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    GameCardPreviewComponent
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+  ],
   templateUrl: './game-score.component.html',
   styleUrl: './game-score.component.scss',
 })
 export class GameScoreComponent {
+  public games: BallGame[] = [];
 
-  game: BalLGame = {
-    id: "1",
-    tournament: "CBA AA",
-    location: "ANC",
-    date: "13/04/2025",
-    startedTime: "09:00",
-    status: "finalizado",
-    startOffense: "Foxes",
-    startDefense: "Furai Banzai",
-    startOffenseScore: 5,
-    startDefenseScore: 2,
-    firstBaseRunner: false,
-    secondBaseRunner: true,
-    thirdBaseRunner: false,
-    balls: 3,
-    strikes: 2,
-    outs: 1,
-    inning: 1,
-    inningHalf: true
-  }
-
-
-  constructor(private socket: Socket) {}
+  constructor(private socket: Socket, private api: ApiService) {}
 
   ngOnInit() {
-    this.socket.fromEvent('gameUpdate').subscribe((data) => {
-      console.log("data", data);
-      this.game = data
+    this.api.get<BallGame[]>('game').subscribe((data) => {
+      this.games = data;
     });
-
-    // this.socket.on('message', (data) => {
-    //   console.log(data);
-    // });
   }
 }

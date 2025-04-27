@@ -1,0 +1,57 @@
+<form [formGroup]="addGameFormGroup" class="form">
+  <mat-form-field class="select-input" >
+    <mat-label>Torneio</mat-label>
+    <mat-select formControlName="tournament">
+      <mat-option value="CBA A">CBA A</mat-option>
+      <mat-option value="CBA AA">CBA AA</mat-option>
+      <mat-option value="Inter Foxes">Inter Foxes</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="select-input" >
+    <mat-label>Localização</mat-label>
+    <mat-select formControlName="location">
+      <mat-option value="ANC">ANC</mat-option>
+      <mat-option value="Mogi">Mogi</mat-option>
+      <mat-option value="Ibiúna">Ibiúna</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field >
+    <mat-label>Data</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="date"/>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width" >
+    <mat-label>Horário de Início</mat-label>
+    <input matInput type="time" formControlName="startedTime"/>
+  </mat-form-field>
+
+  <mat-form-field class="select-input" >
+    <mat-label>Time que ataca primeiro</mat-label>
+    <mat-select formControlName="startOffense">
+      <mat-option value="Foxes">Foxes</mat-option>
+      <mat-option value="Blue Labels">Blue Labels</mat-option>
+      <mat-option value="UnderDogs">UnderDogs</mat-option>
+      <mat-option value="Mogi">Mogi</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="select-input" >
+    <mat-label>Time que defende primeiro</mat-label>
+    <mat-select formControlName="startDefense">
+      <mat-option value="Foxes">Foxes</mat-option>
+      <mat-option value="Blue Labels">Blue Labels</mat-option>
+      <mat-option value="UnderDogs">UnderDogs</mat-option>
+      <mat-option value="Mogi">Mogi</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="action-button">
+    <button (click)="submit()" type="submit" mat-fab color="primary" aria-label="Adicionar Jogo">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</form>

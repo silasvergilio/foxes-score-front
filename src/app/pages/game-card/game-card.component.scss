@@ -1,17 +1,41 @@
-@use '@angular/material' as mat;
+// ...estilos existentes mantidos
 
-// Customize the entire app. Change :root to your selector if you want to scope the styles.
-.menu-button {
-  @include mat.button-overrides((
-    text-label-text-color: orange,
-    text-state-layer-color: black,
-    text-ripple-color: #ffe0b2,
-  ));
+.score-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap; // Adiciona flexibilidade
+  gap: 8px;
+}
+
+.score-header-content-2 {
+  display: flex;
+  justify-content: end;
+  align-items: flex-end;
+  width: 100%;
+  flex-wrap: wrap; // Adiciona flexibilidade
+  gap: 8px;
+}
+
+.score-header {
+  display: flex;
+  color: black;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 2rem;
+  margin: 0.5rem 1rem 1rem 1rem;
 }
 
 .score-outside {
   margin-top: 2rem;
   background-color: orange;
+  width: 100%;
+  max-width: 960px;
+}
+
+.hide {
+  visibility: hidden;
 }
 
 body {
@@ -19,8 +43,10 @@ body {
   justify-content: center;
   flex-direction: row;
   align-content: center;
-  align-items: center;
+  max-height: 60%;
+  padding: 3rem;
 }
+
 .score-card {
   border-radius: 2rem;
   padding-top: 2rem;
@@ -42,17 +68,21 @@ body {
 .scoreboard {
   display: flex;
   justify-content: space-between;
-  width: 350px;
+  width: 100%;
+  max-width: 500px;
   background: #fff;
-  padding: 10px 20px;
+  padding: 0.2rem;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .team {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 120px;
 }
 
 .team-logo {
@@ -138,8 +168,10 @@ body {
 .tracker {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 30px;
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   text-align: center;
   padding-top: 2rem;
 }
@@ -149,7 +181,7 @@ body {
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  flex: 1;
+  flex: 1 1 80px;
 }
 
 .tracker h3 {
@@ -162,13 +194,39 @@ body {
   font-weight: bold;
 }
 
-.container {
-  background-color: white;
-  color: black;
-}
+// ===== RESPONSIVO PARA TELAS PEQUENAS =====
+@media (max-width: 420px) {
+  .score-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.drawer {
-  background-color: #fff3e0;
-  color: black;
-  padding: 2rem;
+  .scoreboard {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tracker {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .team-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  body {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .score-card {
+    padding: 10px;
+    gap: 16px;
+  }
+
+  .score-outside {
+  //  margin: 1rem;
+  }
 }

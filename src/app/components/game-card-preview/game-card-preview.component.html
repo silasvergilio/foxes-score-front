@@ -1,0 +1,22 @@
+<mat-card *ngIf="game" class="game-card">
+    <img mat-card-image src="stadium.webp" alt="Estádio de Baseball" class="stadium-image" />
+
+    <mat-card-content class="card-content">
+
+        <div class="stadium-name">{{ game.location }}</div>
+        <div class="game-time">{{ game.date }}</div>
+        <div class="game-name">{{ game.startedTime }}</div>
+        <div class="teams">
+            <span>{{ game.startOffense }}</span> vs <span>{{ game.startDefense }}</span>
+        </div>
+        <div class="action-buttons">
+            <button (click)="navigate(true)" class="button" mat-mini-fab color="primary" aria-label="Configurações">
+                <mat-icon>settings</mat-icon>
+            </button>
+
+            <button (click)="navigate(false)" class="button" mat-mini-fab color="accent" aria-label="Iniciar Jogo">
+                <mat-icon>play_arrow</mat-icon>
+            </button>
+        </div>
+    </mat-card-content>
+</mat-card>

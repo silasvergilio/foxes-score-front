@@ -7,6 +7,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
 const config: SocketIoConfig = {
   url: 'http://localhost:3000',
@@ -22,6 +23,7 @@ const config: SocketIoConfig = {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     importProvidersFrom(SocketIoModule.forRoot(config)),
