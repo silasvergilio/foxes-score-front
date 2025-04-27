@@ -13,9 +13,9 @@
         </div>
         <div class="score-header-content-2">
           <button *ngIf="game.status" (click)="toggleField(game,'status')" class="statusButton"
-            mat-raised-button>Iniciar Jogo</button>
-          <button *ngIf="!game.status" (click)="toggleField(game,'status')" class="statusButton"
             mat-raised-button>Finalizar Jogo</button>
+          <button *ngIf="!game.status" (click)="toggleField(game,'status')" class="statusButton"
+            mat-raised-button>Iniciar Jogo</button>
           <mat-card-subtitle style="color: black"><mat-icon aria-hidden="false" aria-label="Stadium Icon"
               fontIcon="schedule"></mat-icon>
             {{ game.startedTime }}
