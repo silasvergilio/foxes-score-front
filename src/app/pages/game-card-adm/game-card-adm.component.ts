@@ -30,7 +30,7 @@ export class GameCardAdminComponent {
     private socket: Socket,
     private api: ApiService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   game: BallGame | undefined;
   idFromUrl!: string; // 👈 variável para armazenar o id
@@ -52,6 +52,7 @@ export class GameCardAdminComponent {
 
     if (obj.strikes > 2) {
       obj.strikes = 0;
+      obj.balls = 0;
       obj.outs++;
     }
 
