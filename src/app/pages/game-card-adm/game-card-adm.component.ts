@@ -10,6 +10,7 @@ import { GameIndicatorComponent } from '../../components/game-indicator/game-ind
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../services/api.service';
 import { ActivatedRoute } from '@angular/router';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'game-card-adm',
@@ -29,7 +30,8 @@ export class GameCardAdminComponent {
   constructor(
     private socket: Socket,
     private api: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loader: LoaderService
   ) { }
 
   game: BallGame | undefined;
@@ -39,7 +41,9 @@ export class GameCardAdminComponent {
     // Pegando o ID da URL
     this.idFromUrl = this.route.snapshot.paramMap.get('id') || '';
 
+    this.loader.start();
     this.api.get<BallGame>(`game/${this.idFromUrl}`).subscribe((data) => {
+      this.loader.stop();
       this.game = data;
     });
   }
@@ -90,7 +94,6 @@ export class GameCardAdminComponent {
       obj = this.updateGame(obj as unknown as BallGame) as unknown as T;
 
       this.api.put<any>('game', obj).subscribe((data) => {
-        console.log('data', data);
       });
     } else {
       throw new Error(`Property "${String(key)}" is not a number.`);
@@ -102,8 +105,18 @@ export class GameCardAdminComponent {
   ): void {
     if (typeof obj[key] === 'boolean') {
       obj[key] = !obj[key] as T[K];
+      if (!obj[key]) {
+        if (this.game) {
+          this.game.balls = 0;
+          this.game.strikes = 0;
+          this.game.outs = 0;
+          this.game.firstBaseRunner = false;
+          this.game.secondBaseRunner = false;
+          this.game.thirdBaseRunner = false;
+        }
+
+      }
       this.api.put<any>('game', obj).subscribe((data) => {
-        console.log('data', data);
       });
     } else {
       throw new Error(`Property "${String(key)}" is not a boolean.`);

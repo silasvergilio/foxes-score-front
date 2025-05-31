@@ -10,12 +10,9 @@
 }
 
 .form {
-  @include mat.fab-overrides(
-    (
-      container-color: #424242,
+  @include mat.fab-overrides((container-color: #424242,
       foreground-color: orange,
-    )
-  );
+    ));
 
   display: flex;
   flex-wrap: wrap;
@@ -39,6 +36,7 @@
 
 .action-button {
   flex: 0 0 auto;
+  margin-bottom: 20px;
 }
 
 .cards-container {

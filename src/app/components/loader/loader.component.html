@@ -1,0 +1,7 @@
+<div class="overlay" *ngIf="loaderService.loading$ | async">
+    <div class="spinner-container">
+        <mat-progress-spinner diameter="70" mode="indeterminate" color="accent">
+        </mat-progress-spinner>
+        <mat-icon class="center-icon">sports_baseball</mat-icon> <!-- seu ícone no meio -->
+    </div>
+</div>

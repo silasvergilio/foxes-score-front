@@ -14,7 +14,6 @@ export class ChatService {
   }
   getMessage() {
     return this.socket.fromEvent('message').pipe(map(data => {
-      console.log(data);
     }));
   }
 }

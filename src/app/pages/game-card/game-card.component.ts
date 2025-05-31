@@ -10,6 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GameIndicatorComponent } from '../../components/game-indicator/game-indicator.component';
 import { ChatService } from '../../services/chat.service';
 import { ApiService } from '../../services/api.service';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'game-card',
@@ -32,15 +33,19 @@ export class GameCardComponent {
     private socket: Socket,
     private chat: ChatService,
     private route: ActivatedRoute,
-    private api: ApiService
+    private api: ApiService,
+    private loader: LoaderService
   ) {}
 
   ngOnInit() {
     // Pegando o ID da URL
     this.idFromUrl = this.route.snapshot.paramMap.get('id') || '';
 
+
+    this.loader.start();
     this.api.get<BallGame>(`game/${this.idFromUrl}`).subscribe((data) => {
       this.game = data;
+      this.loader.stop();
     });
 
     this.socket.on('gameUpdate', (data) => {

@@ -63,11 +63,9 @@ export class AddGameComponent {
       const rawDate = formValue.date as unknown as Date;
       formValue.date = this.utils.formatDate(rawDate); // string DD/MM/AAAA
 
-      console.log('addGameFormGroup', formValue);
 
       this.api.post('game', formValue).subscribe({
         next: (data) => {
-          console.log('data', data);
           this.addGameFormGroup.reset();
         },
         error: (error) => {

@@ -1,3 +1,4 @@
+import { Batting } from './batting.interface';
 export interface BallGame {
   _id: string;
   tournament: string;
@@ -17,4 +18,6 @@ export interface BallGame {
   outs: number;
   inning: number;
   inningHalf: boolean;
+  batting: Batting[];
+  battingOrder: number;
 }

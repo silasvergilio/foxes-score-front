@@ -20,7 +20,6 @@ export class GameCardPreviewComponent {
 
   public navigate(type: boolean) {
 
-    console.log(`${type ? 'game-adm' : 'game'}/${this.game?._id}`)
   this.router.navigate([`${type ? 'game-adm' : 'game'}/${this.game?._id}`]);
   }
 }

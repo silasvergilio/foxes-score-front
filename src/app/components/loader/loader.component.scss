@@ -1,0 +1,50 @@
+@use '@angular/material' as mat;
+
+
+
+.overlay {
+    @include mat.progress-spinner-overrides((active-indicator-color: orange,
+        ));
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-container {
+    position: relative;
+    width: 80px;
+    /* aumentei um pouco */
+    height: 80px;
+}
+
+.spinner-container mat-progress-spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.center-icon {
+
+    @include mat.icon-overrides((color: orange,
+        ));
+
+    color: orange;
+    font-size: 120%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-65%, -65%);
+    /* pode ajustar aqui também */
+    color: white;
+    pointer-events: none;
+    /* garante que o clique passe pelo ícone */
+}

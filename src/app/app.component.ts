@@ -7,11 +7,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
+import { LoaderComponent } from './components/loader/loader.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [MatCardModule, CommonModule, RouterModule,MatSidenavModule, MatIconModule, MatToolbarModule,MatButtonModule,MatSidenavModule],
+  imports: [MatCardModule, CommonModule, RouterModule,MatSidenavModule, MatIconModule, MatToolbarModule,MatButtonModule,MatSidenavModule,LoaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -24,7 +25,6 @@ export class AppComponent {
   }
 
   public navigate(route: string) {
-    console.log('route', route);
     this.router.navigate([route]);
   }
 }

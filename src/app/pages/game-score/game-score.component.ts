@@ -16,6 +16,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../services/api.service';
 import { GameCardPreviewComponent } from '../../components/game-card-preview/game-card-preview.component';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'game-score',
@@ -41,11 +42,14 @@ import { GameCardPreviewComponent } from '../../components/game-card-preview/gam
 export class GameScoreComponent {
   public games: BallGame[] = [];
 
-  constructor(private socket: Socket, private api: ApiService) {}
+  constructor(private socket: Socket, private api: ApiService, private loader: LoaderService) {}
 
   ngOnInit() {
+
+    this.loader.start();
     this.api.get<BallGame[]>('game').subscribe((data) => {
       this.games = data;
+      this.loader.stop();
     });
   }
 }
