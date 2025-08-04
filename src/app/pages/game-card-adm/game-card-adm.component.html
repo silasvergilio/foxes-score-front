@@ -148,6 +148,32 @@
           </div>
           <div class="count" id="outs">{{ game.outs }}</div>
         </div>
+        <!-- Novo bloco lateral -->
+        <div class="batter-info" *ngIf="game && game.batting.length > 0">
+          <img src="assets/bat.png" class="bat-icon" alt="Ícone de taco de baseball" />
+          <div class="batter-order">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="counter_{{game.battingOrder + 1}}"></mat-icon>
+            {{ game.batting[game.battingOrder]?.playerId }}
+          </div>
+          <div class="batter-result">
+            {{ game.batting[game.battingOrder]?.battingResult?.join(', ') }}
+          </div>
+          <div *ngIf="game.status" class="button-group">
+            <input #atBatResult type="text" placeholder="Ex: HR" style="width: 50px; text-align: center;">
+            <button (click)="addAtBatResult(atBatResult.value)" class="adm-button" mat-mini-fab color="primary"
+              aria-label="add">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button (click)="clearAtBatResults()" class="adm-button" mat-mini-fab color="warn"
+              aria-label="clear">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button (click)="nextBatter()" class="adm-button" mat-mini-fab color="accent"
+            aria-label="next">
+            <mat-icon>skip_next</mat-icon>
+          </button>
+          </div>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
