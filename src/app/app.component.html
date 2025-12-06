@@ -1,22 +1,35 @@
 <app-loader></app-loader>
-<mat-toolbar style="background-color: #ef6c00">
+<mat-toolbar style="background-color: #5474e5">
   <button (click)="drawer.toggle()" mat-icon-button class="example-icon"
     aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
-  <span>Foxes Score</span>
+  <img src="logo-title.png" alt="Campo" class="logo-title-img" />
   <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-    <mat-icon>sports_baseball</mat-icon>
-  </button>
+  <img src="logo-title-cbbsbr.png" alt="Campo" class="logo-title-img" />
 </mat-toolbar>
 <mat-drawer-container class="container">
   <mat-drawer class="drawer" #drawer [mode]="'over'">
-    <button (click)="navigate('/add-game')" class="menu-button" mat-button>
-      <mat-icon aria-hidden="false" aria-label="Add Button" fontIcon="add"></mat-icon>Adicionar Jogo
+    <button (click)="navigate('/teams')" class="menu-button" mat-button>
+      <mat-icon aria-hidden="false" aria-label="Add Button" fontIcon="groups_3"></mat-icon>Equipes Participantes
+    </button>
+    <button (click)="navigate('/game-results')" class="menu-button" mat-button>
+      <mat-icon aria-hidden="false" aria-label="View Button" fontIcon="sports_baseball"></mat-icon>Jogos e Resultados
+    </button>
+    <!-- <button (click)="navigate('/game-view')" class="menu-button" mat-button>
+      <mat-icon aria-hidden="false" aria-label="View Button" fontIcon="tv"></mat-icon>Transmissão ao vivo
+    </button> -->
+    <button (click)="navigate('/stats')" class="menu-button" mat-button>
+      <mat-icon aria-hidden="false" aria-label="View Button" fontIcon="analytics"></mat-icon>Estatísticas
     </button>
     <button (click)="navigate('/game-view')" class="menu-button" mat-button>
-      <mat-icon aria-hidden="false" aria-label="View Button" fontIcon="tv"></mat-icon>Acompanhar Jogos
+      <mat-icon aria-hidden="false" aria-label="View Button" fontIcon="table"></mat-icon>Tabela de Jogos
+    </button>
+    <button (click)="navigate('/game-view')" class="menu-button" mat-button>
+      <mat-icon aria-hidden="false" aria-label="View Button" fontIcon="leaderboard"></mat-icon>Classificação
+    </button>
+    <button (click)="navigate('/game-view')" class="menu-button" mat-button>
+      <mat-icon aria-hidden="false" aria-label="View Button" fontIcon="folder_shared"></mat-icon>Documentos Oficiais
     </button>
     <!-- <button (click)="navigate('/adm-game')" class="menu-button" mat-button>
       <mat-icon
@@ -30,4 +43,4 @@
   <mat-drawer-content>
     <router-outlet> </router-outlet>
   </mat-drawer-content>
-</mat-drawer-container>
+</mat-drawer-container>`

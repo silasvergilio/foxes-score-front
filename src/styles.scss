@@ -1,4 +1,74 @@
-/* You can add global styles to this file, and also import other style files */
+/* MLB Style Table */
+:root {
+    --mlb-navy: #002d72;
+    --mlb-red: #d50032;
+    --mlb-gray: #f5f5f5;
+    --mlb-border: rgba(0, 0, 0, 0.15);
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Table container */
+table.mat-mdc-table {
+    background: white !important;
+    border: 1px solid var(--mlb-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* HEADER */
+.mat-mdc-header-row {
+    background-color: var(--mlb-gray) !important;
+    color: var(--mlb-navy) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* HEADER CELLS */
+.mat-mdc-header-cell {
+    color: var(--mlb-navy) !important;
+    font-size: 14px;
+    border-bottom: 1px solid var(--mlb-border);
+}
+
+/* BODY CELLS */
+.mat-mdc-cell {
+    color: black !important;
+    font-size: 14px;
+    border-bottom: 1px solid var(--mlb-border);
+}
+
+/* ZEBRA STRIPES */
+.mat-mdc-row:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* HOVER EFFECT */
+.mat-mdc-row:hover {
+    background-color: rgba(0, 45, 114, 0.08);
+    transition: background-color 0.2s ease;
+}
+
+/* LEFT ALIGN NOME */
+.mat-mdc-cell:first-child,
+.mat-mdc-header-cell:first-child {
+    padding-left: 16px !important;
+}
+
+/* NUMERIC COLUMNS CENTERED */
+.mat-mdc-cell:not(:first-child),
+.mat-mdc-header-cell:not(:first-child) {
+    text-align: center;
+}
+
+/* OPTIONAL: highlight stats above average */
+.mlb-positive {
+    color: var(--mlb-navy);
+    font-weight: 700;
+}
+
+.mlb-negative {
+    color: var(--mlb-red);
+    font-weight: 700;
+}
+
+

@@ -1,0 +1,138 @@
+:host {
+    display: block;
+    padding-top: 24px;
+    font-family: Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+/* ===========================
+        CARD COMPLETO
+  =========================== */
+.scoreboard-card {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    /* ESSENCIAL p/ bordas consistentes */
+    width: 100%;
+}
+
+/* ===========================
+        BANNER SUPERIOR
+  =========================== */
+.field-banner {
+    position: relative;
+    width: 100%;
+    height: 120px;
+
+    overflow: hidden;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+}
+
+.field-banner .field-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Barra superior dentro da imagem */
+.field-top-bar {
+    position: absolute;
+    bottom: 10px;
+    left: 16px;
+    right: 16px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* nome do campo agora segue o visual MLB */
+.field-title {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* ===========================
+        BOTÃO TRANSMISSÃO
+  =========================== */
+.transmission-button {
+    background: #dc2626;
+    padding: 6px 12px;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    transition: 0.2s ease;
+}
+
+.transmission-button:hover {
+    background: #b91c1c;
+}
+
+/* ===========================
+        ÁREA DA TABELA
+  =========================== */
+.scoreboard-area {
+    width: 100%;
+    overflow-x: auto;
+    /* RESPONSIVO!!!! */
+}
+
+/* ===========================
+        RESPONSIVIDADE
+  =========================== */
+@media (max-width: 768px) {
+    .field-banner {
+        height: 90px;
+    }
+
+    .field-title {
+        font-size: 18px;
+    }
+
+    .transmission-button {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 520px) {
+    .field-title {
+        font-size: 16px;
+    }
+
+    .field-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+
+.field-top-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 10px 16px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /* A mágica */
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.0));
+}
