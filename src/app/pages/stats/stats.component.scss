@@ -1,265 +1,126 @@
 @use '@angular/material' as mat;
 
-/* Paleta MLB */
 :host {
-  --mlb-blue: #1e40af;
-  --mlb-blue-soft: #e8f0ff;
-  --mlb-text-dark: #1f2937;
-  --mlb-border: #d1d5db;
-  --mlb-white: #ffffff;
+  display: block;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.stats-page {
+  background: #f0f4f8;
+  min-height: 100vh;
 }
 
 /* ===========================
-      🔵 SELECT MLB STYLE
+   HERO
+=========================== */
+.page-hero {
+  background: linear-gradient(135deg, #002d72 0%, #1a4db3 60%, #5474e5 100%);
+  padding: 2.5rem 2rem 2rem;
+}
+
+.hero-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 0.4px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.hero-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* ===========================
+   CONTENT AREA
+=========================== */
+.stats-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ===========================
+   TEAM SELECT
 =========================== */
 .select-input {
   width: 240px;
+  margin-bottom: 1.25rem;
 
-  .mat-mdc-form-field-flex {
-    background: var(--mlb-blue-soft);
-    border-radius: 8px;
-    padding-left: 12px;
-  }
-
-  .mat-mdc-floating-label {
-    color: var(--mlb-blue) !important;
-    font-weight: 600;
-  }
-
-  .mdc-line-ripple {
-    display: none; /* remove linha inferior */
-  }
-
-  .mat-mdc-form-field-icon-suffix,
-  .mat-mdc-select-arrow {
-    color: var(--mlb-blue) !important;
-  }
-
-  .mat-mdc-select-value {
-    color: var(--mlb-text-dark);
-    font-weight: 600;
-  }
+  --mdc-outlined-text-field-label-text-color: #374151;
+  --mdc-outlined-text-field-input-text-color: #111827;
+  --mdc-outlined-text-field-outline-color: rgba(0, 45, 114, 0.3);
+  --mdc-outlined-text-field-hover-outline-color: #002d72;
+  --mdc-outlined-text-field-focus-outline-color: #002d72;
+  --mdc-outlined-text-field-container-shape: 10px;
 }
-
-/* Menu de opções */
-::ng-deep .mat-mdc-select-panel {
-  background: white !important;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
-}
-
-::ng-deep .mat-mdc-option {
-  font-weight: 600 !important;
-  color: var(--mlb-text-dark) !important;
-}
-
-::ng-deep .mat-mdc-option.mdc-list-item--selected {
-  background: var(--mlb-blue-soft) !important;
-  color: var(--mlb-blue) !important;
-}
-
 
 /* ===========================
-      🔵 TABELA MLB STYLE
+   TABS
 =========================== */
-
-table {
-  width: 100%;
-  border-radius: 12px;
+.stats-tabs {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.07);
   overflow: hidden;
 }
 
-/* Header */
-::ng-deep .mdc-data-table__header-row {
-  background: var(--mlb-blue-soft) !important;
-  height: 50px !important;
-}
-
-::ng-deep .mdc-data-table__header-cell {
-  color: var(--mlb-blue) !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--mlb-border);
-  text-align: center;
-}
-
-/* Primeira coluna */
-::ng-deep .mdc-data-table__header-cell:first-child,
-::ng-deep .mdc-data-table__cell:first-child {
-  text-align: left !important;
-  padding-left: 14px !important;
-  font-weight: 700 !important;
-}
-
-/* Células */
-::ng-deep .mdc-data-table__cell {
-  color: var(--mlb-text-dark) !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  text-align: center;
-  border-bottom: 1px solid var(--mlb-border);
-}
-
-/* Zebra */
-::ng-deep .mdc-data-table__row:nth-child(even) {
-  background: #f9fafb !important;
-}
-
-/* Hover */
-::ng-deep .mdc-data-table__row:hover {
-  background: var(--mlb-blue-soft) !important;
-  transition: background 0.15s ease;
-}
-
-/* ================================
-   ⚾ MLB PREMIUM MAT-SELECT STYLE
-   ================================ */
-
-   :host {
-    --mlb-navy: #002d72;
-    --mlb-navy-soft: #e6eeff;
-    --mlb-navy-light: #4a6cd8;
-    --mlb-text: #1f2937;
-  }
-  
-  /* Wrapper opcional */
-  .select-input {
-    width: 240px;
-  }
-  
-  /* Campo principal (remove cinza padrão do MDC) */
-  .select-input .mdc-text-field--filled {
-    background-color: white !important;
-    border-radius: 10px !important;
-    border: 1px solid var(--mlb-navy-light);
-    transition: 0.2s;
-  
-    &:hover {
-      border-color: var(--mlb-navy) !important;
-    }
-  }
-  
-  /* Remove a camada cinza interna */
-  .select-input .mat-mdc-form-field-focus-overlay {
-    background: transparent !important;
-  }
-  
-  /* Label "flutuante" estilo MLB */
-  .select-input .mat-mdc-floating-label {
-    font-weight: 600 !important;
-    color: var(--mlb-navy) !important;
-    opacity: 0.9;
-  }
-  
-  /* Texto selecionado */
-  .select-input .mat-mdc-select-value {
-    color: var(--mlb-text) !important;
-    font-weight: 600 !important;
-  }
-  
-  /* Ícone da setinha */
-  .select-input .mat-mdc-select-arrow {
-    color: var(--mlb-navy) !important;
-    transform: scale(1.15);
-  }
-  
-  /* Linha inferior — removida para um estilo mais limpo */
-  .select-input .mdc-line-ripple {
-    display: none !important;
-  }
-  
-  /* Foco do campo */
-  .select-input .mdc-text-field--focused {
-    border-color: var(--mlb-navy) !important;
-    box-shadow: 0 0 0 2px var(--mlb-navy-soft);
-  }
-  
-  /* ============================
-     ⚾ PAINEL DO dropdown
-     ============================ */
-  
-  /* Menu suspenso inteiro */
-  .mat-mdc-select-panel {
-    background: white !important;
-    border: 1px solid var(--mlb-navy-light);
-    border-radius: 10px !important;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12) !important;
-  }
-  
-  /* Opções do menu */
-  .mat-mdc-option {
-    font-size: 15px;
-    font-weight: 500;
-    padding: 10px 16px !important;
-    color: var(--mlb-text) !important;
-  }
-  
-  /* Hover nas opções */
-  .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
-    background-color: var(--mlb-navy-soft) !important;
-    color: var(--mlb-navy) !important;
-  }
-  
-  /* Opção selecionada */
-  .mat-mdc-option.mdc-list-item--selected {
-    background-color: var(--mlb-navy-soft) !important;
-    color: var(--mlb-navy) !important;
-    font-weight: 700 !important;
-  }
-  
-  /* Remove ripple escuro */
-  .mat-mdc-option .mat-mdc-option-ripple {
-    display: none !important;
-  }
-
-  :host ::ng-deep .select-input .mdc-text-field--filled.mdc-text-field {
-    background-color: white !important;
-    --mdc-filled-text-field-container-color: white !important;
-}
-
-:host ::ng-deep .select-input .mdc-text-field--filled .mdc-text-field__input {
-  color: #1f2937 !important; /* dark gray MLB */
-  font-weight: 600;
-}
-
-:host ::ng-deep .select-input .mdc-floating-label {
-  color: #1f2937 !important;
-  font-weight: 600;
-}
-
-:host ::ng-deep .select-input .mat-mdc-select-arrow {
-  color: #1e40af !important; /* navy MLB */
-  opacity: 1 !important;
-}
-
-/* Wrapper para permitir rolagem suave */
+/* ===========================
+   TABLE WRAPPER
+=========================== */
 .stats-table-wrapper {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 12px; /* evita corte no mobile */
-  border-radius: 8px;
+  padding: 1rem;
 }
 
-/* A tabela deve ter largura mínima para evitar quebra */
 .stats-table-wrapper table {
-  min-width: 950px; /* ajuste conforme a quantidade de colunas */
+  min-width: 950px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-/* ======== MOBILE ======== */
+/* ===========================
+   RESPONSIVE
+=========================== */
 @media (max-width: 768px) {
-  .stats-table-wrapper {
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
+  .page-hero {
+    padding: 1.75rem 1.25rem 1.5rem;
   }
 
-  .mat-mdc-table {
-      font-size: 13px !important;
+  .hero-title {
+    font-size: 1.5rem;
   }
 
-  .mat-mdc-cell,
-  .mat-mdc-header-cell {
-      padding: 6px 8px !important;
+  .stats-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .select-input {
+    width: 100%;
   }
 }

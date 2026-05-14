@@ -6,11 +6,16 @@ import { GameCardAdminComponent } from './pages/game-card-adm/game-card-adm.comp
 import { StatsComponent } from './pages/stats/stats.component';
 import { GameResultsComponent } from './pages/game-results/game-results.component';
 import { TeamsComponent } from './pages/teams/teams.component';
+import { GameScheduleComponent } from './pages/game-schedule/game-schedule.component';
 
 export const routes: Routes = [
   {
     path: 'game-view',
     component: GameScoreComponent,
+  },
+  {
+    path: 'game-schedule',
+    component: GameScheduleComponent,
   },
   {
     path: 'add-game',

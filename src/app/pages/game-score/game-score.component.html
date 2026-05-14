@@ -1,6 +1,19 @@
 <div class="page-container">
-  <div class="form">
-    <mat-form-field class="select-input">
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>sports_baseball</mat-icon>
+        <span>Taça Brasil Amador</span>
+      </div>
+      <h1 class="hero-title">Jogos ao Vivo</h1>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <mat-form-field class="filter-field" appearance="outline">
       <mat-label>Torneio</mat-label>
       <mat-select>
         <mat-option value="one">CBA A</mat-option>
@@ -9,14 +22,14 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="filter-field" appearance="outline">
       <mat-label>Data</mat-label>
       <input matInput [matDatepicker]="picker" />
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="filter-field" appearance="outline">
       <mat-label>Status</mat-label>
       <mat-select>
         <mat-option value="one">Em andamento</mat-option>
@@ -24,14 +37,15 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="action-button">
-      <button mat-fab color="primary" aria-label="Pesquisar">
-        <mat-icon>search</mat-icon>
-      </button>
-    </div>
+    <button class="search-btn" mat-flat-button aria-label="Pesquisar">
+      <mat-icon>search</mat-icon>
+      Pesquisar
+    </button>
   </div>
 
+  <!-- Games Cards -->
   <div class="cards-container">
     <game-card-preview *ngFor="let game of games" [game]="game"></game-card-preview>
   </div>
+
 </div>
