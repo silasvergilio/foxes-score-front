@@ -19,8 +19,10 @@ $foxes-theme: mat.define-theme((
 
 html {
   @include mat.all-component-themes($foxes-theme);
+}
 
-  /* Override M3 system color tokens to match Foxes/MLB branding */
+/* Override M3 system color tokens to match Foxes/MLB branding */
+html {
   --mat-sys-primary: #002d72;
   --mat-sys-on-primary: #ffffff;
   --mat-sys-primary-container: #e6eeff;
