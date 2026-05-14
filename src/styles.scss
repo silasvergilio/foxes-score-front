@@ -1,74 +1,146 @@
-/* MLB Style Table */
+@use '@angular/material' as mat;
+
+/* ============================================================
+   ANGULAR MATERIAL M3 — CUSTOM FOXES THEME
+   Base: azure-blue palette, overridden with our navy/red tokens
+   ============================================================ */
+
+$foxes-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto',
+    plain-family: 'Roboto',
+  ),
+  density: (scale: 0),
+));
+
+html {
+  @include mat.all-component-themes($foxes-theme);
+
+  /* Override M3 system color tokens to match Foxes/MLB branding */
+  --mat-sys-primary: #002d72;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #e6eeff;
+  --mat-sys-on-primary-container: #001a4d;
+
+  --mat-sys-secondary: #1a4db3;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #dce6ff;
+  --mat-sys-on-secondary-container: #001a5c;
+
+  --mat-sys-tertiary: #d50032;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-tertiary-container: #ffdad9;
+  --mat-sys-on-tertiary-container: #400010;
+
+  --mat-sys-error: #ba1a1a;
+  --mat-sys-on-error: #ffffff;
+
+  --mat-sys-surface: #ffffff;
+  --mat-sys-on-surface: #1a1c1e;
+  --mat-sys-surface-variant: #e6eeff;
+  --mat-sys-on-surface-variant: #44474f;
+  --mat-sys-outline: rgba(0, 45, 114, 0.35);
+  --mat-sys-outline-variant: rgba(0, 45, 114, 0.2);
+}
+
+/* ============================================================
+   GLOBAL CSS VARIABLES (used by component styles)
+   ============================================================ */
 :root {
-    --mlb-navy: #002d72;
-    --mlb-red: #d50032;
-    --mlb-gray: #f5f5f5;
-    --mlb-border: rgba(0, 0, 0, 0.15);
+  --mlb-navy: #002d72;
+  --mlb-red: #d50032;
+  --mlb-gray: #f5f5f5;
+  --mlb-border: rgba(0, 0, 0, 0.15);
 }
 
-/* Table container */
+/* ============================================================
+   MATERIAL TABLE — GLOBAL DEFAULTS
+   ============================================================ */
 table.mat-mdc-table {
-    background: white !important;
-    border: 1px solid var(--mlb-border);
-    border-radius: 8px;
-    overflow: hidden;
+  background: white !important;
+  border: 1px solid var(--mlb-border);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-/* HEADER */
 .mat-mdc-header-row {
-    background-color: var(--mlb-gray) !important;
-    color: var(--mlb-navy) !important;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  background-color: var(--mlb-gray) !important;
 }
 
-/* HEADER CELLS */
 .mat-mdc-header-cell {
-    color: var(--mlb-navy) !important;
-    font-size: 14px;
-    border-bottom: 1px solid var(--mlb-border);
+  color: var(--mlb-navy) !important;
+  font-size: 13px;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--mlb-border);
 }
 
-/* BODY CELLS */
 .mat-mdc-cell {
-    color: black !important;
-    font-size: 14px;
-    border-bottom: 1px solid var(--mlb-border);
+  color: #1a1c1e !important;
+  font-size: 13px;
+  border-bottom: 1px solid var(--mlb-border);
 }
 
-/* ZEBRA STRIPES */
 .mat-mdc-row:nth-child(even) {
-    background-color: #fafafa;
+  background-color: #fafafa;
 }
 
-/* HOVER EFFECT */
 .mat-mdc-row:hover {
-    background-color: rgba(0, 45, 114, 0.08);
-    transition: background-color 0.2s ease;
+  background-color: rgba(0, 45, 114, 0.06);
+  transition: background-color 0.15s ease;
 }
 
-/* LEFT ALIGN NOME */
 .mat-mdc-cell:first-child,
 .mat-mdc-header-cell:first-child {
-    padding-left: 16px !important;
+  padding-left: 16px !important;
 }
 
-/* NUMERIC COLUMNS CENTERED */
 .mat-mdc-cell:not(:first-child),
 .mat-mdc-header-cell:not(:first-child) {
-    text-align: center;
+  text-align: center;
 }
 
-/* OPTIONAL: highlight stats above average */
+/* ============================================================
+   MAT-SELECT DROPDOWN PANEL
+   ============================================================ */
+.mat-mdc-select-panel {
+  background: #ffffff !important;
+}
+
+.mat-mdc-option {
+  color: #1a1c1e !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: var(--mat-sys-primary-container) !important;
+  color: var(--mlb-navy) !important;
+}
+
+/* ============================================================
+   MAT-TAB COLORS
+   ============================================================ */
+.mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--mlb-navy) !important;
+}
+
+.mat-mdc-tab-header {
+  border-bottom: 1px solid rgba(0, 45, 114, 0.15);
+}
+
+/* ============================================================
+   HELPER CLASSES
+   ============================================================ */
 .mlb-positive {
-    color: var(--mlb-navy);
-    font-weight: 700;
+  color: var(--mlb-navy);
+  font-weight: 700;
 }
 
 .mlb-negative {
-    color: var(--mlb-red);
-    font-weight: 700;
+  color: var(--mlb-red);
+  font-weight: 700;
 }
-
-

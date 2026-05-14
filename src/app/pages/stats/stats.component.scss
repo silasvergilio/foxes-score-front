@@ -94,14 +94,40 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
 .stats-table-wrapper table {
-  min-width: 950px;
   width: 100%;
   border-radius: 10px;
   overflow: hidden;
+  table-layout: fixed;
+}
+
+/* Compact all cells in the stats table */
+.stats-table-wrapper .mat-mdc-header-cell,
+.stats-table-wrapper .mat-mdc-cell {
+  padding: 6px 6px !important;
+  font-size: 12px !important;
+  white-space: nowrap;
+}
+
+/* Name column gets more space */
+.stats-table-wrapper .mat-mdc-header-cell:first-child,
+.stats-table-wrapper .mat-mdc-cell:first-child {
+  padding-left: 12px !important;
+  min-width: 140px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Numeric columns — fixed narrow width */
+.stats-table-wrapper .mat-mdc-header-cell:not(:first-child),
+.stats-table-wrapper .mat-mdc-cell:not(:first-child) {
+  width: 44px;
+  min-width: 44px;
+  text-align: center;
 }
 
 /* ===========================
