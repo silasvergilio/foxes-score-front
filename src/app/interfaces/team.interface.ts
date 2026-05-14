@@ -10,6 +10,7 @@ export interface Team {
   _id: string;
   name: string;
   code: string;
+  slot?: string;
   imageFile?: string;
   location?: string;
   link?: string;

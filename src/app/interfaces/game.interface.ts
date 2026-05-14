@@ -1,4 +1,44 @@
 import { Batting } from './batting.interface';
+import { Team } from './team.interface';
+
+export type GameStatus = 'scheduled' | 'live' | 'finished';
+export type InningHalf = 'top' | 'bottom';
+
+/**
+ * Current Game model matching the redesigned backend schema.
+ * homeTeam/awayTeam are populated Team objects (selected fields only:
+ * _id, name, code, slot, imageFile, location).
+ */
+export interface Game {
+  _id: string;
+  tournament: string;
+  date: string;
+  field?: string;
+  location?: string;
+  homeTeam: Team;
+  awayTeam: Team;
+  homeScore: number;
+  awayScore: number;
+  status: GameStatus;
+  inning?: number;
+  inningHalf?: InningHalf;
+  outs?: number;
+  balls?: number;
+  strikes?: number;
+  bases?: {
+    first: boolean;
+    second: boolean;
+    third: boolean;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/**
+ * @deprecated Legacy game shape from the previous backend schema.
+ * Still referenced by game-card, game-card-adm, game-score, and game-admin
+ * components which haven't been migrated to the new schema yet.
+ */
 export interface BallGame {
   _id: string;
   tournament: string;
