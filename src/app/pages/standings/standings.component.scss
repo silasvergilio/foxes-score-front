@@ -1,0 +1,272 @@
+:host {
+  display: block;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.standings-page {
+  background: #f0f4f8;
+  min-height: 100vh;
+}
+
+/* ===========================
+   HERO
+=========================== */
+.page-hero {
+  background: linear-gradient(135deg, #002d72 0%, #1a4db3 60%, #5474e5 100%);
+  padding: 2.5rem 2rem 2rem;
+}
+
+.hero-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 0.4px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.hero-title {
+  margin: 0 0 4px;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.hero-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 1rem;
+}
+
+/* ===========================
+   GROUPS GRID
+=========================== */
+.groups-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+/* ===========================
+   GROUP CARD
+=========================== */
+.group-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+
+/* Group Header */
+.group-header {
+  background: #002d72;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.group-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.group-field-name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.trophy-deco {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+}
+
+/* ===========================
+   STANDINGS TABLE
+=========================== */
+.standings-table {
+  width: 100%;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px 36px 52px 44px;
+  align-items: center;
+
+  &.header-row {
+    background: #f5f8ff;
+    border-bottom: 2px solid rgba(0, 45, 114, 0.12);
+  }
+
+  &.team-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    &:hover {
+      background: #f5f8ff;
+    }
+
+    &.last-row {
+      border-bottom: none;
+    }
+
+    &.leader-row {
+      background: rgba(0, 45, 114, 0.03);
+    }
+  }
+}
+
+.header-cell {
+  padding: 8px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #002d72;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+
+  &.team-col {
+    text-align: left;
+    padding-left: 10px;
+  }
+}
+
+/* Position column */
+.pos-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px;
+}
+
+.pos-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(0, 45, 114, 0.1);
+  color: #002d72;
+
+  &.gold {
+    background: #f59e0b;
+    color: #ffffff;
+  }
+
+  &.silver {
+    background: #9ca3af;
+    color: #ffffff;
+  }
+
+  &.bronze {
+    background: #b45309;
+    color: #ffffff;
+  }
+}
+
+/* Team name column */
+.team-col {
+  overflow: hidden;
+}
+
+.team-name-cell {
+  padding: 10px 6px 10px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Stat columns */
+.stat-col {
+  text-align: center;
+}
+
+.stat-cell {
+  padding: 10px 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+
+  &.wins {
+    color: #002d72;
+    font-weight: 800;
+  }
+
+  &.losses {
+    color: #6b7280;
+  }
+
+  &.pct {
+    color: #1f2937;
+    font-size: 13px;
+  }
+
+  &.gb {
+    color: #6b7280;
+    font-size: 13px;
+  }
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 900px) {
+  .groups-section {
+    grid-template-columns: 1fr;
+    padding: 1.25rem 1rem;
+  }
+
+  .group-card {
+    max-width: 540px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .page-hero {
+    padding: 1.75rem 1.25rem 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+}

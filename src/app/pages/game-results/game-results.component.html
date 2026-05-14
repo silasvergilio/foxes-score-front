@@ -11,53 +11,49 @@
     </div>
   </div>
 
-  <!-- Scoreboard Card -->
+  <!-- One scoreboard card per field -->
   <div class="scoreboards-section">
-    <div class="scoreboard-card">
+    <div class="scoreboard-card" *ngFor="let field of fields">
 
-      <!-- Card Header: Field + Status -->
+      <!-- Card Header -->
       <div class="card-header">
         <div class="field-info">
           <mat-icon class="field-icon">stadium</mat-icon>
           <div>
             <span class="field-label">Campo</span>
-            <h2 class="field-name">Campo Principal</h2>
+            <h2 class="field-name">{{ field.fieldName }}</h2>
           </div>
         </div>
         <div class="header-right">
-          <span class="status-badge finished">Finalizado</span>
-          <a class="transmission-button" href="https://link-da-transmissao.com" target="_blank">
+          <span class="status-badge" [class]="field.status">{{ statusLabel(field.status) }}</span>
+          <a *ngIf="field.broadcastUrl" class="transmission-button" [href]="field.broadcastUrl" target="_blank">
             <mat-icon>radio_button_checked</mat-icon>
             Transmissão
           </a>
         </div>
       </div>
 
-      <!-- Field Banner -->
-      <div class="field-banner">
-        <img src="campo-principal.jpg" alt="Campo" class="field-image" />
-        <div class="banner-overlay"></div>
-      </div>
-
       <!-- Scoreboard Table -->
       <div class="scoreboard-area">
-
-        <!-- Inning Labels Row -->
         <div class="scoreboard-table">
+
+          <!-- Header row -->
           <div class="scoreboard-row header-row">
             <div class="team-col header-cell">Equipe</div>
             <div class="inning-col header-cell" *ngFor="let inning of innings">{{ inning }}</div>
             <div class="runs-col header-cell highlight-col">R</div>
           </div>
 
-          <div class="scoreboard-row" *ngFor="let team of dataSource; let last = last" [class.last-row]="last">
+          <!-- Team rows -->
+          <div class="scoreboard-row" *ngFor="let team of field.teams; let last = last" [class.last-row]="last">
             <div class="team-col team-name-cell">{{ team.teamName | formatName }}</div>
             <div class="inning-col score-cell" *ngFor="let s of team.score">{{ s }}</div>
             <div class="runs-col score-cell highlight-col runs-total">{{ getRuns(team.score) }}</div>
           </div>
-        </div>
 
+        </div>
       </div>
+
     </div>
   </div>
 

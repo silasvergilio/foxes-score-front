@@ -1,0 +1,61 @@
+<div class="standings-page">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>emoji_events</mat-icon>
+        <span>Taça Brasil Amador</span>
+      </div>
+      <h1 class="hero-title">Classificação</h1>
+      <p class="hero-subtitle">Fase de Grupos</p>
+    </div>
+  </div>
+
+  <!-- Groups Grid -->
+  <div class="groups-section">
+    <div class="group-card" *ngFor="let group of groups">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-header-left">
+          <span class="group-pill">Grupo {{ group.id }}</span>
+          <h2 class="group-field-name">{{ group.fieldName }}</h2>
+        </div>
+        <mat-icon class="trophy-deco">leaderboard</mat-icon>
+      </div>
+
+      <!-- Standings Table -->
+      <div class="standings-table">
+
+        <!-- Table Header -->
+        <div class="table-row header-row">
+          <div class="pos-col header-cell">#</div>
+          <div class="team-col header-cell">Equipe</div>
+          <div class="stat-col header-cell" title="Vitórias">V</div>
+          <div class="stat-col header-cell" title="Derrotas">D</div>
+          <div class="stat-col header-cell" title="Aproveitamento">PCT</div>
+          <div class="stat-col header-cell" title="Jogos Atrás">GB</div>
+        </div>
+
+        <!-- Team Rows -->
+        <ng-container *ngFor="let team of sortedTeams(group.teams); let i = index; let last = last">
+          <div class="table-row team-row" [class.leader-row]="i === 0" [class.last-row]="last">
+            <div class="pos-col pos-cell">
+              <span class="pos-badge" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
+                {{ i + 1 }}
+              </span>
+            </div>
+            <div class="team-col team-name-cell">{{ team.name }}</div>
+            <div class="stat-col stat-cell wins">{{ team.W }}</div>
+            <div class="stat-col stat-cell losses">{{ team.L }}</div>
+            <div class="stat-col stat-cell pct">{{ pct(team) }}</div>
+            <div class="stat-col stat-cell gb">{{ gb(sortedTeams(group.teams)[0], team) }}</div>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+</div>
