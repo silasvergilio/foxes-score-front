@@ -1,0 +1,12 @@
+<div class="page-title">
+    <div class="title">
+        <h1>{{ title }}</h1>
+        <p *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
+
+    <div class="page-title-action" *ngIf="actionLabel">
+        <button mat-button color="primary" (click)="actionClick.emit()">
+            {{ actionLabel }}
+        </button>
+    </div>
+</div>

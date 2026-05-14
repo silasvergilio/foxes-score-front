@@ -9,10 +9,10 @@ import { TeamsComponent } from './pages/teams/teams.component';
 import { GameScheduleComponent } from './pages/game-schedule/game-schedule.component';
 
 export const routes: Routes = [
-  {
-    path: 'game-view',
-    component: GameScoreComponent,
-  },
+  // {
+  //   path: 'game-view',
+  //   component: GameScoreComponent,
+  // },
   {
     path: 'game-schedule',
     component: GameScheduleComponent,
