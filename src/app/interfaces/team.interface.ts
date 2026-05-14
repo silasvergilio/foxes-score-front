@@ -1,9 +1,20 @@
+export type CoachRole = 'head' | 'assistant';
+
+export interface Coach {
+  name: string;
+  role: CoachRole;
+  phone?: string;
+}
 
 export interface Team {
-    name: string;
-    code: string;
-    imageFile: string;
-    location: string;
-    link: string;
-  }
-  
+  _id: string;
+  name: string;
+  code: string;
+  imageFile?: string;
+  location?: string;
+  link?: string;
+  email?: string;
+  division?: string;
+  tournament?: string;
+  coaches?: Coach[];
+}

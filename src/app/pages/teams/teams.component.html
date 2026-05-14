@@ -8,21 +8,181 @@
         <span>Taça Brasil Amador</span>
       </div>
       <h1 class="hero-title">Equipes Participantes</h1>
+      <p class="hero-subtitle" *ngIf="!loadingTeams">
+        {{ teams.length }} {{ teams.length === 1 ? 'equipe' : 'equipes' }}
+      </p>
     </div>
   </div>
 
-  <!-- Cards -->
-  <div class="teams-grid">
-    <mat-card class="team-card" appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Foxes Academy</mat-card-title>
-        <mat-card-subtitle>São Paulo - SP</mat-card-subtitle>
-      </mat-card-header>
-      <img mat-card-image src="foxes.png" alt="Foxes Academy">
-      <mat-card-actions>
-        <button mat-button>LINK</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+  <div class="page-body">
 
+    <!-- Empty / Error state -->
+    <div class="empty-state" *ngIf="error && !loadingTeams">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-flat-button color="primary" (click)="fetchTeams()">Tentar novamente</button>
+    </div>
+
+    <div class="empty-state" *ngIf="!error && !loadingTeams && teams.length === 0">
+      <mat-icon>groups_off</mat-icon>
+      <p>Nenhuma equipe cadastrada ainda.</p>
+    </div>
+
+    <!-- Teams Grid -->
+    <div class="teams-grid" *ngIf="teams.length > 0">
+      <div
+        class="team-card"
+        *ngFor="let team of teams"
+        [class.selected]="selectedTeam?._id === team._id"
+        (click)="selectTeam(team)"
+      >
+        <div class="team-card-logo">
+          <img *ngIf="team.imageFile" [src]="imagePath(team)" [alt]="team.name" />
+          <div *ngIf="!team.imageFile" class="logo-placeholder">{{ initials(team.name) }}</div>
+        </div>
+        <div class="team-card-body">
+          <div class="team-card-code">{{ team.code }}</div>
+          <h3 class="team-card-name">{{ team.name }}</h3>
+          <div class="team-card-meta" *ngIf="team.location">
+            <mat-icon>location_on</mat-icon>
+            <span>{{ team.location }}</span>
+          </div>
+          <div class="team-card-tags">
+            <span class="tag tournament" *ngIf="team.tournament">{{ team.tournament }}</span>
+            <span class="tag division" *ngIf="team.division">{{ team.division }}</span>
+          </div>
+        </div>
+        <mat-icon class="card-chevron">chevron_right</mat-icon>
+      </div>
+    </div>
+
+    <!-- Team Detail -->
+    <div class="team-detail" *ngIf="selectedTeam">
+
+      <div class="detail-header">
+        <div class="detail-logo">
+          <img *ngIf="selectedTeam.imageFile" [src]="imagePath(selectedTeam)" [alt]="selectedTeam.name" />
+          <div *ngIf="!selectedTeam.imageFile" class="logo-placeholder large">{{ initials(selectedTeam.name) }}</div>
+        </div>
+        <div class="detail-header-info">
+          <div class="detail-code">{{ selectedTeam.code }}</div>
+          <h2 class="detail-name">{{ selectedTeam.name }}</h2>
+          <div class="detail-tags">
+            <span class="tag tournament" *ngIf="selectedTeam.tournament">{{ selectedTeam.tournament }}</span>
+            <span class="tag division" *ngIf="selectedTeam.division">{{ selectedTeam.division }}</span>
+          </div>
+        </div>
+        <div class="detail-header-actions">
+          <a
+            *ngIf="selectedTeam.link"
+            mat-stroked-button
+            [href]="selectedTeam.link"
+            target="_blank"
+            rel="noopener"
+          >
+            <mat-icon>public</mat-icon>
+            <span>Visitar site</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Info Grid -->
+      <div class="detail-info-grid">
+        <div class="info-block" *ngIf="selectedTeam.location">
+          <mat-icon>location_on</mat-icon>
+          <div>
+            <span class="info-label">Localização</span>
+            <span class="info-value">{{ selectedTeam.location }}</span>
+          </div>
+        </div>
+
+        <div class="info-block" *ngIf="selectedTeam.email">
+          <mat-icon>mail</mat-icon>
+          <div>
+            <span class="info-label">Contato</span>
+            <a class="info-value link" [href]="'mailto:' + selectedTeam.email">{{ selectedTeam.email }}</a>
+          </div>
+        </div>
+
+        <div class="info-block" *ngIf="headCoaches(selectedTeam.coaches).length > 0">
+          <mat-icon>sports</mat-icon>
+          <div>
+            <span class="info-label">Técnico</span>
+            <span class="info-value" *ngFor="let c of headCoaches(selectedTeam.coaches)">
+              {{ c.name }}<span class="phone" *ngIf="c.phone"> · {{ c.phone }}</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="info-block" *ngIf="assistantCoaches(selectedTeam.coaches).length > 0">
+          <mat-icon>group</mat-icon>
+          <div>
+            <span class="info-label">Auxiliares</span>
+            <span class="info-value" *ngFor="let c of assistantCoaches(selectedTeam.coaches)">
+              {{ c.name }}<span class="phone" *ngIf="c.phone"> · {{ c.phone }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roster -->
+      <div class="roster-section">
+        <div class="roster-header">
+          <h3>
+            <mat-icon>format_list_numbered</mat-icon>
+            Elenco
+          </h3>
+          <span class="roster-count" *ngIf="!loadingRoster">
+            {{ roster.length }} {{ roster.length === 1 ? 'jogador' : 'jogadores' }}
+          </span>
+        </div>
+
+        <div class="roster-loading" *ngIf="loadingRoster">
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+
+        <div class="roster-empty" *ngIf="!loadingRoster && roster.length === 0">
+          <mat-icon>person_off</mat-icon>
+          <p>Elenco ainda não cadastrado.</p>
+        </div>
+
+        <div class="roster-table-wrapper" *ngIf="!loadingRoster && roster.length > 0">
+          <table mat-table [dataSource]="roster" class="roster-table">
+
+            <ng-container matColumnDef="jerseyNumber">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let p">
+                <span class="jersey-number">{{ p.jerseyNumber }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nome</th>
+              <td mat-cell *matCellDef="let p" class="player-name">{{ p.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="nickname">
+              <th mat-header-cell *matHeaderCellDef>Apelido</th>
+              <td mat-cell *matCellDef="let p">{{ p.nickname || '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="bats">
+              <th mat-header-cell *matHeaderCellDef matTooltip="Bate">B</th>
+              <td mat-cell *matCellDef="let p">{{ handLabel(p.bats) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="throws">
+              <th mat-header-cell *matHeaderCellDef matTooltip="Arremessa">A</th>
+              <td mat-cell *matCellDef="let p">{{ handLabel(p.throws) }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="rosterColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: rosterColumns;"></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 </div>
