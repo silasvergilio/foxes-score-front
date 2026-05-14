@@ -1,93 +1,64 @@
-<div class="scoreboard-card">
+<div class="results-page">
 
-    <!-- 🔵 Banner superior -->
-    <div class="field-banner">
-        <img src="campo-principal.jpg" alt="Campo" class="field-image" />
+  <!-- Page Header -->
+  <div class="page-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>sports_baseball</mat-icon>
+        <span>Taça Brasil Amador</span>
+      </div>
+      <h1 class="hero-title">Jogos e Resultados</h1>
+    </div>
+  </div>
 
-        <!-- Nome + transmissão, alinhados em extremos -->
-        <div class="field-top-bar">
-            <span class="field-title">Campo Principal</span>
+  <!-- Scoreboard Card -->
+  <div class="scoreboards-section">
+    <div class="scoreboard-card">
 
-            <a class="transmission-button" href="https://link-da-transmissao.com" target="_blank">
-                🔴 Transmissão Oficial
-            </a>
+      <!-- Card Header: Field + Status -->
+      <div class="card-header">
+        <div class="field-info">
+          <mat-icon class="field-icon">stadium</mat-icon>
+          <div>
+            <span class="field-label">Campo</span>
+            <h2 class="field-name">Campo Principal</h2>
+          </div>
         </div>
+        <div class="header-right">
+          <span class="status-badge finished">Finalizado</span>
+          <a class="transmission-button" href="https://link-da-transmissao.com" target="_blank">
+            <mat-icon>radio_button_checked</mat-icon>
+            Transmissão
+          </a>
+        </div>
+      </div>
+
+      <!-- Field Banner -->
+      <div class="field-banner">
+        <img src="campo-principal.jpg" alt="Campo" class="field-image" />
+        <div class="banner-overlay"></div>
+      </div>
+
+      <!-- Scoreboard Table -->
+      <div class="scoreboard-area">
+
+        <!-- Inning Labels Row -->
+        <div class="scoreboard-table">
+          <div class="scoreboard-row header-row">
+            <div class="team-col header-cell">Equipe</div>
+            <div class="inning-col header-cell" *ngFor="let inning of innings">{{ inning }}</div>
+            <div class="runs-col header-cell highlight-col">R</div>
+          </div>
+
+          <div class="scoreboard-row" *ngFor="let team of dataSource; let last = last" [class.last-row]="last">
+            <div class="team-col team-name-cell">{{ team.teamName | formatName }}</div>
+            <div class="inning-col score-cell" *ngFor="let s of team.score">{{ s }}</div>
+            <div class="runs-col score-cell highlight-col runs-total">{{ getRuns(team.score) }}</div>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
 
-    <!-- 🔵 Área da tabela -->
-    <div class="scoreboard-area">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-            <!-- Name -->
-            <ng-container matColumnDef="Equipe">
-                <th mat-header-cell *matHeaderCellDef> Equipe </th>
-                <td mat-cell *matCellDef="let element"> {{ element.teamName | formatName }} </td>
-            </ng-container>
-
-            <!-- G -->
-            <ng-container matColumnDef="1">
-                <th mat-header-cell *matHeaderCellDef matTooltip="Games Played (Jogos disputados)"> 1 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[0] }} </td>
-            </ng-container>
-
-            <!-- PA -->
-            <ng-container matColumnDef="2">
-                <th mat-header-cell *matHeaderCellDef> 2 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[1] }} </td>
-            </ng-container>
-
-            <!-- AB -->
-            <ng-container matColumnDef="3">
-                <th mat-header-cell *matHeaderCellDef> 3 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[2] }} </td>
-            </ng-container>
-
-            <!-- R -->
-            <ng-container matColumnDef="4">
-                <th mat-header-cell *matHeaderCellDef> 4 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[3] }} </td>
-            </ng-container>
-
-            <!-- H -->
-            <ng-container matColumnDef="5">
-                <th mat-header-cell *matHeaderCellDef> 5 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[4]}} </td>
-            </ng-container>
-
-            <!-- HR -->
-            <ng-container matColumnDef="6">
-                <th mat-header-cell *matHeaderCellDef> 6 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[5]}} </td>
-            </ng-container>
-
-            <!-- TB -->
-            <ng-container matColumnDef="7">
-                <th mat-header-cell *matHeaderCellDef> 7 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[6] }} </td>
-            </ng-container>
-
-            <!-- RBI -->
-            <ng-container matColumnDef="8">
-                <th mat-header-cell *matHeaderCellDef> 8</th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[7] }} </td>
-            </ng-container>
-
-            <!-- AVG -->
-            <ng-container matColumnDef="9">
-                <th mat-header-cell *matHeaderCellDef> 9 </th>
-                <td mat-cell *matCellDef="let element"> {{ element.score[8] }} </td>
-            </ng-container>
-
-            <!-- BB -->
-            <ng-container matColumnDef="R">
-                <th mat-header-cell *matHeaderCellDef> R </th>
-                <td mat-cell *matCellDef="let element"> {{ getRuns(element.score) }} </td>
-            </ng-container>
-
-            <!-- Header e linhas -->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-        </table>
-    </div>
 </div>

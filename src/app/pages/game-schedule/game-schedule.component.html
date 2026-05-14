@@ -1,0 +1,69 @@
+<div class="schedule-page">
+
+  <!-- Hero Banner -->
+  <div class="page-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>emoji_events</mat-icon>
+        <span>Taça Brasil Amador</span>
+      </div>
+      <h1 class="hero-title">Tabela de Jogos</h1>
+      <p class="hero-subtitle">Fase de Grupos · {{ currentYear }}</p>
+    </div>
+  </div>
+
+  <!-- Fields Grid -->
+  <div class="fields-section">
+    <div class="field-card" *ngFor="let field of fields">
+
+      <!-- Field Card Header -->
+      <div class="field-card-header">
+        <div class="field-card-left">
+          <span class="group-pill">Grupo {{ field.id }}</span>
+          <h2 class="field-card-name">{{ field.name }}</h2>
+        </div>
+        <mat-icon class="baseball-deco">sports_baseball</mat-icon>
+      </div>
+
+      <!-- Teams List -->
+      <div class="teams-section">
+        <p class="section-label">
+          <mat-icon>groups</mat-icon>
+          Equipes
+        </p>
+        <div class="team-row" *ngFor="let team of field.teams; let i = index">
+          <span class="seed">{{ i + 1 }}</span>
+          <span class="team-name-text">{{ team }}</span>
+          <span class="tba-tag" *ngIf="team === 'A Definir'">TBA</span>
+        </div>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <!-- Games Schedule -->
+      <div class="games-section">
+        <p class="section-label">
+          <mat-icon>calendar_month</mat-icon>
+          Jogos
+        </p>
+
+        <div class="game-row" *ngFor="let game of field.games; let gi = index">
+          <div class="round-pill">R{{ gi + 1 }}</div>
+
+          <div class="matchup">
+            <span class="match-team">{{ game.teamA }}</span>
+            <div class="vs-badge">VS</div>
+            <span class="match-team">{{ game.teamB }}</span>
+          </div>
+
+          <div class="game-right">
+            <span class="game-date">{{ game.date }}</span>
+            <span class="status-tag" [class]="game.status">{{ statusLabel(game.status) }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

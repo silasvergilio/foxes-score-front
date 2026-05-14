@@ -4,6 +4,7 @@ import { PlayerStats } from '../../interfaces/player-stats.interface';
 import { FormatNamePipe } from '../../pipes/formatName.pipe';
 import { MatFormField, MatLabel, MatSelect, MatOption } from "@angular/material/select";
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
 
 
 const PLAYER_DATA: PlayerStats[] = [
@@ -33,7 +34,7 @@ const PLAYER_DATA: PlayerStats[] = [
 
 @Component({
   selector: 'app-stats',
-  imports: [MatTableModule, FormatNamePipe, MatFormField, MatLabel, MatSelect, MatOption, MatTabsModule],
+  imports: [MatTableModule, FormatNamePipe, MatFormField, MatLabel, MatSelect, MatOption, MatTabsModule, MatIconModule],
   templateUrl: './stats.component.html',
   styleUrl: './stats.component.scss',
 
