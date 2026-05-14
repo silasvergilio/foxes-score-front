@@ -5,22 +5,35 @@
     <div class="hero-content">
       <div class="hero-badge">
         <mat-icon>emoji_events</mat-icon>
-        <span>Taça Brasil Amador</span>
+        <span>{{ tournament }}</span>
       </div>
       <h1 class="hero-title">Tabela de Jogos</h1>
-      <p class="hero-subtitle">Fase de Grupos · {{ currentYear }}</p>
+      <p class="hero-subtitle">Fase de Grupos</p>
     </div>
   </div>
 
-  <!-- Fields Grid -->
-  <div class="fields-section">
-    <div class="field-card" *ngFor="let field of fields">
+  <!-- Error state -->
+  <div class="page-state" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-flat-button color="primary" (click)="fetch()">Tentar novamente</button>
+  </div>
 
-      <!-- Field Card Header -->
+  <!-- Loading state -->
+  <div class="page-state" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Carregando agenda…</p>
+  </div>
+
+  <!-- Groups Grid -->
+  <div class="fields-section" *ngIf="!loading && !error">
+    <div class="field-card" *ngFor="let group of groups; trackBy: trackGroup">
+
+      <!-- Group Header -->
       <div class="field-card-header">
         <div class="field-card-left">
-          <span class="group-pill">Grupo {{ field.id }}</span>
-          <h2 class="field-card-name">{{ field.name }}</h2>
+          <span class="group-pill">{{ group.label }}</span>
+          <h2 class="field-card-name">{{ group.teams.length }} Equipes</h2>
         </div>
         <mat-icon class="baseball-deco">sports_baseball</mat-icon>
       </div>
@@ -31,10 +44,19 @@
           <mat-icon>groups</mat-icon>
           Equipes
         </p>
-        <div class="team-row" *ngFor="let team of field.teams; let i = index">
-          <span class="seed">{{ i + 1 }}</span>
-          <span class="team-name-text">{{ team }}</span>
-          <span class="tba-tag" *ngIf="team === 'A Definir'">TBA</span>
+
+        <div class="empty-mini" *ngIf="group.teams.length === 0">Nenhuma equipe neste grupo.</div>
+
+        <div class="team-row" *ngFor="let team of group.teams; trackBy: trackById">
+          <span class="seed">{{ team.slot }}</span>
+          <img
+            *ngIf="teamLogo(team) as logo"
+            [src]="logo"
+            [alt]="team.name"
+            class="team-logo"
+          />
+          <span *ngIf="!teamLogo(team)" class="team-logo placeholder">{{ initials(team.name) }}</span>
+          <span class="team-name-text">{{ team.name }}</span>
         </div>
       </div>
 
@@ -47,18 +69,38 @@
           Jogos
         </p>
 
-        <div class="game-row" *ngFor="let game of field.games; let gi = index">
+        <div class="empty-mini" *ngIf="group.games.length === 0">
+          Nenhum jogo agendado.
+        </div>
+
+        <div class="game-row" *ngFor="let game of group.games; let gi = index; trackBy: trackById">
           <div class="round-pill">R{{ gi + 1 }}</div>
 
           <div class="matchup">
-            <span class="match-team">{{ game.teamA }}</span>
-            <div class="vs-badge">VS</div>
-            <span class="match-team">{{ game.teamB }}</span>
+            <div class="match-team">
+              <img *ngIf="teamLogo(game.homeTeam) as logo" [src]="logo" [alt]="game.homeTeam?.name" class="mini-logo" />
+              <span class="team-code">{{ game.homeTeam?.code || '?' }}</span>
+            </div>
+
+            <div class="vs-wrap" *ngIf="game.status === 'finished'; else vsBadge">
+              <span class="score" [class.win]="game.homeScore > game.awayScore">{{ game.homeScore }}</span>
+              <span class="score-sep">·</span>
+              <span class="score" [class.win]="game.awayScore > game.homeScore">{{ game.awayScore }}</span>
+            </div>
+            <ng-template #vsBadge>
+              <div class="vs-badge">VS</div>
+            </ng-template>
+
+            <div class="match-team away">
+              <span class="team-code">{{ game.awayTeam?.code || '?' }}</span>
+              <img *ngIf="teamLogo(game.awayTeam) as logo" [src]="logo" [alt]="game.awayTeam?.name" class="mini-logo" />
+            </div>
           </div>
 
           <div class="game-right">
-            <span class="game-date">{{ game.date }}</span>
+            <span class="game-date">{{ formatGameDate(game.date) }}</span>
             <span class="status-tag" [class]="game.status">{{ statusLabel(game.status) }}</span>
+            <span class="field-tag" *ngIf="game.field">{{ game.field }}</span>
           </div>
         </div>
       </div>
