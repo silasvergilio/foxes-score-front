@@ -9,34 +9,27 @@ interface TeamStanding {
 }
 
 interface GroupStanding {
-  id: number;
-  fieldName: string;
+  letter: string;
+  label: string;
   teams: TeamStanding[];
 }
 
 const STANDINGS_DATA: GroupStanding[] = [
   {
-    id: 1,
-    fieldName: 'Campo 1',
+    letter: 'A',
+    label: 'Grupo A',
     teams: [
+      { name: 'A Definir', W: 0, L: 0 },
       { name: 'A Definir', W: 0, L: 0 },
       { name: 'A Definir', W: 0, L: 0 },
       { name: 'A Definir', W: 0, L: 0 },
     ]
   },
   {
-    id: 2,
-    fieldName: 'Campo 2',
+    letter: 'B',
+    label: 'Grupo B',
     teams: [
       { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-    ]
-  },
-  {
-    id: 3,
-    fieldName: 'Campo 3',
-    teams: [
       { name: 'A Definir', W: 0, L: 0 },
       { name: 'A Definir', W: 0, L: 0 },
       { name: 'A Definir', W: 0, L: 0 },

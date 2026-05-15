@@ -35,15 +35,6 @@ const FIELDS_DATA: FieldGame[] = [
       { teamName: 'A Definir', score: [0, 0, 0, 0, 0, 0, 0, 0, 0] },
       { teamName: 'A Definir', score: [0, 0, 0, 0, 0, 0, 0, 0, 0] },
     ]
-  },
-  {
-    fieldId: 3,
-    fieldName: 'Campo 3',
-    status: 'scheduled',
-    teams: [
-      { teamName: 'A Definir', score: [0, 0, 0, 0, 0, 0, 0, 0, 0] },
-      { teamName: 'A Definir', score: [0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    ]
   }
 ];
 

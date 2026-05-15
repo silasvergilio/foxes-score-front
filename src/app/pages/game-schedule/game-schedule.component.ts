@@ -17,7 +17,7 @@ interface ScheduleGroup {
 }
 
 const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2025';
-const GROUP_LETTERS = ['A', 'B', 'C'];
+const GROUP_LETTERS = ['A', 'B'];
 
 @Component({
   selector: 'app-game-schedule',
