@@ -29,6 +29,16 @@ export class GameResultsComponent implements OnInit {
   innings = INNINGS;
   tournament = DEFAULT_TOURNAMENT;
 
+  /**
+   * Broadcast URLs keyed by field name. The Transmissão button only
+   * renders for a field that has a URL configured here. Set the field's
+   * name exactly as it appears on the Game document (game.field).
+   */
+  broadcastUrls: Record<string, string> = {
+    // 'Field 1': 'https://www.youtube.com/...',
+    // 'Field 2': 'https://www.twitch.tv/...',
+  };
+
   /** One game per field — the next/current game on that field. */
   featured: Game[] = [];
 
@@ -96,6 +106,11 @@ export class GameResultsComponent implements OnInit {
    */
   inningCells(_total: number): number[] {
     return INNINGS.map(() => 0);
+  }
+
+  broadcastFor(field: string | undefined): string | null {
+    if (!field) return null;
+    return this.broadcastUrls[field] ?? null;
   }
 
   statusLabel(status: GameStatus | string | undefined): string {
