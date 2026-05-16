@@ -133,4 +133,29 @@ export class StandingsComponent implements OnInit {
   sortedTeams(teams: TeamStanding[]): TeamStanding[] {
     return teams;
   }
+
+  /**
+   * Returns the tiebreaker rule that placed `team` below the team(s) above it
+   * with the same wins/losses record, or null if the team isn't part of a
+   * W/L tie. Used to mark rows whose order is decided by a tiebreaker rather
+   * than by record alone.
+   */
+  tiebreakerReason(teams: TeamStanding[], i: number): string | null {
+    if (i === 0) return null;
+    const team = teams[i];
+    const above = teams[i - 1];
+    if (above.W !== team.W || above.L !== team.L) return null;
+    if (above.diff !== team.diff) return 'Saldo de runs';
+    if (above.RS !== team.RS) return 'Runs anotadas';
+    return 'Critério adicional';
+  }
+
+  /**
+   * Compact run-differential display: "+6", "−5", "0".
+   */
+  formatDiff(d: number): string {
+    if (d > 0) return `+${d}`;
+    if (d < 0) return `−${Math.abs(d)}`;
+    return '0';
+  }
 }
