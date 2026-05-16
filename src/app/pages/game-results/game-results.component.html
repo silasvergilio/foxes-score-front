@@ -46,14 +46,14 @@
         <div class="header-right">
           <span class="status-badge" [class]="game.status">{{ statusLabel(game.status) }}</span>
           <a
-            *ngIf="broadcastFor(game.field) as url"
+            *ngIf="game.status === 'live' && broadcastFor(game.field) as url"
             class="transmission-button"
             [href]="url"
             target="_blank"
             rel="noopener"
           >
             <mat-icon>radio_button_checked</mat-icon>
-            Transmissão
+            Assistir ao vivo
           </a>
         </div>
       </div>
