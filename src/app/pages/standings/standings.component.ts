@@ -18,10 +18,9 @@ interface TeamStanding {
   RA: number;
   diff: number;
   /**
-   * Team Quality Balance = (runsScored / inningsBatted) / (runsAgainst / inningsFielded).
-   * `null` when the value can't be expressed as a finite number — either the
-   * team hasn't played yet (also indicated by RA === 0 && gamesPlayed === 0)
-   * or it has played but allowed 0 runs (RA === 0 && gamesPlayed > 0, infinite TQB).
+   * Team Quality Balance = (runsScored / inningsBatted) − (runsAgainst / inningsFielded).
+   * Always finite for any team that's played at least one inning on each side.
+   * `null` only when the team hasn't played yet.
    */
   TQB: number | null;
   gamesPlayed: number;
@@ -171,15 +170,17 @@ export class StandingsComponent implements OnInit {
     return 'Critério adicional';
   }
 
-  /** Formats a TQB ratio: "1.833", "∞" (RA = 0 after at least one game), or "—". */
+  /**
+   * Signed TQB: "+3.595", "−0.452", "0.000", or "—" for unplayed teams.
+   * Backend now always returns a finite number (or null when no games), so
+   * the legacy "∞" case is gone.
+   */
   formatTQB(team: TeamStanding): string {
-    if (team.TQB == null) {
-      // Infinity round-tripped through JSON. Distinguish "no games" from
-      // "played but never gave up a run" using RA + gamesPlayed.
-      if (team.gamesPlayed > 0 && team.RA === 0) return '∞';
-      return '—';
-    }
-    return team.TQB.toFixed(3);
+    if (team.TQB == null) return '—';
+    const v = team.TQB;
+    if (v > 0) return `+${v.toFixed(3)}`;
+    if (v < 0) return `−${Math.abs(v).toFixed(3)}`;
+    return '0.000';
   }
 
   /**
