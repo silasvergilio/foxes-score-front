@@ -42,61 +42,10 @@ mat-drawer-content {
   display: flex !important;
   flex-direction: column !important;
   background: #ffffff;
-  padding: 0;
+  padding: 0.75rem 0;
   width: 260px;
   border-right: 1px solid rgba(0, 45, 114, 0.15) !important;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-}
-
-/* ===========================
-   SIDEBAR LOGO HEADER
-=========================== */
-.drawer-logo-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 1.25rem 1.5rem 1rem;
-  background: linear-gradient(135deg, #002d72 0%, #1a4db3 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-logo {
-  height: 2.2rem;
-  user-select: none;
-  filter: brightness(0) invert(1);
-  opacity: 0.92;
-  object-fit: contain;
-  flex: 1;
-  max-width: 90px;
-
-  &.sidebar-logo-left {
-    object-position: right center;
-  }
-
-  &.sidebar-logo-right {
-    object-position: left center;
-  }
-}
-
-.sidebar-divider-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  flex-shrink: 0;
-}
-
-/* ===========================
-   SECTION LABEL
-=========================== */
-.drawer-section-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: #9ca3af;
-  padding: 1rem 1.25rem 0.4rem;
 }
 
 /* ===========================

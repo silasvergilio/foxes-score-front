@@ -39,6 +39,18 @@ export class GameResultsComponent implements OnInit {
     // 'Field 2': 'https://www.twitch.tv/...',
   };
 
+  /**
+   * Display-name overrides for the field shown on each card. Backend
+   * stores the raw field name (e.g. "Field 2"), but the venue's
+   * physical fields are numbered Campo 1 and Campo 3 (Campo 2 doesn't
+   * exist on site). Map the backend values to the display labels here.
+   */
+  private fieldNameMap: Record<string, string> = {
+    'Field 1': 'Campo 1',
+    'Field 2': 'Campo 3',
+    'Campo 2': 'Campo 3',
+  };
+
   /** Up next per field — scheduled or live, earliest round wins. */
   featured: Game[] = [];
 
@@ -110,6 +122,11 @@ export class GameResultsComponent implements OnInit {
    */
   inningCells(_total: number): number[] {
     return INNINGS.map(() => 0);
+  }
+
+  fieldDisplayName(field: string | undefined): string {
+    if (!field) return 'A Definir';
+    return this.fieldNameMap[field] ?? field;
   }
 
   broadcastFor(field: string | undefined): string | null {
