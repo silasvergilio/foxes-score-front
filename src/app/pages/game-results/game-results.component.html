@@ -65,26 +65,27 @@
           <!-- Header row -->
           <div class="scoreboard-row header-row">
             <div class="team-col header-cell">Equipe</div>
-            <div class="inning-col header-cell" *ngFor="let inning of innings">{{ inning }}</div>
+            <div class="inning-col header-cell" *ngFor="let inning of inningRange(game)">{{ inning }}</div>
             <div class="runs-col header-cell highlight-col">R</div>
           </div>
 
-          <!-- Home Team row -->
-          <div class="scoreboard-row">
-            <div class="team-col team-name-cell">
-              {{ (game.homeTeam?.name || 'A Definir') | formatName }}
-            </div>
-            <div class="inning-col score-cell" *ngFor="let s of inningCells(game.homeScore)">{{ s }}</div>
-            <div class="runs-col score-cell highlight-col runs-total">{{ game.homeScore ?? 0 }}</div>
-          </div>
-
+          <!-- Baseball convention: away (visitor) on top, home on bottom. -->
           <!-- Away Team row -->
-          <div class="scoreboard-row last-row">
+          <div class="scoreboard-row">
             <div class="team-col team-name-cell">
               {{ (game.awayTeam?.name || 'A Definir') | formatName }}
             </div>
-            <div class="inning-col score-cell" *ngFor="let s of inningCells(game.awayScore)">{{ s }}</div>
+            <div class="inning-col score-cell" *ngFor="let s of inningCells(game, 'away')">{{ s ?? '' }}</div>
             <div class="runs-col score-cell highlight-col runs-total">{{ game.awayScore ?? 0 }}</div>
+          </div>
+
+          <!-- Home Team row -->
+          <div class="scoreboard-row last-row">
+            <div class="team-col team-name-cell">
+              {{ (game.homeTeam?.name || 'A Definir') | formatName }}
+            </div>
+            <div class="inning-col score-cell" *ngFor="let s of inningCells(game, 'home')">{{ s ?? '' }}</div>
+            <div class="runs-col score-cell highlight-col runs-total">{{ game.homeScore ?? 0 }}</div>
           </div>
 
         </div>
