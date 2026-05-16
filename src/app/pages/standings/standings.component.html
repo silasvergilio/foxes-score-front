@@ -47,8 +47,9 @@
           <div class="team-col header-cell">Equipe</div>
           <div class="stat-col header-cell" title="Vitórias">V</div>
           <div class="stat-col header-cell" title="Derrotas">D</div>
+          <div class="stat-col header-cell" title="Saldo de runs (anotadas − sofridas)">SR</div>
+          <div class="stat-col header-cell" title="Runs anotadas">CA</div>
           <div class="stat-col header-cell" title="Aproveitamento">PCT</div>
-          <div class="stat-col header-cell" title="Jogos Atrás">GB</div>
         </div>
 
         <!-- Team Rows -->
@@ -58,15 +59,40 @@
               <span class="pos-badge" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
                 {{ i + 1 }}
               </span>
+              <span
+                *ngIf="tiebreakerReason(sortedTeams(group.teams), i) as reason"
+                class="tiebreak-mark"
+                [title]="'Desempate: ' + reason"
+              >★</span>
             </div>
             <div class="team-col team-name-cell">{{ team.name }}</div>
             <div class="stat-col stat-cell wins">{{ team.W }}</div>
             <div class="stat-col stat-cell losses">{{ team.L }}</div>
+            <div
+              class="stat-col stat-cell diff"
+              [class.diff-pos]="team.diff > 0"
+              [class.diff-neg]="team.diff < 0"
+            >{{ formatDiff(team.diff) }}</div>
+            <div class="stat-col stat-cell rs">{{ team.RS }}</div>
             <div class="stat-col stat-cell pct">{{ pct(team) }}</div>
-            <div class="stat-col stat-cell gb">{{ gb(sortedTeams(group.teams)[0], team) }}</div>
           </div>
         </ng-container>
 
+      </div>
+
+      <!-- Tiebreaker legend -->
+      <div class="tiebreaker-legend">
+        <strong>Critérios de desempate</strong>
+        <ol>
+          <li>Mais vitórias</li>
+          <li>Menos derrotas</li>
+          <li>Saldo de runs (SR)</li>
+          <li>Runs anotadas (CA)</li>
+        </ol>
+        <p class="legend-note">
+          <span class="tiebreak-mark">★</span>
+          indica equipe classificada por critério de desempate (passe o cursor para ver qual).
+        </p>
       </div>
     </div>
   </div>
