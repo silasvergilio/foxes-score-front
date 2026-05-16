@@ -5,15 +5,34 @@
     <div class="hero-content">
       <div class="hero-badge">
         <mat-icon>sports_baseball</mat-icon>
-        <span>Taça Brasil Amador</span>
+        <span>{{ tournament }}</span>
       </div>
       <h1 class="hero-title">Jogos e Resultados</h1>
     </div>
   </div>
 
+  <!-- Loading state -->
+  <div class="page-state" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Carregando jogos…</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="page-state" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-flat-button color="primary" (click)="fetch()">Tentar novamente</button>
+  </div>
+
+  <!-- Empty state -->
+  <div class="page-state" *ngIf="!loading && !error && featured.length === 0">
+    <mat-icon>event_busy</mat-icon>
+    <p>Nenhum jogo agendado.</p>
+  </div>
+
   <!-- One scoreboard card per field -->
-  <div class="scoreboards-section">
-    <div class="scoreboard-card" *ngFor="let field of fields">
+  <div class="scoreboards-section" *ngIf="!loading && !error && featured.length > 0">
+    <div class="scoreboard-card" *ngFor="let game of featured; trackBy: trackById">
 
       <!-- Card Header -->
       <div class="card-header">
@@ -21,15 +40,11 @@
           <mat-icon class="field-icon">stadium</mat-icon>
           <div>
             <span class="field-label">Campo</span>
-            <h2 class="field-name">{{ field.fieldName }}</h2>
+            <h2 class="field-name">{{ game.field || 'A Definir' }}</h2>
           </div>
         </div>
         <div class="header-right">
-          <span class="status-badge" [class]="field.status">{{ statusLabel(field.status) }}</span>
-          <a *ngIf="field.broadcastUrl" class="transmission-button" [href]="field.broadcastUrl" target="_blank">
-            <mat-icon>radio_button_checked</mat-icon>
-            Transmissão
-          </a>
+          <span class="status-badge" [class]="game.status">{{ statusLabel(game.status) }}</span>
         </div>
       </div>
 
@@ -44,11 +59,22 @@
             <div class="runs-col header-cell highlight-col">R</div>
           </div>
 
-          <!-- Team rows -->
-          <div class="scoreboard-row" *ngFor="let team of field.teams; let last = last" [class.last-row]="last">
-            <div class="team-col team-name-cell">{{ team.teamName | formatName }}</div>
-            <div class="inning-col score-cell" *ngFor="let s of team.score">{{ s }}</div>
-            <div class="runs-col score-cell highlight-col runs-total">{{ getRuns(team.score) }}</div>
+          <!-- Home Team row -->
+          <div class="scoreboard-row">
+            <div class="team-col team-name-cell">
+              {{ (game.homeTeam?.name || 'A Definir') | formatName }}
+            </div>
+            <div class="inning-col score-cell" *ngFor="let s of inningCells(game.homeScore)">{{ s }}</div>
+            <div class="runs-col score-cell highlight-col runs-total">{{ game.homeScore ?? 0 }}</div>
+          </div>
+
+          <!-- Away Team row -->
+          <div class="scoreboard-row last-row">
+            <div class="team-col team-name-cell">
+              {{ (game.awayTeam?.name || 'A Definir') | formatName }}
+            </div>
+            <div class="inning-col score-cell" *ngFor="let s of inningCells(game.awayScore)">{{ s }}</div>
+            <div class="runs-col score-cell highlight-col runs-total">{{ game.awayScore ?? 0 }}</div>
           </div>
 
         </div>
