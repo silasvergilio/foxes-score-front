@@ -1,11 +1,21 @@
-import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ApiService } from '../../services/api.service';
+import { LoaderService } from '../../services/loader.service';
 
 interface TeamStanding {
   name: string;
+  code: string;
+  slot?: string;
   W: number;
   L: number;
+  T: number;
+  RS: number;
+  RA: number;
+  diff: number;
 }
 
 interface GroupStanding {
@@ -14,43 +24,98 @@ interface GroupStanding {
   teams: TeamStanding[];
 }
 
-const STANDINGS_DATA: GroupStanding[] = [
-  {
-    id: '1',
-    label: 'Grupo 1',
-    teams: [
-      { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-    ]
-  },
-  {
-    id: '2',
-    label: 'Grupo 2',
-    teams: [
-      { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-      { name: 'A Definir', W: 0, L: 0 },
-    ]
-  }
-];
+interface ApiStanding {
+  team: { _id: string; name: string; code: string; slot?: string; group?: string };
+  gamesPlayed: number;
+  wins: number;
+  losses: number;
+  ties: number;
+  runsScored: number;
+  runsAgainst: number;
+  runDiff: number;
+  winPct: number;
+}
+
+interface ApiResponse {
+  tournament: string | null;
+  groups: { group: string; standings: ApiStanding[] }[];
+}
+
+const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2026';
 
 @Component({
   selector: 'app-standings',
   standalone: true,
-  imports: [NgFor, MatIconModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './standings.component.html',
-  styleUrl: './standings.component.scss'
+  styleUrl: './standings.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StandingsComponent {
-  groups = STANDINGS_DATA;
+export class StandingsComponent implements OnInit {
+  tournament = DEFAULT_TOURNAMENT;
+  groups: GroupStanding[] = [];
+  loading = false;
+  error = '';
+
+  constructor(
+    private api: ApiService,
+    private loader: LoaderService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.fetch();
+  }
+
+  fetch() {
+    this.loading = true;
+    this.error = '';
+    this.loader.start();
+
+    this.api
+      .get<ApiResponse>(`standings?tournament=${encodeURIComponent(this.tournament)}`)
+      .subscribe({
+        next: (resp) => {
+          this.groups = this.toGroups(resp);
+          this.loading = false;
+          this.loader.stop();
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error('Erro ao carregar classificação', err);
+          this.error = 'Não foi possível carregar a classificação.';
+          this.loading = false;
+          this.loader.stop();
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  private toGroups(resp: ApiResponse | null): GroupStanding[] {
+    if (!resp || !Array.isArray(resp.groups)) return [];
+    return resp.groups
+      .filter((g) => g.group !== '_') // skip the "no group" bucket
+      .map((g) => ({
+        id: g.group,
+        label: `Grupo ${g.group}`,
+        teams: g.standings.map((s) => ({
+          name: s.team.name,
+          code: s.team.code,
+          slot: s.team.slot,
+          W: s.wins,
+          L: s.losses,
+          T: s.ties,
+          RS: s.runsScored,
+          RA: s.runsAgainst,
+          diff: s.runDiff,
+        })),
+      }));
+  }
 
   pct(team: TeamStanding): string {
-    const total = team.W + team.L;
+    const total = team.W + team.L + team.T;
     if (total === 0) return '.000';
-    const val = team.W / total;
+    const val = (team.W + team.T / 2) / total;
     return val === 1 ? '1.000' : val.toFixed(3).replace('0.', '.');
   }
 
@@ -60,11 +125,12 @@ export class StandingsComponent {
     return diff % 1 === 0 ? diff.toString() : diff.toFixed(1);
   }
 
+  /**
+   * Standings already come sorted from the backend (wins desc, losses asc,
+   * runDiff desc, runsScored desc), so we just return the array as-is.
+   * Kept for template parity with the previous component.
+   */
   sortedTeams(teams: TeamStanding[]): TeamStanding[] {
-    return [...teams].sort((a, b) => {
-      const pctA = (a.W + a.L) > 0 ? a.W / (a.W + a.L) : 0;
-      const pctB = (b.W + b.L) > 0 ? b.W / (b.W + b.L) : 0;
-      return pctB - pctA || b.W - a.W;
-    });
+    return teams;
   }
 }
