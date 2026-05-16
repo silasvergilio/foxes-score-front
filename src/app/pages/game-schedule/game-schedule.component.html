@@ -104,15 +104,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="ls-code">{{ game.homeTeam?.code || 'H' }}</td>
-                <td class="ls-cell" *ngFor="let i of inningRange(game)">{{ inningRuns(game.homeInnings, i) }}</td>
-                <td class="ls-total" [class.win]="game.homeScore > game.awayScore">{{ game.homeScore }}</td>
-              </tr>
+              <!-- Baseball convention: away (visitor) on top, home on bottom. -->
               <tr>
                 <td class="ls-code">{{ game.awayTeam?.code || 'A' }}</td>
                 <td class="ls-cell" *ngFor="let i of inningRange(game)">{{ inningRuns(game.awayInnings, i) }}</td>
                 <td class="ls-total" [class.win]="game.awayScore > game.homeScore">{{ game.awayScore }}</td>
+              </tr>
+              <tr>
+                <td class="ls-code">{{ game.homeTeam?.code || 'H' }}</td>
+                <td class="ls-cell" *ngFor="let i of inningRange(game)">{{ inningRuns(game.homeInnings, i) }}</td>
+                <td class="ls-total" [class.win]="game.homeScore > game.awayScore">{{ game.homeScore }}</td>
               </tr>
             </tbody>
           </table>

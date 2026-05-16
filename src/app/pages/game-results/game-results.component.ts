@@ -9,7 +9,7 @@ import { ApiService } from '../../services/api.service';
 import { LoaderService } from '../../services/loader.service';
 
 const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2026';
-const INNINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const MIN_INNING_COLUMNS = 9;
 
 @Component({
   selector: 'app-game-results',
@@ -26,7 +26,6 @@ const INNINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GameResultsComponent implements OnInit {
-  innings = INNINGS;
   tournament = DEFAULT_TOURNAMENT;
 
   /**
@@ -106,12 +105,25 @@ export class GameResultsComponent implements OnInit {
   }
 
   /**
-   * Placeholder inning row: backend only stores totals (homeScore /
-   * awayScore), not per-inning runs. We render zeros for innings 1-9
-   * so the scoreboard layout stays intact; the real total goes in R.
+   * Number of inning columns to render. Always at least 9; grows if a
+   * game went to extras and either team has runs recorded past inning 9.
    */
-  inningCells(_total: number): number[] {
-    return INNINGS.map(() => 0);
+  inningRange(game: Game): number[] {
+    const recorded = Math.max(
+      game.homeInnings?.length ?? 0,
+      game.awayInnings?.length ?? 0
+    );
+    const total = Math.max(MIN_INNING_COLUMNS, recorded);
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  /**
+   * One cell per inning column. Returns the recorded run count for that
+   * inning, or null when no data has been entered yet (rendered blank).
+   */
+  inningCells(game: Game, side: 'home' | 'away'): (number | null)[] {
+    const arr = side === 'home' ? game.homeInnings : game.awayInnings;
+    return this.inningRange(game).map((n) => arr?.[n - 1] ?? null);
   }
 
   fieldDisplayName(field: string | undefined): string {
