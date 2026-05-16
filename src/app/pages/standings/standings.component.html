@@ -12,8 +12,21 @@
     </div>
   </div>
 
+  <!-- Loading state -->
+  <div class="page-state" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Carregando classificação…</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="page-state" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-flat-button color="primary" (click)="fetch()">Tentar novamente</button>
+  </div>
+
   <!-- Groups Grid -->
-  <div class="groups-section">
+  <div class="groups-section" *ngIf="!loading && !error">
     <div class="group-card" *ngFor="let group of groups">
 
       <!-- Group Header -->
