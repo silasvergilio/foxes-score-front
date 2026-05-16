@@ -174,28 +174,6 @@
   flex-shrink: 0;
 }
 
-.team-logo {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  object-fit: contain;
-  background: #ffffff;
-  padding: 2px;
-  border: 1px solid rgba(0, 45, 114, 0.1);
-  flex-shrink: 0;
-
-  &.placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 800;
-    color: #002d72;
-    background: #e6eeff;
-    padding: 0;
-  }
-}
-
 .team-name-text {
   flex: 1;
   font-size: 14px;
@@ -286,17 +264,6 @@
 
 .team-code {
   letter-spacing: 0.3px;
-}
-
-.mini-logo {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  object-fit: contain;
-  background: #ffffff;
-  padding: 1px;
-  border: 1px solid rgba(0, 45, 114, 0.08);
-  flex-shrink: 0;
 }
 
 .vs-badge {

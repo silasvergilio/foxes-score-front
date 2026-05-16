@@ -136,35 +136,6 @@
   }
 }
 
-.team-card-logo {
-  flex-shrink: 0;
-  width: 52px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f4f8;
-  border-radius: 10px;
-  overflow: hidden;
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-}
-
-.logo-placeholder {
-  font-size: 16px;
-  font-weight: 800;
-  color: #002d72;
-  letter-spacing: 0.5px;
-
-  &.large {
-    font-size: 28px;
-  }
-}
-
 .team-card-body {
   flex: 1;
   min-width: 0;
@@ -255,25 +226,6 @@
   padding: 1.25rem 1.5rem;
   background: linear-gradient(135deg, #001a4d 0%, #002d72 100%);
   color: #ffffff;
-}
-
-.detail-logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  flex-shrink: 0;
-  padding: 6px;
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
 }
 
 .detail-header-info {
@@ -548,11 +500,6 @@
   .detail-header {
     flex-wrap: wrap;
     padding: 1rem 1.25rem;
-  }
-
-  .detail-logo {
-    width: 56px;
-    height: 56px;
   }
 
   .detail-name {

@@ -36,10 +36,6 @@
         [class.selected]="selectedTeam?._id === team._id"
         (click)="selectTeam(team)"
       >
-        <div class="team-card-logo">
-          <img *ngIf="team.imageFile" [src]="imagePath(team)" [alt]="team.name" />
-          <div *ngIf="!team.imageFile" class="logo-placeholder">{{ initials(team.name) }}</div>
-        </div>
         <div class="team-card-body">
           <div class="team-card-code">{{ team.code }}</div>
           <h3 class="team-card-name">{{ team.name }}</h3>
@@ -60,10 +56,6 @@
     <div class="team-detail" *ngIf="selectedTeam">
 
       <div class="detail-header">
-        <div class="detail-logo">
-          <img *ngIf="selectedTeam.imageFile" [src]="imagePath(selectedTeam)" [alt]="selectedTeam.name" />
-          <div *ngIf="!selectedTeam.imageFile" class="logo-placeholder large">{{ initials(selectedTeam.name) }}</div>
-        </div>
         <div class="detail-header-info">
           <div class="detail-code">{{ selectedTeam.code }}</div>
           <h2 class="detail-name">{{ selectedTeam.name }}</h2>

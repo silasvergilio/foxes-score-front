@@ -96,19 +96,6 @@ export class TeamsComponent implements OnInit {
     });
   }
 
-  imagePath(team: Team): string {
-    return team.imageFile ? team.imageFile : 'foxes.png';
-  }
-
-  initials(name: string): string {
-    return name
-      .split(' ')
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((s) => s[0]?.toUpperCase() ?? '')
-      .join('');
-  }
-
   headCoaches(coaches?: Coach[]): Coach[] {
     return (coaches ?? []).filter((c) => c.role === 'head');
   }

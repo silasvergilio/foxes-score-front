@@ -110,22 +110,6 @@ export class GameScheduleComponent implements OnInit {
     return `${day} · ${time}`;
   }
 
-  initials(name: string | undefined): string {
-    if (!name) return '?';
-    return name
-      .split(' ')
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((s) => s[0]?.toUpperCase() ?? '')
-      .join('');
-  }
-
-  teamLogo(team: Team | undefined): string | null {
-    if (!team?.imageFile) return null;
-    const file = team.imageFile.includes('.') ? team.imageFile : `${team.imageFile}.png`;
-    return file;
-  }
-
   trackById(_: number, item: { _id: string }): string {
     return item._id;
   }

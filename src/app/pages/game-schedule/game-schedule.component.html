@@ -49,13 +49,6 @@
 
         <div class="team-row" *ngFor="let team of group.teams; trackBy: trackById">
           <span class="seed">{{ team.slot }}</span>
-          <img
-            *ngIf="teamLogo(team) as logo"
-            [src]="logo"
-            [alt]="team.name"
-            class="team-logo"
-          />
-          <span *ngIf="!teamLogo(team)" class="team-logo placeholder">{{ initials(team.name) }}</span>
           <span class="team-name-text">{{ team.name }}</span>
         </div>
       </div>
@@ -78,7 +71,6 @@
 
           <div class="matchup">
             <div class="match-team">
-              <img *ngIf="teamLogo(game.homeTeam) as logo" [src]="logo" [alt]="game.homeTeam?.name" class="mini-logo" />
               <span class="team-code">{{ game.homeTeam?.code || '?' }}</span>
             </div>
 
@@ -93,7 +85,6 @@
 
             <div class="match-team away">
               <span class="team-code">{{ game.awayTeam?.code || '?' }}</span>
-              <img *ngIf="teamLogo(game.awayTeam) as logo" [src]="logo" [alt]="game.awayTeam?.name" class="mini-logo" />
             </div>
           </div>
 
