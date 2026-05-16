@@ -10,6 +10,11 @@ import { GameScheduleComponent } from './pages/game-schedule/game-schedule.compo
 import { StandingsComponent } from './pages/standings/standings.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'teams',
+    pathMatch: 'full',
+  },
   // {
   //   path: 'game-view',
   //   component: GameScoreComponent,
@@ -48,6 +53,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'game-view',
+    redirectTo: 'teams',
   },
 ];
