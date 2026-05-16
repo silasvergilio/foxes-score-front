@@ -20,6 +20,9 @@ export interface Game {
   awayTeam: Team;
   homeScore: number;
   awayScore: number;
+  /** Runs per inning; index 0 = inning 1. Empty until innings are recorded. */
+  homeInnings?: number[];
+  awayInnings?: number[];
   status: GameStatus;
   inning?: number;
   inningHalf?: InningHalf;

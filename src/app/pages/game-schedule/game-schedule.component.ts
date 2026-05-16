@@ -128,6 +128,33 @@ export class GameScheduleComponent implements OnInit {
     }
   }
 
+  /**
+   * Number of innings to render in the linescore strip for this game.
+   * Uses the longer of homeInnings/awayInnings; falls back to current
+   * `inning` for in-progress games when no per-inning data has been
+   * recorded yet.
+   */
+  inningCount(game: Game): number {
+    const h = game.homeInnings?.length ?? 0;
+    const a = game.awayInnings?.length ?? 0;
+    return Math.max(h, a);
+  }
+
+  /** Returns runs for an inning (1-indexed), or 0 if not recorded. */
+  inningRuns(arr: number[] | undefined, inning: number): number {
+    return arr?.[inning - 1] ?? 0;
+  }
+
+  hasLinescore(game: Game): boolean {
+    return this.inningCount(game) > 0;
+  }
+
+  // Used by the template to iterate "1..n" without a pipe.
+  inningRange(game: Game): number[] {
+    const n = this.inningCount(game);
+    return Array.from({ length: n }, (_, i) => i + 1);
+  }
+
   formatGameDate(iso: string | undefined): string {
     if (!iso) return 'A Definir';
     const d = new Date(iso);
