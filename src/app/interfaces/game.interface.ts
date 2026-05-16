@@ -12,9 +12,10 @@ export type InningHalf = 'top' | 'bottom';
 export interface Game {
   _id: string;
   tournament: string;
-  date: string;
+  date?: string;
   field?: string;
   location?: string;
+  round?: number;
   homeTeam: Team;
   awayTeam: Team;
   homeScore: number;

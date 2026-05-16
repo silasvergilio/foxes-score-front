@@ -91,9 +91,22 @@ export class GameScheduleComponent implements OnInit {
         .filter((t) => t.group === id)
         .sort((a, b) => (a.slot ?? '').localeCompare(b.slot ?? ''));
 
+      // Match backend's sort order: round -> field -> date.
+      // Backend already returns games in this order; we keep the sort
+      // explicit on the client in case a future API caches/proxies it.
       const groupGames = games
         .filter((g) => groupOf(g.homeTeam?._id) === id)
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        .sort((a, b) => {
+          const ra = a.round ?? Number.MAX_SAFE_INTEGER;
+          const rb = b.round ?? Number.MAX_SAFE_INTEGER;
+          if (ra !== rb) return ra - rb;
+          const fa = a.field ?? '';
+          const fb = b.field ?? '';
+          if (fa !== fb) return fa.localeCompare(fb);
+          const da = a.date ? new Date(a.date).getTime() : Number.MAX_SAFE_INTEGER;
+          const db = b.date ? new Date(b.date).getTime() : Number.MAX_SAFE_INTEGER;
+          return da - db;
+        });
 
       return {
         id,
@@ -115,7 +128,7 @@ export class GameScheduleComponent implements OnInit {
     }
   }
 
-  formatGameDate(iso: string): string {
+  formatGameDate(iso: string | undefined): string {
     if (!iso) return 'A Definir';
     const d = new Date(iso);
     if (isNaN(d.getTime())) return 'A Definir';
