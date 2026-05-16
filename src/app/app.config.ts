@@ -12,7 +12,7 @@ import { provideHttpClient } from '@angular/common/http';
 const config: SocketIoConfig = {
   url: window.location.hostname === 'localhost'
     ? 'http://localhost:3000'
-    : 'https://foxes-score-backend-601c21db8b30.herokuapp.com',
+    : 'https://foxes-score-backend-19a6f4f9b2c5.herokuapp.com',
   options: {
     reconnectionDelay: 1000,
     reconnection: true,
