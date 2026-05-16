@@ -12,7 +12,7 @@ export class ApiService {
     if (window.location.hostname === 'localhost') {
       this.baseUrl = 'http://localhost:3000';
     } else {
-      this.baseUrl = 'https://foxes-score-backend-601c21db8b30.herokuapp.com'; // <-- coloque aqui sua URL de produção
+      this.baseUrl = 'https://foxes-score-backend-19a6f4f9b2c5.herokuapp.com'; // <-- coloque aqui sua URL de produção
     }
   }
 
