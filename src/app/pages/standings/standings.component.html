@@ -49,7 +49,7 @@
           <div class="stat-col header-cell" title="Derrotas">D</div>
           <div
             class="stat-col header-cell"
-            matTooltip="TQB = (runs anotadas / innings atacando) ÷ (runs sofridas / innings defendendo)"
+            matTooltip="TQB = (runs anotadas / innings atacando) − (runs sofridas / innings defendendo)"
             matTooltipPosition="above"
           >TQB</div>
           <div class="stat-col header-cell" title="Runs anotadas">CA</div>
@@ -90,8 +90,8 @@
           <li>Menos derrotas</li>
           <li>
             <strong>TQB</strong> — Team Quality Balance:
-            <code>(CA / innings atacando) ÷ (CS / innings defendendo)</code>.
-            Maior é melhor.
+            <code>(CA / innings atacando) − (CS / innings defendendo)</code>.
+            Maior é melhor (valores negativos são possíveis).
           </li>
           <li>Runs anotadas (CA)</li>
         </ol>
