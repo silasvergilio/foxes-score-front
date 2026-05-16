@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService } from '../../services/api.service';
 import { LoaderService } from '../../services/loader.service';
 
@@ -46,7 +47,13 @@ const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2026';
 @Component({
   selector: 'app-standings',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+  ],
   templateUrl: './standings.component.html',
   styleUrl: './standings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
