@@ -9,15 +9,15 @@ interface TeamStanding {
 }
 
 interface GroupStanding {
-  letter: string;
+  id: string;
   label: string;
   teams: TeamStanding[];
 }
 
 const STANDINGS_DATA: GroupStanding[] = [
   {
-    letter: 'A',
-    label: 'Grupo A',
+    id: '1',
+    label: 'Grupo 1',
     teams: [
       { name: 'A Definir', W: 0, L: 0 },
       { name: 'A Definir', W: 0, L: 0 },
@@ -26,8 +26,8 @@ const STANDINGS_DATA: GroupStanding[] = [
     ]
   },
   {
-    letter: 'B',
-    label: 'Grupo B',
+    id: '2',
+    label: 'Grupo 2',
     teams: [
       { name: 'A Definir', W: 0, L: 0 },
       { name: 'A Definir', W: 0, L: 0 },
