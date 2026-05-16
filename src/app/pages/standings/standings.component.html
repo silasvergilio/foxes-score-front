@@ -62,7 +62,9 @@
               <span
                 *ngIf="tiebreakerReason(sortedTeams(group.teams), i) as reason"
                 class="tiebreak-mark"
-                [title]="'Desempate: ' + reason"
+                [matTooltip]="'Desempate: ' + reason"
+                matTooltipPosition="above"
+                aria-label="Equipe classificada por critério de desempate"
               >★</span>
             </div>
             <div class="team-col team-name-cell">{{ team.name }}</div>
@@ -91,7 +93,7 @@
         </ol>
         <p class="legend-note">
           <span class="tiebreak-mark">★</span>
-          indica equipe classificada por critério de desempate (passe o cursor para ver qual).
+          indica equipe classificada por critério de desempate (toque ou passe o cursor para ver qual).
         </p>
       </div>
     </div>
