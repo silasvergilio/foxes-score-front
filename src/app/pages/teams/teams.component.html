@@ -109,7 +109,7 @@
           <div>
             <span class="info-label">Técnico</span>
             <span class="info-value" *ngFor="let c of headCoaches(selectedTeam.coaches)">
-              {{ c.name }}<span class="phone" *ngIf="c.phone"> · {{ c.phone }}</span>
+              {{ c.name }}
             </span>
           </div>
         </div>
@@ -119,7 +119,7 @@
           <div>
             <span class="info-label">Auxiliares</span>
             <span class="info-value" *ngFor="let c of assistantCoaches(selectedTeam.coaches)">
-              {{ c.name }}<span class="phone" *ngIf="c.phone"> · {{ c.phone }}</span>
+              {{ c.name }}
             </span>
           </div>
         </div>
