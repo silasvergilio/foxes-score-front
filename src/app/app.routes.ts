@@ -8,6 +8,7 @@ import { GameResultsComponent } from './pages/game-results/game-results.componen
 import { TeamsComponent } from './pages/teams/teams.component';
 import { GameScheduleComponent } from './pages/game-schedule/game-schedule.component';
 import { StandingsComponent } from './pages/standings/standings.component';
+import { BracketComponent } from './pages/bracket/bracket.component';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,10 @@ export const routes: Routes = [
   {
     path: 'standings',
     component: StandingsComponent,
+  },
+  {
+    path: 'bracket',
+    component: BracketComponent,
   },
   {
     path: 'add-game',

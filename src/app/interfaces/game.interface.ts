@@ -18,8 +18,13 @@ export interface Game {
   round?: number;
   /** Optional link to a live broadcast (YouTube/Twitch/etc). */
   broadcastUrl?: string;
-  homeTeam: Team;
-  awayTeam: Team;
+  /** Tournament phase. "group" during groups; "gold"/"silver"/"bronze" after. */
+  bracket?: 'group' | 'gold' | 'silver' | 'bronze';
+  /** Within a bracket: "semi" / "final" / "third" (third-place match). */
+  bracketStage?: 'semi' | 'final' | 'third';
+  /** May be null for placeholder bracket games (e.g. Final before semis end). */
+  homeTeam: Team | null;
+  awayTeam: Team | null;
   homeScore: number;
   awayScore: number;
   /** Runs per inning; index 0 = inning 1. Empty until innings are recorded. */

@@ -47,7 +47,11 @@
           <div class="team-col header-cell">Equipe</div>
           <div class="stat-col header-cell" title="Vitórias">V</div>
           <div class="stat-col header-cell" title="Derrotas">D</div>
-          <div class="stat-col header-cell" title="Saldo de runs (anotadas − sofridas)">SR</div>
+          <div
+            class="stat-col header-cell"
+            matTooltip="TQB = (runs anotadas / innings atacando) ÷ (runs sofridas / innings defendendo)"
+            matTooltipPosition="above"
+          >TQB</div>
           <div class="stat-col header-cell" title="Runs anotadas">CA</div>
           <div class="stat-col header-cell" title="Aproveitamento">PCT</div>
         </div>
@@ -70,11 +74,7 @@
             <div class="team-col team-name-cell">{{ team.name }}</div>
             <div class="stat-col stat-cell wins">{{ team.W }}</div>
             <div class="stat-col stat-cell losses">{{ team.L }}</div>
-            <div
-              class="stat-col stat-cell diff"
-              [class.diff-pos]="team.diff > 0"
-              [class.diff-neg]="team.diff < 0"
-            >{{ formatDiff(team.diff) }}</div>
+            <div class="stat-col stat-cell tqb">{{ formatTQB(team) }}</div>
             <div class="stat-col stat-cell rs">{{ team.RS }}</div>
             <div class="stat-col stat-cell pct">{{ pct(team) }}</div>
           </div>
@@ -88,7 +88,11 @@
         <ol>
           <li>Mais vitórias</li>
           <li>Menos derrotas</li>
-          <li>Saldo de runs (SR)</li>
+          <li>
+            <strong>TQB</strong> — Team Quality Balance:
+            <code>(CA / innings atacando) ÷ (CS / innings defendendo)</code>.
+            Maior é melhor.
+          </li>
           <li>Runs anotadas (CA)</li>
         </ol>
         <p class="legend-note">
