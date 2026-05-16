@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject, Subscription } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
-import { Socket } from 'ngx-socket-io';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -34,7 +25,7 @@ const INNINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   styleUrl: './game-results.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameResultsComponent implements OnInit, OnDestroy {
+export class GameResultsComponent implements OnInit {
   innings = INNINGS;
   tournament = DEFAULT_TOURNAMENT;
 
@@ -54,50 +45,20 @@ export class GameResultsComponent implements OnInit, OnDestroy {
   loading = false;
   error = '';
 
-  /** Coalesces rapid socket events so we don't refetch on every PUT. */
-  private refresh$ = new Subject<void>();
-  private subs = new Subscription();
-
   constructor(
     private api: ApiService,
     private loader: LoaderService,
-    private socket: Socket,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // Coalesce a burst of updates (e.g. inning advances, status flips)
-    // into one refetch per 500ms window.
-    this.subs.add(
-      this.refresh$.pipe(auditTime(500)).subscribe(() => this.fetch())
-    );
-
-    // Backend emits `gameUpdate` whenever PUT /game runs — status flips,
-    // score changes, etc. Each emission triggers a refetch via refresh$.
-    this.subs.add(
-      this.socket.fromEvent('gameUpdate').subscribe(() => {
-        this.refresh$.next();
-      })
-    );
-
     this.fetch();
   }
 
-  ngOnDestroy() {
-    this.subs.unsubscribe();
-    this.refresh$.complete();
-  }
-
   fetch() {
-    // Silent refresh: don't flicker the spinner / loader overlay when a
-    // socket event triggers a refetch — keep the existing scoreboards
-    // visible until new data arrives.
-    const silent = this.featured.length > 0;
-    if (!silent) {
-      this.loading = true;
-      this.loader.start();
-    }
+    this.loading = true;
     this.error = '';
+    this.loader.start();
 
     this.api
       .get<Game[]>(
@@ -107,16 +68,14 @@ export class GameResultsComponent implements OnInit, OnDestroy {
         next: (games) => {
           this.featured = this.pickNextPerField(games ?? []);
           this.loading = false;
-          if (!silent) this.loader.stop();
+          this.loader.stop();
           this.cdr.markForCheck();
         },
         error: (err) => {
           console.error('Erro ao carregar jogos', err);
-          if (!silent) {
-            this.error = 'Não foi possível carregar os jogos.';
-          }
+          this.error = 'Não foi possível carregar os jogos.';
           this.loading = false;
-          if (!silent) this.loader.stop();
+          this.loader.stop();
           this.cdr.markForCheck();
         },
       });
@@ -127,8 +86,8 @@ export class GameResultsComponent implements OnInit, OnDestroy {
    * Backend returns games sorted by { round, field, date }, so first
    * non-finished occurrence per field == next up on that field.
    *
-   * When a game transitions finished, it drops out and the next round's
-   * game on that field surfaces automatically on the next refetch.
+   * When a game transitions to finished, it'll drop off and the next
+   * round's game on that field surfaces on the next page load.
    */
   private pickNextPerField(games: Game[]): Game[] {
     const seen = new Map<string, Game>();
