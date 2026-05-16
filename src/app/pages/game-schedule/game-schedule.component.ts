@@ -10,14 +10,14 @@ import { ApiService } from '../../services/api.service';
 import { LoaderService } from '../../services/loader.service';
 
 interface ScheduleGroup {
-  letter: string;
+  id: string;
   label: string;
   teams: Team[];
   games: Game[];
 }
 
-const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2025';
-const GROUP_LETTERS = ['A', 'B'];
+const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2026';
+const GROUP_IDS = ['1', '2'];
 
 @Component({
   selector: 'app-game-schedule',
@@ -72,18 +72,32 @@ export class GameScheduleComponent implements OnInit {
   }
 
   private buildGroups(teams: Team[], games: Game[]): ScheduleGroup[] {
-    return GROUP_LETTERS.map((letter) => {
+    // Source of truth for grouping is team.group (string "1" | "2").
+    // The /game/schedule endpoint populates homeTeam/awayTeam with a
+    // limited selection that doesn't include `group`, so we look it up
+    // from the teams response.
+    const teamById = new Map<string, Team>();
+    for (const t of teams) {
+      teamById.set(t._id, t);
+    }
+
+    const groupOf = (teamId: string | undefined): string | undefined => {
+      if (!teamId) return undefined;
+      return teamById.get(teamId)?.group;
+    };
+
+    return GROUP_IDS.map((id) => {
       const groupTeams = teams
-        .filter((t) => (t.slot ?? '').startsWith(letter))
+        .filter((t) => t.group === id)
         .sort((a, b) => (a.slot ?? '').localeCompare(b.slot ?? ''));
 
       const groupGames = games
-        .filter((g) => (g.homeTeam?.slot ?? '').startsWith(letter))
+        .filter((g) => groupOf(g.homeTeam?._id) === id)
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
       return {
-        letter,
-        label: `Grupo ${letter}`,
+        id,
+        label: `Grupo ${id}`,
         teams: groupTeams,
         games: groupGames,
       };
@@ -115,6 +129,6 @@ export class GameScheduleComponent implements OnInit {
   }
 
   trackGroup(_: number, item: ScheduleGroup): string {
-    return item.letter;
+    return item.id;
   }
 }
