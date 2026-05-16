@@ -46,7 +46,7 @@
         <div class="header-right">
           <span class="status-badge" [class]="game.status">{{ statusLabel(game.status) }}</span>
           <a
-            *ngIf="game.status === 'live' && broadcastFor(game.field) as url"
+            *ngIf="game.status === 'live' && broadcastFor(game) as url"
             class="transmission-button"
             [href]="url"
             target="_blank"
