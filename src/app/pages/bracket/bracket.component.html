@@ -1,0 +1,123 @@
+<div class="bracket-page">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>military_tech</mat-icon>
+        <span>{{ tournament }}</span>
+      </div>
+      <h1 class="hero-title">Eliminatórias</h1>
+      <p class="hero-subtitle">Chaves Ouro, Prata e Bronze</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="page-state" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Carregando chaves…</p>
+  </div>
+
+  <!-- Error -->
+  <div class="page-state" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-flat-button color="primary" (click)="fetch()">Tentar novamente</button>
+  </div>
+
+  <!-- Brackets -->
+  <div class="brackets-section" *ngIf="!loading && !error">
+
+    <!-- ────────── Chave Ouro ────────── -->
+    <section class="bracket-card gold">
+      <header class="bracket-header">
+        <span class="bracket-pill gold">🥇 Chave Ouro</span>
+        <span class="bracket-field">Campo 1</span>
+      </header>
+
+      <div class="gold-tree">
+
+        <div class="tree-col semis">
+          <p class="col-label">Semifinais</p>
+          <div class="match-card" *ngFor="let g of goldSemis; trackBy: trackById">
+            <ng-container *ngTemplateOutlet="matchTemplate; context: { $implicit: g }"></ng-container>
+          </div>
+        </div>
+
+        <div class="tree-col final">
+          <p class="col-label">Final</p>
+          <div class="match-card final-card">
+            <ng-container *ngTemplateOutlet="matchTemplate; context: { $implicit: goldFinal }"></ng-container>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3rd place sits under the tree, visually separated -->
+      <div class="third-place" *ngIf="goldThird">
+        <p class="col-label">Disputa de 3º lugar</p>
+        <div class="match-card">
+          <ng-container *ngTemplateOutlet="matchTemplate; context: { $implicit: goldThird }"></ng-container>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────── Chave Prata ────────── -->
+    <section class="bracket-card silver">
+      <header class="bracket-header">
+        <span class="bracket-pill silver">🥈 Chave Prata</span>
+        <span class="bracket-field">Campo 3</span>
+      </header>
+      <div class="match-card single">
+        <ng-container *ngTemplateOutlet="matchTemplate; context: { $implicit: silver }"></ng-container>
+      </div>
+    </section>
+
+    <!-- ────────── Chave Bronze ────────── -->
+    <section class="bracket-card bronze">
+      <header class="bracket-header">
+        <span class="bracket-pill bronze">🥉 Chave Bronze</span>
+        <span class="bracket-field">Campo 3</span>
+      </header>
+      <div class="match-card single">
+        <ng-container *ngTemplateOutlet="matchTemplate; context: { $implicit: bronze }"></ng-container>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Single match template, shared across all brackets -->
+  <ng-template #matchTemplate let-g>
+    <ng-container *ngIf="g; else empty">
+      <div class="match-row">
+        <span class="team-side away">
+          <span class="team-code">{{ g.awayTeam?.code || 'TBD' }}</span>
+          <span class="team-name">{{ g.awayTeam?.name || 'A definir' }}</span>
+        </span>
+        <span class="score" *ngIf="g.status !== 'scheduled'; else vsTpl">
+          {{ scoreLine(g) }}
+        </span>
+        <ng-template #vsTpl><span class="vs-badge">VS</span></ng-template>
+        <span class="team-side home">
+          <span class="team-code">{{ g.homeTeam?.code || 'TBD' }}</span>
+          <span class="team-name">{{ g.homeTeam?.name || 'A definir' }}</span>
+        </span>
+      </div>
+      <div class="match-meta">
+        <span class="status-tag" [class]="g.status">{{ statusLabel(g) }}</span>
+      </div>
+    </ng-container>
+    <ng-template #empty>
+      <div class="match-row empty">
+        <span class="team-side away">
+          <span class="team-code">TBD</span>
+        </span>
+        <span class="vs-badge">VS</span>
+        <span class="team-side home">
+          <span class="team-code">TBD</span>
+        </span>
+      </div>
+    </ng-template>
+  </ng-template>
+
+</div>

@@ -17,6 +17,14 @@ interface TeamStanding {
   RS: number;
   RA: number;
   diff: number;
+  /**
+   * Team Quality Balance = (runsScored / inningsBatted) / (runsAgainst / inningsFielded).
+   * `null` when the value can't be expressed as a finite number — either the
+   * team hasn't played yet (also indicated by RA === 0 && gamesPlayed === 0)
+   * or it has played but allowed 0 runs (RA === 0 && gamesPlayed > 0, infinite TQB).
+   */
+  TQB: number | null;
+  gamesPlayed: number;
 }
 
 interface GroupStanding {
@@ -34,6 +42,10 @@ interface ApiStanding {
   runsScored: number;
   runsAgainst: number;
   runDiff: number;
+  inningsBatted: number;
+  inningsFielded: number;
+  /** Comes through as null when the backend computed Infinity (RA === 0). */
+  tqb: number | null;
   winPct: number;
 }
 
@@ -115,6 +127,8 @@ export class StandingsComponent implements OnInit {
           RS: s.runsScored,
           RA: s.runsAgainst,
           diff: s.runDiff,
+          TQB: s.tqb,
+          gamesPlayed: s.gamesPlayed,
         })),
       }));
   }
@@ -152,9 +166,20 @@ export class StandingsComponent implements OnInit {
     const team = teams[i];
     const above = teams[i - 1];
     if (above.W !== team.W || above.L !== team.L) return null;
-    if (above.diff !== team.diff) return 'Saldo de runs';
+    if ((above.TQB ?? 0) !== (team.TQB ?? 0)) return 'TQB';
     if (above.RS !== team.RS) return 'Runs anotadas';
     return 'Critério adicional';
+  }
+
+  /** Formats a TQB ratio: "1.833", "∞" (RA = 0 after at least one game), or "—". */
+  formatTQB(team: TeamStanding): string {
+    if (team.TQB == null) {
+      // Infinity round-tripped through JSON. Distinguish "no games" from
+      // "played but never gave up a run" using RA + gamesPlayed.
+      if (team.gamesPlayed > 0 && team.RA === 0) return '∞';
+      return '—';
+    }
+    return team.TQB.toFixed(3);
   }
 
   /**

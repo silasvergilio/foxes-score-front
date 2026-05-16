@@ -246,17 +246,11 @@
     font-size: 13px;
   }
 
-  &.diff {
-    color: #6b7280;
+  &.tqb {
+    color: #002d72;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
-  }
-
-  &.diff-pos {
-    color: #166534;
-  }
-
-  &.diff-neg {
-    color: #b91c1c;
+    font-size: 13px;
   }
 
   &.rs {
