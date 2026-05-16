@@ -67,7 +67,7 @@
         </div>
 
         <div class="game-row" *ngFor="let game of group.games; let gi = index; trackBy: trackById">
-          <div class="round-pill">R{{ gi + 1 }}</div>
+          <div class="round-pill">R{{ game.round ?? gi + 1 }}</div>
 
           <div class="matchup">
             <div class="match-team">
