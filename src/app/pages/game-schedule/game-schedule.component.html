@@ -93,6 +93,29 @@
             <span class="status-tag" [class]="game.status">{{ statusLabel(game.status) }}</span>
             <span class="field-tag" *ngIf="game.field">{{ game.field }}</span>
           </div>
+
+          <!-- Linescore: runs per inning. Renders once innings have been recorded. -->
+          <table class="linescore" *ngIf="hasLinescore(game)">
+            <thead>
+              <tr>
+                <th class="ls-code"></th>
+                <th class="ls-inning" *ngFor="let i of inningRange(game)">{{ i }}</th>
+                <th class="ls-total">R</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="ls-code">{{ game.homeTeam?.code || 'H' }}</td>
+                <td class="ls-cell" *ngFor="let i of inningRange(game)">{{ inningRuns(game.homeInnings, i) }}</td>
+                <td class="ls-total" [class.win]="game.homeScore > game.awayScore">{{ game.homeScore }}</td>
+              </tr>
+              <tr>
+                <td class="ls-code">{{ game.awayTeam?.code || 'A' }}</td>
+                <td class="ls-cell" *ngFor="let i of inningRange(game)">{{ inningRuns(game.awayInnings, i) }}</td>
+                <td class="ls-total" [class.win]="game.awayScore > game.homeScore">{{ game.awayScore }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
