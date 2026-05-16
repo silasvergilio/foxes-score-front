@@ -16,6 +16,8 @@ export interface Game {
   field?: string;
   location?: string;
   round?: number;
+  /** Optional link to a live broadcast (YouTube/Twitch/etc). */
+  broadcastUrl?: string;
   homeTeam: Team;
   awayTeam: Team;
   homeScore: number;

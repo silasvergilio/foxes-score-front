@@ -30,16 +30,6 @@ export class GameResultsComponent implements OnInit {
   tournament = DEFAULT_TOURNAMENT;
 
   /**
-   * Broadcast URLs keyed by field name. The Transmissão button only
-   * renders for a field that has a URL configured here. Set the field's
-   * name exactly as it appears on the Game document (game.field).
-   */
-  broadcastUrls: Record<string, string> = {
-    // 'Field 1': 'https://www.youtube.com/...',
-    // 'Field 2': 'https://www.twitch.tv/...',
-  };
-
-  /**
    * Display-name overrides for the field shown on each card. Backend
    * stores the raw field name (e.g. "Field 2"), but the venue's
    * physical fields are numbered Campo 1 and Campo 3 (Campo 2 doesn't
@@ -129,9 +119,8 @@ export class GameResultsComponent implements OnInit {
     return this.fieldNameMap[field] ?? field;
   }
 
-  broadcastFor(field: string | undefined): string | null {
-    if (!field) return null;
-    return this.broadcastUrls[field] ?? null;
+  broadcastFor(game: Game): string | null {
+    return game.broadcastUrl?.trim() || null;
   }
 
   statusLabel(status: GameStatus | string | undefined): string {
