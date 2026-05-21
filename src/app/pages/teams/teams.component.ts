@@ -82,7 +82,7 @@ export class TeamsComponent implements OnInit {
     this.api.get<Player[]>(`teams/${team._id}/players`).subscribe({
       next: (players) => {
         this.roster = (players ?? []).sort(
-          (a, b) => (a.rosterNumber ?? a.jerseyNumber) - (b.rosterNumber ?? b.jerseyNumber)
+          (a, b) => (a.rosterNumber ?? a.jerseyNumber ?? 999) - (b.rosterNumber ?? b.jerseyNumber ?? 999)
         );
         this.loadingRoster = false;
         this.cdr.markForCheck();

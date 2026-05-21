@@ -8,232 +8,414 @@
         <span>Taça Brasil Amador</span>
       </div>
       <h1 class="hero-title">Estatísticas</h1>
+      <p class="hero-subtitle">Líderes da competição e stats por time</p>
     </div>
   </div>
 
+  <!-- Loading -->
+  <div class="page-state" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Carregando estatísticas…</p>
+  </div>
+
+  <!-- Error -->
+  <div class="page-state" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
   <!-- Content -->
-  <div class="stats-content">
+  <div class="stats-content" *ngIf="!loading && !error && stats">
 
-    <mat-form-field class="select-input" appearance="outline">
-      <mat-label>Time</mat-label>
-      <mat-select>
-        <mat-option value="one">Foxes</mat-option>
-        <mat-option value="two">White Tigers</mat-option>
-        <mat-option value="three">UnderDogs</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <mat-tab-group class="main-tabs" animationDuration="200ms">
 
-    <mat-tab-group class="stats-tabs">
-      <mat-tab label="Batting">
-        <div class="stats-table-wrapper">
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- ═══════════════════════════════════════════
+           TAB 1 — OVERALL LEADERS
+      ══════════════════════════════════════════════ -->
+      <mat-tab label="Líderes">
+        <div class="tab-body">
 
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Nome</th>
-              <td mat-cell *matCellDef="let element">{{ element.name | formatName }}</td>
-            </ng-container>
+          <!-- Pitching -->
+          <div class="section-card">
+            <div class="section-header">
+              <mat-icon>sports_baseball</mat-icon>
+              <div>
+                <h2>Melhores Arremessadores</h2>
+                <p class="section-note">Apenas arremessadores com IP &gt; {{ stats.thresholds.avg_ip }} (média da competição)</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table mat-table [dataSource]="stats.leaders.pitching">
+                <ng-container matColumnDef="medal">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let r; let i = index" class="medal-cell">{{ medal(i) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Nome</th>
+                  <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                </ng-container>
+                <ng-container matColumnDef="team">
+                  <th mat-header-cell *matHeaderCellDef>Time</th>
+                  <td mat-cell *matCellDef="let r" class="team-cell">{{ r.Team }}</td>
+                </ng-container>
+                <ng-container matColumnDef="ip">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Innings lançadas">IP</th>
+                  <td mat-cell *matCellDef="let r">{{ fmt(r.IP) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="k">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Strikeouts">K</th>
+                  <td mat-cell *matCellDef="let r">{{ r.K }}</td>
+                </ng-container>
+                <ng-container matColumnDef="k_ip">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Strikeouts por inning">K/IP</th>
+                  <td mat-cell *matCellDef="let r">{{ fmt(r.K_per_IP) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="h">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Hits sofridos">H</th>
+                  <td mat-cell *matCellDef="let r">{{ r.H }}</td>
+                </ng-container>
+                <ng-container matColumnDef="h_ip">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Hits sofridos por inning">H/IP</th>
+                  <td mat-cell *matCellDef="let r">{{ fmt(r.H_per_IP) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="era">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Earned Run Average (base 7 innings)">ERA</th>
+                  <td mat-cell *matCellDef="let r" class="highlight-cell">{{ fmt(r.ERA) }}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="pitchingCols"></tr>
+                <tr mat-row *matRowDef="let row; columns: pitchingCols;" [class.top-row]="stats.leaders.pitching.indexOf(row) === 0"></tr>
+              </table>
+            </div>
+          </div>
 
-            <ng-container matColumnDef="G">
-              <th mat-header-cell *matHeaderCellDef matTooltip="Jogos disputados">G</th>
-              <td mat-cell *matCellDef="let element">{{ element.G }}</td>
-            </ng-container>
+          <!-- Batting AVG -->
+          <div class="section-card">
+            <div class="section-header">
+              <mat-icon>sports_cricket</mat-icon>
+              <div>
+                <h2>Melhores Rebatedores</h2>
+                <p class="section-note">Apenas rebatedores com AB &gt; {{ stats.thresholds.avg_ab }} (média da competição) · Desempate: RBI</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table mat-table [dataSource]="stats.leaders.batting_avg">
+                <ng-container matColumnDef="medal">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let r; let i = index" class="medal-cell">{{ medal(i) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Nome</th>
+                  <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                </ng-container>
+                <ng-container matColumnDef="team">
+                  <th mat-header-cell *matHeaderCellDef>Time</th>
+                  <td mat-cell *matCellDef="let r" class="team-cell">{{ r.Team }}</td>
+                </ng-container>
+                <ng-container matColumnDef="ab">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Vezes ao bastão">AB</th>
+                  <td mat-cell *matCellDef="let r">{{ r.AB }}</td>
+                </ng-container>
+                <ng-container matColumnDef="h">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Hits">H</th>
+                  <td mat-cell *matCellDef="let r">{{ r.H }}</td>
+                </ng-container>
+                <ng-container matColumnDef="avg">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Média de rebatidas">AVG</th>
+                  <td mat-cell *matCellDef="let r" class="highlight-cell">{{ fmtAvg(r.AVG) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="rbi">
+                  <th mat-header-cell *matHeaderCellDef matTooltip="Runs batidas">RBI</th>
+                  <td mat-cell *matCellDef="let r">{{ r.RBI }}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="battingAvgCols"></tr>
+                <tr mat-row *matRowDef="let row; columns: battingAvgCols;" [class.top-row]="stats.leaders.batting_avg.indexOf(row) === 0"></tr>
+              </table>
+            </div>
+          </div>
 
-            <ng-container matColumnDef="PA">
-              <th mat-header-cell *matHeaderCellDef>PA</th>
-              <td mat-cell *matCellDef="let element">{{ element.PA }}</td>
-            </ng-container>
+          <!-- Bottom 3: RBI / Runs / SB side by side -->
+          <div class="three-col">
 
-            <ng-container matColumnDef="AB">
-              <th mat-header-cell *matHeaderCellDef>AB</th>
-              <td mat-cell *matCellDef="let element">{{ element.AB }}</td>
-            </ng-container>
+            <!-- RBI -->
+            <div class="section-card">
+              <div class="section-header compact">
+                <mat-icon>emoji_events</mat-icon>
+                <h2>Mais RBI</h2>
+              </div>
+              <div class="table-wrap">
+                <table mat-table [dataSource]="stats.leaders.rbi">
+                  <ng-container matColumnDef="medal">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let r; let i = index" class="medal-cell">{{ medal(i) }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="team">
+                    <th mat-header-cell *matHeaderCellDef>Time</th>
+                    <td mat-cell *matCellDef="let r" class="team-cell">{{ r.Team }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="rbi">
+                    <th mat-header-cell *matHeaderCellDef>RBI</th>
+                    <td mat-cell *matCellDef="let r" class="highlight-cell">{{ r.RBI }}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="rbiCols"></tr>
+                  <tr mat-row *matRowDef="let row; columns: rbiCols;" [class.top-row]="stats.leaders.rbi.indexOf(row) === 0"></tr>
+                </table>
+              </div>
+            </div>
 
-            <ng-container matColumnDef="R">
-              <th mat-header-cell *matHeaderCellDef>R</th>
-              <td mat-cell *matCellDef="let element">{{ element.R }}</td>
-            </ng-container>
+            <!-- Runs -->
+            <div class="section-card">
+              <div class="section-header compact">
+                <mat-icon>directions_run</mat-icon>
+                <h2>Mais Runs</h2>
+              </div>
+              <div class="table-wrap">
+                <table mat-table [dataSource]="stats.leaders.runs">
+                  <ng-container matColumnDef="medal">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let r; let i = index" class="medal-cell">{{ medal(i) }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="team">
+                    <th mat-header-cell *matHeaderCellDef>Time</th>
+                    <td mat-cell *matCellDef="let r" class="team-cell">{{ r.Team }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="r">
+                    <th mat-header-cell *matHeaderCellDef>R</th>
+                    <td mat-cell *matCellDef="let r" class="highlight-cell">{{ r.R }}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="runsCols"></tr>
+                  <tr mat-row *matRowDef="let row; columns: runsCols;" [class.top-row]="stats.leaders.runs.indexOf(row) === 0"></tr>
+                </table>
+              </div>
+            </div>
 
-            <ng-container matColumnDef="H">
-              <th mat-header-cell *matHeaderCellDef>H</th>
-              <td mat-cell *matCellDef="let element">{{ element.H }}</td>
-            </ng-container>
+            <!-- Stolen Bases -->
+            <div class="section-card">
+              <div class="section-header compact">
+                <mat-icon>flash_on</mat-icon>
+                <h2>Mais Bases Roubadas</h2>
+              </div>
+              <div class="table-wrap">
+                <table mat-table [dataSource]="stats.leaders.stolen_bases">
+                  <ng-container matColumnDef="medal">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let r; let i = index" class="medal-cell">{{ medal(i) }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="team">
+                    <th mat-header-cell *matHeaderCellDef>Time</th>
+                    <td mat-cell *matCellDef="let r" class="team-cell">{{ r.Team }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="sb">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Bases roubadas">SB</th>
+                    <td mat-cell *matCellDef="let r" class="highlight-cell">{{ r.SB }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="r">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Runs anotadas (desempate)">R</th>
+                    <td mat-cell *matCellDef="let r">{{ r.R }}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="sbCols"></tr>
+                  <tr mat-row *matRowDef="let row; columns: sbCols;" [class.top-row]="stats.leaders.stolen_bases.indexOf(row) === 0"></tr>
+                </table>
+              </div>
+            </div>
 
-            <ng-container matColumnDef="HR">
-              <th mat-header-cell *matHeaderCellDef>HR</th>
-              <td mat-cell *matCellDef="let element">{{ element.HR }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="TB">
-              <th mat-header-cell *matHeaderCellDef>TB</th>
-              <td mat-cell *matCellDef="let element">{{ element.TB }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="RBI">
-              <th mat-header-cell *matHeaderCellDef>RBI</th>
-              <td mat-cell *matCellDef="let element">{{ element.RBI }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="AVG">
-              <th mat-header-cell *matHeaderCellDef>AVG</th>
-              <td mat-cell *matCellDef="let element">{{ element.AVG }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="BB">
-              <th mat-header-cell *matHeaderCellDef>BB</th>
-              <td mat-cell *matCellDef="let element">{{ element.BB }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SO">
-              <th mat-header-cell *matHeaderCellDef>SO</th>
-              <td mat-cell *matCellDef="let element">{{ element.SO }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="HBP">
-              <th mat-header-cell *matHeaderCellDef>HBP</th>
-              <td mat-cell *matCellDef="let element">{{ element.HBP }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SB">
-              <th mat-header-cell *matHeaderCellDef>SB</th>
-              <td mat-cell *matCellDef="let element">{{ element.SB }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="CS">
-              <th mat-header-cell *matHeaderCellDef>CS</th>
-              <td mat-cell *matCellDef="let element">{{ element.CS }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SCB">
-              <th mat-header-cell *matHeaderCellDef>SCB</th>
-              <td mat-cell *matCellDef="let element">{{ element.SCB }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SF">
-              <th mat-header-cell *matHeaderCellDef>SF</th>
-              <td mat-cell *matCellDef="let element">{{ element.SF }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SLG">
-              <th mat-header-cell *matHeaderCellDef>SLG</th>
-              <td mat-cell *matCellDef="let element">{{ element.SLG }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="BA_RSP">
-              <th mat-header-cell *matHeaderCellDef>BA/RSP</th>
-              <td mat-cell *matCellDef="let element">{{ element.BA_RSP }}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-        </div>
+          </div><!-- /three-col -->
+        </div><!-- /tab-body leaders -->
       </mat-tab>
 
-      <mat-tab label="Pitching">
-        <div class="stats-table-wrapper">
-          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- ═══════════════════════════════════════════
+           TAB 2 — BY TEAM
+      ══════════════════════════════════════════════ -->
+      <mat-tab label="Por Time">
+        <div class="tab-body">
 
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Nome</th>
-              <td mat-cell *matCellDef="let element">{{ element.name | formatName }}</td>
-            </ng-container>
+          <mat-form-field class="team-select" appearance="outline">
+            <mat-label>Selecione um time</mat-label>
+            <mat-select [(ngModel)]="selectedTeam">
+              <mat-option *ngFor="let t of teamNames" [value]="t">{{ t }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-            <ng-container matColumnDef="G">
-              <th mat-header-cell *matHeaderCellDef matTooltip="Jogos disputados">G</th>
-              <td mat-cell *matCellDef="let element">{{ element.G }}</td>
-            </ng-container>
+          <div class="page-state subtle" *ngIf="!selectedTeam">
+            <mat-icon>sports_baseball</mat-icon>
+            <p>Selecione um time para ver as estatísticas.</p>
+          </div>
 
-            <ng-container matColumnDef="PA">
-              <th mat-header-cell *matHeaderCellDef>PA</th>
-              <td mat-cell *matCellDef="let element">{{ element.PA }}</td>
-            </ng-container>
+          <ng-container *ngIf="selectedTeam && teamStats">
 
-            <ng-container matColumnDef="AB">
-              <th mat-header-cell *matHeaderCellDef>AB</th>
-              <td mat-cell *matCellDef="let element">{{ element.AB }}</td>
-            </ng-container>
+            <!-- Pitching by team -->
+            <div class="section-card" *ngIf="teamStats.pitching.length > 0">
+              <div class="section-header">
+                <mat-icon>sports_baseball</mat-icon>
+                <div>
+                  <h2>Arremessadores</h2>
+                  <p class="section-note">Apenas arremessadores qualificados (IP &gt; {{ stats!.thresholds.avg_ip }})</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table mat-table [dataSource]="teamStats.pitching">
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="ip">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Innings lançadas">IP</th>
+                    <td mat-cell *matCellDef="let r">{{ fmt(r.IP) }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="k">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Strikeouts">K</th>
+                    <td mat-cell *matCellDef="let r">{{ r.K }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="k_ip">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Strikeouts por inning">K/IP</th>
+                    <td mat-cell *matCellDef="let r">{{ fmt(r.K_per_IP) }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="h">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Hits sofridos">H</th>
+                    <td mat-cell *matCellDef="let r">{{ r.H }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="h_ip">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Hits por inning">H/IP</th>
+                    <td mat-cell *matCellDef="let r">{{ fmt(r.H_per_IP) }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="era">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Earned Run Average">ERA</th>
+                    <td mat-cell *matCellDef="let r" class="highlight-cell">{{ fmt(r.ERA) }}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="pitchingTeamCols"></tr>
+                  <tr mat-row *matRowDef="let row; columns: pitchingTeamCols;"></tr>
+                </table>
+              </div>
+            </div>
+            <div class="empty-section" *ngIf="teamStats.pitching.length === 0">
+              <mat-icon>info</mat-icon>
+              <span>Nenhum arremessador qualificado neste time.</span>
+            </div>
 
-            <ng-container matColumnDef="R">
-              <th mat-header-cell *matHeaderCellDef>R</th>
-              <td mat-cell *matCellDef="let element">{{ element.R }}</td>
-            </ng-container>
+            <!-- Batting AVG by team -->
+            <div class="section-card" *ngIf="teamStats.batting_avg.length > 0">
+              <div class="section-header">
+                <mat-icon>sports_cricket</mat-icon>
+                <div>
+                  <h2>Rebatedores</h2>
+                  <p class="section-note">Apenas rebatedores qualificados (AB &gt; {{ stats!.thresholds.avg_ab }}) · Desempate: RBI</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table mat-table [dataSource]="teamStats.batting_avg">
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="ab">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Vezes ao bastão">AB</th>
+                    <td mat-cell *matCellDef="let r">{{ r.AB }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="h">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Hits">H</th>
+                    <td mat-cell *matCellDef="let r">{{ r.H }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="avg">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Média de rebatidas">AVG</th>
+                    <td mat-cell *matCellDef="let r" class="highlight-cell">{{ fmtAvg(r.AVG) }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="rbi">
+                    <th mat-header-cell *matHeaderCellDef matTooltip="Runs batidas">RBI</th>
+                    <td mat-cell *matCellDef="let r">{{ r.RBI }}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="battingAvgTeamCols"></tr>
+                  <tr mat-row *matRowDef="let row; columns: battingAvgTeamCols;"></tr>
+                </table>
+              </div>
+            </div>
 
-            <ng-container matColumnDef="H">
-              <th mat-header-cell *matHeaderCellDef>H</th>
-              <td mat-cell *matCellDef="let element">{{ element.H }}</td>
-            </ng-container>
+            <!-- RBI / Runs / SB by team -->
+            <div class="three-col">
 
-            <ng-container matColumnDef="HR">
-              <th mat-header-cell *matHeaderCellDef>HR</th>
-              <td mat-cell *matCellDef="let element">{{ element.HR }}</td>
-            </ng-container>
+              <div class="section-card" *ngIf="teamStats.rbi.length > 0">
+                <div class="section-header compact">
+                  <mat-icon>emoji_events</mat-icon>
+                  <h2>Mais RBI</h2>
+                </div>
+                <div class="table-wrap">
+                  <table mat-table [dataSource]="teamStats.rbi">
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef>Nome</th>
+                      <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="rbi">
+                      <th mat-header-cell *matHeaderCellDef>RBI</th>
+                      <td mat-cell *matCellDef="let r" class="highlight-cell">{{ r.RBI }}</td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="rbiTeamCols"></tr>
+                    <tr mat-row *matRowDef="let row; columns: rbiTeamCols;"></tr>
+                  </table>
+                </div>
+              </div>
 
-            <ng-container matColumnDef="TB">
-              <th mat-header-cell *matHeaderCellDef>TB</th>
-              <td mat-cell *matCellDef="let element">{{ element.TB }}</td>
-            </ng-container>
+              <div class="section-card" *ngIf="teamStats.runs.length > 0">
+                <div class="section-header compact">
+                  <mat-icon>directions_run</mat-icon>
+                  <h2>Mais Runs</h2>
+                </div>
+                <div class="table-wrap">
+                  <table mat-table [dataSource]="teamStats.runs">
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef>Nome</th>
+                      <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="r">
+                      <th mat-header-cell *matHeaderCellDef>R</th>
+                      <td mat-cell *matCellDef="let r" class="highlight-cell">{{ r.R }}</td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="runsTeamCols"></tr>
+                    <tr mat-row *matRowDef="let row; columns: runsTeamCols;"></tr>
+                  </table>
+                </div>
+              </div>
 
-            <ng-container matColumnDef="RBI">
-              <th mat-header-cell *matHeaderCellDef>RBI</th>
-              <td mat-cell *matCellDef="let element">{{ element.RBI }}</td>
-            </ng-container>
+              <div class="section-card" *ngIf="teamStats.stolen_bases.length > 0">
+                <div class="section-header compact">
+                  <mat-icon>flash_on</mat-icon>
+                  <h2>Bases Roubadas</h2>
+                </div>
+                <div class="table-wrap">
+                  <table mat-table [dataSource]="teamStats.stolen_bases">
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef>Nome</th>
+                      <td mat-cell *matCellDef="let r" class="name-cell">{{ r.Name }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="sb">
+                      <th mat-header-cell *matHeaderCellDef matTooltip="Bases roubadas">SB</th>
+                      <td mat-cell *matCellDef="let r" class="highlight-cell">{{ r.SB }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="r">
+                      <th mat-header-cell *matHeaderCellDef matTooltip="Runs (desempate)">R</th>
+                      <td mat-cell *matCellDef="let r">{{ r.R }}</td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="sbTeamCols"></tr>
+                    <tr mat-row *matRowDef="let row; columns: sbTeamCols;"></tr>
+                  </table>
+                </div>
+              </div>
 
-            <ng-container matColumnDef="AVG">
-              <th mat-header-cell *matHeaderCellDef>AVG</th>
-              <td mat-cell *matCellDef="let element">{{ element.AVG }}</td>
-            </ng-container>
+            </div><!-- /three-col -->
 
-            <ng-container matColumnDef="BB">
-              <th mat-header-cell *matHeaderCellDef>BB</th>
-              <td mat-cell *matCellDef="let element">{{ element.BB }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SO">
-              <th mat-header-cell *matHeaderCellDef>SO</th>
-              <td mat-cell *matCellDef="let element">{{ element.SO }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="HBP">
-              <th mat-header-cell *matHeaderCellDef>HBP</th>
-              <td mat-cell *matCellDef="let element">{{ element.HBP }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SB">
-              <th mat-header-cell *matHeaderCellDef>SB</th>
-              <td mat-cell *matCellDef="let element">{{ element.SB }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="CS">
-              <th mat-header-cell *matHeaderCellDef>CS</th>
-              <td mat-cell *matCellDef="let element">{{ element.CS }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SCB">
-              <th mat-header-cell *matHeaderCellDef>SCB</th>
-              <td mat-cell *matCellDef="let element">{{ element.SCB }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SF">
-              <th mat-header-cell *matHeaderCellDef>SF</th>
-              <td mat-cell *matCellDef="let element">{{ element.SF }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="SLG">
-              <th mat-header-cell *matHeaderCellDef>SLG</th>
-              <td mat-cell *matCellDef="let element">{{ element.SLG }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="BA_RSP">
-              <th mat-header-cell *matHeaderCellDef>BA/RSP</th>
-              <td mat-cell *matCellDef="let element">{{ element.BA_RSP }}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-        </div>
+          </ng-container>
+        </div><!-- /tab-body por time -->
       </mat-tab>
+
     </mat-tab-group>
-
   </div>
 </div>
