@@ -110,12 +110,18 @@ export class StatsComponent implements OnInit {
   }
 
   /**
-   * Pitching tab only renders players who actually have appearances.
-   * Backend defaults every player's pitching subdoc to zeros, so the
-   * tab would otherwise list the entire roster with empty rows.
+   * Pitching tab.
+   * - When a specific team is selected: show the full roster, even players
+   *   with all-zero stats. The source iScore PDFs list the whole pitching
+   *   staff, so users expect to see everyone — zeros and all.
+   * - When "Todos os times" is selected: keep only players with actual
+   *   appearances so the table isn't ~100 rows of zeros.
    */
   get pitchers(): Array<Player & { _team?: Team }> {
-    return this.filteredPlayers.filter((p) => (p.pitching?.G ?? 0) > 0);
+    if (this.selectedTeamId === ALL_TEAMS) {
+      return this.filteredPlayers.filter((p) => (p.pitching?.G ?? 0) > 0);
+    }
+    return this.filteredPlayers;
   }
 
   /** ERA gets a single decimal place; null/undefined renders as "—". */
