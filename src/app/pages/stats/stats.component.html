@@ -42,16 +42,93 @@
 
       <mat-tab-group class="stats-tabs">
 
-        <!-- Batting tab: backend doesn't track batting stats yet -->
+        <!-- Batting tab: real data from player.batting -->
         <mat-tab label="Batting">
-          <div class="tab-empty">
-            <mat-icon>construction</mat-icon>
-            <h3>Estatísticas de rebatida em breve</h3>
-            <p>
-              As estatísticas de batting ainda não estão sendo registradas no
-              servidor. Elas aparecerão aqui assim que estiverem disponíveis.
+
+          <div class="tab-empty" *ngIf="batters.length === 0">
+            <mat-icon>sports_cricket</mat-icon>
+            <h3>Sem registros de batting</h3>
+            <p *ngIf="selectedTeamId === ALL_TEAMS">
+              Nenhum jogador ainda tem estatísticas de batting registradas.
+            </p>
+            <p *ngIf="selectedTeamId !== ALL_TEAMS">
+              Este time ainda não tem estatísticas de batting registradas.
             </p>
           </div>
+
+          <div class="stats-table-wrapper" *ngIf="batters.length > 0">
+            <table mat-table [dataSource]="batters" [trackBy]="trackById" class="mat-elevation-z8">
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nome</th>
+                <td mat-cell *matCellDef="let p">{{ p.name | formatName }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="team">
+                <th mat-header-cell *matHeaderCellDef>Time</th>
+                <td mat-cell *matCellDef="let p">{{ p._team?.code || '—' }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="G">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Jogos disputados">G</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.G ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="PA">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Aparições no bastão">PA</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.PA ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="AB">
+                <th mat-header-cell *matHeaderCellDef matTooltip="At-bats (vezes ao bastão oficiais)">AB</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.AB ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="R">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Runs anotadas">R</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.R ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="H">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Rebatidas">H</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.H ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="HR">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Home runs">HR</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.HR ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="RBI">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Runs impulsionadas">RBI</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.RBI ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="AVG">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Média de rebatidas (H / AB)">AVG</th>
+                <td mat-cell *matCellDef="let p">{{ formatAVG(p.batting?.AVG) }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="BB">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Bases por bola">BB</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.BB ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="SO">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Strikeouts">SO</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.SO ?? 0 }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="SB">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Bases roubadas">SB</th>
+                <td mat-cell *matCellDef="let p">{{ p.batting?.SB ?? 0 }}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="battingColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: battingColumns;"></tr>
+            </table>
+          </div>
+
         </mat-tab>
 
         <!-- Pitching tab: real data from player.pitching -->
