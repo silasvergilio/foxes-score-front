@@ -45,6 +45,7 @@ export class StatsComponent implements OnInit {
   error = '';
 
   pitchingColumns = ['name', 'team', 'G', 'IP', 'R', 'ERA', 'K', 'H', 'BB'];
+  battingColumns  = ['name', 'team', 'G', 'PA', 'AB', 'R', 'H', 'HR', 'RBI', 'AVG', 'BB', 'SO', 'SB'];
 
   constructor(
     private api: ApiService,
@@ -124,6 +125,18 @@ export class StatsComponent implements OnInit {
     return this.filteredPlayers;
   }
 
+  /**
+   * Batting tab. Same display rule as pitching:
+   * - Specific team selected: show the full roster, including non-batters.
+   * - "Todos os times": only players with at least one plate appearance.
+   */
+  get batters(): Array<Player & { _team?: Team }> {
+    if (this.selectedTeamId === ALL_TEAMS) {
+      return this.filteredPlayers.filter((p) => (p.batting?.PA ?? 0) > 0);
+    }
+    return this.filteredPlayers;
+  }
+
   /** ERA gets a single decimal place; null/undefined renders as "—". */
   formatERA(era: number | undefined): string {
     if (era == null) return '—';
@@ -134,6 +147,13 @@ export class StatsComponent implements OnInit {
   formatIP(ip: number | undefined): string {
     if (ip == null) return '—';
     return Number.isInteger(ip) ? ip.toString() : ip.toFixed(1);
+  }
+
+  /** AVG renders as ".320" / "1.000" / "—". Three decimals, no leading zero. */
+  formatAVG(avg: number | undefined): string {
+    if (avg == null) return '—';
+    if (avg >= 1) return avg.toFixed(3);
+    return avg.toFixed(3).replace('0.', '.');
   }
 
   trackById(_: number, p: Player): string {
