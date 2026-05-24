@@ -117,24 +117,44 @@ export class StatsComponent implements OnInit {
    *   staff, so users expect to see everyone — zeros and all.
    * - When "Todos os times" is selected: keep only players with actual
    *   appearances so the table isn't ~100 rows of zeros.
+   *
+   * Sorted by games pitched (G) descending so active pitchers float to the
+   * top and non-pitchers (G === 0) sink to the bottom. Ties broken by
+   * jersey number ascending.
    */
   get pitchers(): Array<Player & { _team?: Team }> {
-    if (this.selectedTeamId === ALL_TEAMS) {
-      return this.filteredPlayers.filter((p) => (p.pitching?.G ?? 0) > 0);
-    }
-    return this.filteredPlayers;
+    const list =
+      this.selectedTeamId === ALL_TEAMS
+        ? this.filteredPlayers.filter((p) => (p.pitching?.G ?? 0) > 0)
+        : this.filteredPlayers;
+    return [...list].sort((a, b) => {
+      const ga = a.pitching?.G ?? 0;
+      const gb = b.pitching?.G ?? 0;
+      if (gb !== ga) return gb - ga;
+      return (a.jerseyNumber ?? 999) - (b.jerseyNumber ?? 999);
+    });
   }
 
   /**
    * Batting tab. Same display rule as pitching:
    * - Specific team selected: show the full roster, including non-batters.
    * - "Todos os times": only players with at least one plate appearance.
+   *
+   * Sorted by at-bats (AB) descending so regulars float to the top and
+   * roster members who never came to bat (AB === 0) sink to the bottom.
+   * Ties broken by jersey number ascending.
    */
   get batters(): Array<Player & { _team?: Team }> {
-    if (this.selectedTeamId === ALL_TEAMS) {
-      return this.filteredPlayers.filter((p) => (p.batting?.PA ?? 0) > 0);
-    }
-    return this.filteredPlayers;
+    const list =
+      this.selectedTeamId === ALL_TEAMS
+        ? this.filteredPlayers.filter((p) => (p.batting?.PA ?? 0) > 0)
+        : this.filteredPlayers;
+    return [...list].sort((a, b) => {
+      const aba = a.batting?.AB ?? 0;
+      const abb = b.batting?.AB ?? 0;
+      if (abb !== aba) return abb - aba;
+      return (a.jerseyNumber ?? 999) - (b.jerseyNumber ?? 999);
+    });
   }
 
   /** ERA gets a single decimal place; null/undefined renders as "—". */
