@@ -9,6 +9,7 @@ import { TeamsComponent } from './pages/teams/teams.component';
 import { GameScheduleComponent } from './pages/game-schedule/game-schedule.component';
 import { StandingsComponent } from './pages/standings/standings.component';
 import { BracketComponent } from './pages/bracket/bracket.component';
+import { AwardsComponent } from './pages/awards/awards.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,10 @@ export const routes: Routes = [
   {
     path: 'bracket',
     component: BracketComponent,
+  },
+  {
+    path: 'awards',
+    component: AwardsComponent,
   },
   {
     path: 'add-game',
