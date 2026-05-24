@@ -1,0 +1,49 @@
+<div class="awards-page">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>emoji_events</mat-icon>
+        <span>Taça Brasil Amador 2026</span>
+      </div>
+      <h1 class="hero-title">Premiações</h1>
+      <p class="hero-subtitle">Destaques da competição</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="page-state" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Carregando premiações…</p>
+  </div>
+
+  <!-- Error -->
+  <div class="page-state" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-flat-button color="primary" (click)="fetch()">Tentar novamente</button>
+  </div>
+
+  <!-- Grid -->
+  <div class="awards-section" *ngIf="!loading && !error">
+    <div
+      class="award-card"
+      *ngFor="let a of awards; trackBy: trackByCategory"
+      [class.mvp]="a.category === 'MVP'"
+    >
+      <div class="award-icon">
+        <mat-icon>{{ iconFor(a.category) }}</mat-icon>
+      </div>
+      <div class="award-body">
+        <p class="award-category">{{ a.category }}</p>
+        <h2 class="award-player">{{ a.player?.name || 'A definir' }}</h2>
+        <div class="award-team" *ngIf="a.team">
+          <span class="team-slot" *ngIf="a.team.slot">{{ a.team.slot }}</span>
+          <span class="team-name">{{ a.team.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
