@@ -27,6 +27,37 @@
   }
 }
 
+/* Compact toolbar dropdown for switching tournament editions. Sits
+   between the Foxes logo and the spacer; hidden when only one edition
+   is published (handled by *ngIf in the template). */
+.edition-select {
+  width: 170px;
+  margin-left: 0.5rem;
+
+  --mdc-outlined-text-field-container-shape: 8px;
+  --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.4);
+  --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.7);
+  --mdc-outlined-text-field-focus-outline-color: #ffffff;
+  --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, 0.9);
+  --mdc-outlined-text-field-input-text-color: #ffffff;
+  --mdc-outlined-text-field-focus-label-text-color: #ffffff;
+  --mdc-outlined-text-field-hover-label-text-color: #ffffff;
+
+  .mat-mdc-select-arrow {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .mat-mdc-form-field-infix {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    min-height: 0 !important;
+  }
+
+  .mdc-text-field--outlined {
+    --mdc-outlined-text-field-container-height: 38px;
+  }
+}
+
 /* ===========================
    DRAWER CONTAINER
 =========================== */

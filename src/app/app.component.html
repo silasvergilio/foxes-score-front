@@ -5,6 +5,24 @@
     <mat-icon>menu</mat-icon>
   </button>
   <img src="logo-title.png" alt="Foxes" class="logo-title-img" />
+
+  <mat-form-field
+    class="edition-select"
+    appearance="outline"
+    *ngIf="editions.length > 1"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Edição</mat-label>
+    <mat-select
+      [ngModel]="editionKey(current)"
+      (selectionChange)="onEditionChange($event.value)"
+    >
+      <mat-option *ngFor="let e of editions" [value]="editionKey(e)">
+        {{ labelFor(e) }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <span class="spacer"></span>
   <img src="logo-title-cbbsbr.png" alt="CBBSBR" class="logo-title-img" />
 </mat-toolbar>
