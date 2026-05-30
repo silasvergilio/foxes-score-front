@@ -6,22 +6,33 @@
   </button>
   <img src="logo-title.png" alt="Foxes" class="logo-title-img" />
 
-  <mat-form-field
-    class="edition-select"
-    appearance="outline"
+  <!-- Edition switcher. Pill-style trigger to match the site's badge
+       language; hidden until at least 2 editions are published. -->
+  <button
     *ngIf="editions.length > 1"
-    subscriptSizing="dynamic"
+    class="edition-pill"
+    [matMenuTriggerFor]="editionMenu"
+    type="button"
+    aria-label="Trocar edição"
   >
-    <mat-label>Edição</mat-label>
-    <mat-select
-      [ngModel]="editionKey(current)"
-      (selectionChange)="onEditionChange($event.value)"
+    <span class="edition-pill-division">D{{ current.division }}</span>
+    <span class="edition-pill-year">{{ current.year }}</span>
+    <mat-icon class="edition-pill-chevron">expand_more</mat-icon>
+  </button>
+
+  <mat-menu #editionMenu="matMenu" xPosition="before" class="edition-menu">
+    <button
+      *ngFor="let e of editions"
+      mat-menu-item
+      class="edition-menu-item"
+      [class.active]="sameEdition(e, current)"
+      (click)="selectEdition(e)"
     >
-      <mat-option *ngFor="let e of editions" [value]="editionKey(e)">
-        {{ labelFor(e) }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+      <span class="edition-menu-pill">D{{ e.division }}</span>
+      <span class="edition-menu-year">{{ e.year }}</span>
+      <mat-icon *ngIf="sameEdition(e, current)" class="edition-menu-check">check</mat-icon>
+    </button>
+  </mat-menu>
 
   <span class="spacer"></span>
   <img src="logo-title-cbbsbr.png" alt="CBBSBR" class="logo-title-img" />

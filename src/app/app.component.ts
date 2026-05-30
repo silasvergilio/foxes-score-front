@@ -8,8 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 import { LoaderComponent } from './components/loader/loader.component';
 import { TournamentService } from './services/tournament.service';
 import {
@@ -28,8 +27,7 @@ import {
     MatIconModule,
     MatToolbarModule,
     MatButtonModule,
-    MatFormFieldModule,
-    MatSelectModule,
+    MatMenuModule,
     LoaderComponent,
   ],
   templateUrl: './app.component.html',
@@ -62,18 +60,13 @@ export class AppComponent implements OnInit {
     });
   }
 
-  /** mat-select needs scalar values; encode as "year::division". */
-  editionKey(e: { year: number; division: string }): string {
-    return `${e.year}::${e.division}`;
+  /** Same identity for *ngFor trackBy + active-state comparison. */
+  sameEdition(a: { year: number; division: string }, b: { year: number; division: string }): boolean {
+    return a.year === b.year && a.division === b.division;
   }
 
-  onEditionChange(key: string) {
-    const [yearStr, division] = key.split('::');
-    this.tournaments.setCurrent({ year: Number(yearStr), division });
-  }
-
-  labelFor(e: TournamentEdition): string {
-    return `Divisão ${e.division} · ${e.year}`;
+  selectEdition(e: TournamentEdition) {
+    this.tournaments.setCurrent({ year: e.year, division: e.division });
   }
 
   navigate(route: string) {

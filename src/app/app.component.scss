@@ -27,34 +27,123 @@
   }
 }
 
-/* Compact toolbar dropdown for switching tournament editions. Sits
-   between the Foxes logo and the spacer; hidden when only one edition
-   is published (handled by *ngIf in the template). */
-.edition-select {
-  width: 170px;
-  margin-left: 0.5rem;
+/* ===========================
+   EDITION SWITCHER
+   Pill button in the toolbar; opens a mat-menu listing editions.
+   Matches the hero badge / slot pill language used elsewhere.
+=========================== */
+.edition-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 0.75rem;
+  padding: 6px 6px 6px 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
 
-  --mdc-outlined-text-field-container-shape: 8px;
-  --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.4);
-  --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.7);
-  --mdc-outlined-text-field-focus-outline-color: #ffffff;
-  --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, 0.9);
-  --mdc-outlined-text-field-input-text-color: #ffffff;
-  --mdc-outlined-text-field-focus-label-text-color: #ffffff;
-  --mdc-outlined-text-field-hover-label-text-color: #ffffff;
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
 
-  .mat-mdc-select-arrow {
+  &:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+  }
+
+  .edition-pill-division {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #002d72;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+  }
+
+  .edition-pill-year {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: 0.3px;
+  }
+
+  .edition-pill-chevron {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
     color: rgba(255, 255, 255, 0.85);
+    margin-right: 2px;
+  }
+}
+
+/* The mat-menu panel styled to match the card aesthetic. */
+::ng-deep .mat-mdc-menu-panel.mat-mdc-menu-panel.edition-menu {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  min-width: 180px;
+  padding: 6px 0;
+}
+
+::ng-deep .edition-menu-item.mat-mdc-menu-item {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  min-height: 40px;
+  font-size: 14px;
+  color: #1f2937;
+
+  &:hover {
+    background: rgba(0, 45, 114, 0.06);
   }
 
-  .mat-mdc-form-field-infix {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
-    min-height: 0 !important;
+  &.active {
+    background: rgba(245, 158, 11, 0.10);
+    color: #002d72;
+    font-weight: 700;
+
+    .edition-menu-pill {
+      background: #002d72;
+      color: #ffffff;
+    }
   }
 
-  .mdc-text-field--outlined {
-    --mdc-outlined-text-field-container-height: 38px;
+  .edition-menu-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: rgba(0, 45, 114, 0.10);
+    color: #002d72;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+  }
+
+  .edition-menu-year {
+    flex: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .edition-menu-check {
+    color: #f59e0b;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 }
 
