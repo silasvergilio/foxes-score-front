@@ -18,7 +18,6 @@ interface ScheduleGroup {
   games: Game[];
 }
 
-const GROUP_IDS = ['1', '2'];
 
 @Component({
   selector: 'app-game-schedule',
@@ -104,7 +103,15 @@ export class GameScheduleComponent implements OnInit, OnDestroy {
       return teamById.get(teamId)?.group;
     };
 
-    return GROUP_IDS.map((id) => {
+    // Derive the group set from the actual teams in this edition. D2 has
+    // groups "1" and "2"; D1 only has "1". Skipping the hardcoded list
+    // means an empty "Grupo 2" card no longer renders for single-group
+    // tournaments.
+    const groupIds = Array.from(
+      new Set(teams.map((t) => t.group).filter((g): g is string => !!g))
+    ).sort();
+
+    return groupIds.map((id) => {
       const groupTeams = teams
         .filter((t) => t.group === id)
         .sort((a, b) => (a.slot ?? '').localeCompare(b.slot ?? ''));
