@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService } from '../../services/api.service';
 import { LoaderService } from '../../services/loader.service';
+import { TournamentService } from '../../services/tournament.service';
+import { TournamentKey } from '../../interfaces/tournament.interface';
 
 interface TeamStanding {
   name: string;
@@ -53,8 +56,6 @@ interface ApiResponse {
   groups: { group: string; standings: ApiStanding[] }[];
 }
 
-const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2026';
-
 @Component({
   selector: 'app-standings',
   standalone: true,
@@ -69,29 +70,47 @@ const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2026';
   styleUrl: './standings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StandingsComponent implements OnInit {
-  tournament = DEFAULT_TOURNAMENT;
+export class StandingsComponent implements OnInit, OnDestroy {
+  current!: TournamentKey;
   groups: GroupStanding[] = [];
   loading = false;
   error = '';
 
+  private sub?: Subscription;
+
+  get editionLabel(): string {
+    return this.current
+      ? `Taça Brasil Amador ${this.current.year} · Divisão ${this.current.division}`
+      : '';
+  }
+
   constructor(
     private api: ApiService,
     private loader: LoaderService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private tournaments: TournamentService
   ) {}
 
   ngOnInit() {
-    this.fetch();
+    this.sub = this.tournaments.current$.subscribe((c) => {
+      this.current = c;
+      this.fetch();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   fetch() {
+    if (!this.current) return;
     this.loading = true;
     this.error = '';
     this.loader.start();
 
+    const q = `year=${this.current.year}&division=${encodeURIComponent(this.current.division)}`;
     this.api
-      .get<ApiResponse>(`standings?tournament=${encodeURIComponent(this.tournament)}`)
+      .get<ApiResponse>(`standings?${q}`)
       .subscribe({
         next: (resp) => {
           this.groups = this.toGroups(resp);

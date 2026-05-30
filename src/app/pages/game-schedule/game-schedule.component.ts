@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -8,6 +8,8 @@ import { Team } from '../../interfaces/team.interface';
 import { Game, GameStatus } from '../../interfaces/game.interface';
 import { ApiService } from '../../services/api.service';
 import { LoaderService } from '../../services/loader.service';
+import { TournamentService } from '../../services/tournament.service';
+import { TournamentKey } from '../../interfaces/tournament.interface';
 
 interface ScheduleGroup {
   id: string;
@@ -16,7 +18,6 @@ interface ScheduleGroup {
   games: Game[];
 }
 
-const DEFAULT_TOURNAMENT = 'Taça Brasil Amador 2026';
 const GROUP_IDS = ['1', '2'];
 
 @Component({
@@ -27,33 +28,50 @@ const GROUP_IDS = ['1', '2'];
   styleUrl: './game-schedule.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameScheduleComponent implements OnInit {
-  tournament = DEFAULT_TOURNAMENT;
+export class GameScheduleComponent implements OnInit, OnDestroy {
+  current!: TournamentKey;
   groups: ScheduleGroup[] = [];
+
+  get editionLabel(): string {
+    return this.current
+      ? `Taça Brasil Amador ${this.current.year} · Divisão ${this.current.division}`
+      : '';
+  }
 
   loading = false;
   error = '';
 
+  private sub?: Subscription;
+
   constructor(
     private api: ApiService,
     private loader: LoaderService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private tournaments: TournamentService
   ) {}
 
   ngOnInit() {
-    this.fetch();
+    // Re-fetch whenever the toolbar switches editions.
+    this.sub = this.tournaments.current$.subscribe((c) => {
+      this.current = c;
+      this.fetch();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   fetch() {
+    if (!this.current) return;
     this.loading = true;
     this.error = '';
     this.loader.start();
 
+    const q = `year=${this.current.year}&division=${encodeURIComponent(this.current.division)}`;
     forkJoin({
-      teams: this.api.get<Team[]>('teams'),
-      games: this.api.get<Game[]>(
-        `game/schedule?tournament=${encodeURIComponent(this.tournament)}`
-      ),
+      teams: this.api.get<Team[]>(`teams?${q}`),
+      games: this.api.get<Game[]>(`game/schedule?${q}`),
     }).subscribe({
       next: ({ teams, games }) => {
         this.groups = this.buildGroups(teams ?? [], games ?? []);

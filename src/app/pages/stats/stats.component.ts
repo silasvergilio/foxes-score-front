@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,6 +13,8 @@ import { Team } from '../../interfaces/team.interface';
 import { Player } from '../../interfaces/player.interface';
 import { ApiService } from '../../services/api.service';
 import { LoaderService } from '../../services/loader.service';
+import { TournamentService } from '../../services/tournament.service';
+import { TournamentKey } from '../../interfaces/tournament.interface';
 
 const ALL_TEAMS = '__all__';
 
@@ -34,7 +36,7 @@ const ALL_TEAMS = '__all__';
   styleUrl: './stats.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatsComponent implements OnInit {
+export class StatsComponent implements OnInit, OnDestroy {
   readonly ALL_TEAMS = ALL_TEAMS;
 
   teams: Team[] = [];
@@ -43,28 +45,44 @@ export class StatsComponent implements OnInit {
 
   loading = false;
   error = '';
+  current!: TournamentKey;
 
   pitchingColumns = ['name', 'team', 'G', 'IP', 'R', 'ERA', 'K', 'H', 'BB'];
   battingColumns  = ['name', 'team', 'G', 'PA', 'AB', 'R', 'H', 'HR', 'RBI', 'AVG', 'BB', 'SO', 'SB'];
 
+  private sub?: Subscription;
+
   constructor(
     private api: ApiService,
     private loader: LoaderService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private tournaments: TournamentService
   ) {}
 
   ngOnInit() {
-    this.fetch();
+    this.sub = this.tournaments.current$.subscribe((c) => {
+      this.current = c;
+      // Reset selection so a leftover team id from the previous edition
+      // doesn't show "Nenhum time" by accident.
+      this.selectedTeamId = ALL_TEAMS;
+      this.fetch();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   fetch() {
+    if (!this.current) return;
     this.loading = true;
     this.error = '';
     this.loader.start();
 
+    const q = `year=${this.current.year}&division=${encodeURIComponent(this.current.division)}`;
     forkJoin({
-      teams: this.api.get<Team[]>('teams'),
-      players: this.api.get<Player[]>('player'),
+      teams: this.api.get<Team[]>(`teams?${q}`),
+      players: this.api.get<Player[]>(`player?${q}`),
     }).subscribe({
       next: ({ teams, players }) => {
         this.teams = (teams ?? []).sort((a, b) =>

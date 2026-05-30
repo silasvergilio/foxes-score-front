@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +11,8 @@ import { Team, Coach } from '../../interfaces/team.interface';
 import { Player } from '../../interfaces/player.interface';
 import { ApiService } from '../../services/api.service';
 import { LoaderService } from '../../services/loader.service';
+import { TournamentService } from '../../services/tournament.service';
+import { TournamentKey } from '../../interfaces/tournament.interface';
 
 @Component({
   selector: 'app-teams',
@@ -27,7 +30,7 @@ import { LoaderService } from '../../services/loader.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TeamsComponent implements OnInit {
+export class TeamsComponent implements OnInit, OnDestroy {
   teams: Team[] = [];
   selectedTeam: Team | null = null;
   roster: Player[] = [];
@@ -35,25 +38,40 @@ export class TeamsComponent implements OnInit {
   loadingTeams = false;
   loadingRoster = false;
   error = '';
+  current!: TournamentKey;
 
   rosterColumns = ['jerseyNumber', 'name', 'nickname', 'bats', 'throws'];
+
+  private sub?: Subscription;
 
   constructor(
     private api: ApiService,
     private loader: LoaderService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private tournaments: TournamentService
   ) {}
 
   ngOnInit() {
-    this.fetchTeams();
+    this.sub = this.tournaments.current$.subscribe((c) => {
+      this.current = c;
+      this.selectedTeam = null;
+      this.roster = [];
+      this.fetchTeams();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   fetchTeams() {
+    if (!this.current) return;
     this.loadingTeams = true;
     this.error = '';
     this.loader.start();
 
-    this.api.get<Team[]>('teams').subscribe({
+    const q = `year=${this.current.year}&division=${encodeURIComponent(this.current.division)}`;
+    this.api.get<Team[]>(`teams?${q}`).subscribe({
       next: (data) => {
         this.teams = data ?? [];
         this.loadingTeams = false;
