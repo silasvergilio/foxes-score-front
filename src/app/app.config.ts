@@ -8,11 +8,10 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 const config: SocketIoConfig = {
-  url: window.location.hostname === 'localhost'
-    ? 'http://localhost:3000'
-    : 'https://foxes-score-backend-19a6f4f9b2c5.herokuapp.com',
+  url: environment.apiUrl,
   options: {
     reconnectionDelay: 1000,
     reconnection: true,
