@@ -129,15 +129,33 @@
       <div class="zone z-sb">{{ zoneCounters['sb'] }}</div>
       <div class="zone z-c">{{ zoneCounters['c'] }}</div>
 
-      <!-- Current batter card (placeholder — real data comes from line-up cards) -->
-      <div class="batter-card">
-        <div class="batter-line1">— FOR —</div>
-        <div class="batter-line2">SINGLE, WALK, KS, WALK</div>
+      <!-- Current batter card — resolved from the batting team's lineup -->
+      <div class="batter-card" *ngIf="currentBatter; else noLineup">
+        <div class="batter-line1">
+          {{ currentBatter.battingOrder }}º · {{ battingTeamCode }}
+          <span class="pos-chip" *ngIf="currentBatter.position">{{ currentBatter.position }}</span>
+        </div>
         <div class="batter-name">
-          <span class="batter-num">0</span>
-          A definir
+          <span class="batter-num">{{ currentBatter.jerseyNumber ?? '?' }}</span>
+          {{ currentBatter.displayName }}
+        </div>
+        <div class="on-deck" *ngIf="onDeckBatter">
+          Próximo: <strong>#{{ onDeckBatter.jerseyNumber ?? '?' }} {{ onDeckBatter.displayName }}</strong>
         </div>
       </div>
+
+      <ng-template #noLineup>
+        <div class="batter-card empty">
+          <div class="batter-line1">Sem escalação</div>
+          <div class="batter-line2">
+            Defina a ordem de rebatida antes de começar a marcar.
+          </div>
+          <a class="define-lineup-link" [routerLink]="['/lineup', game._id]">
+            <mat-icon>groups</mat-icon>
+            Definir escalações
+          </a>
+        </div>
+      </ng-template>
     </section>
 
     <!-- ============================================================
