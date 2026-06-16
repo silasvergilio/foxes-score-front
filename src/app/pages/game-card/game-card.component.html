@@ -81,11 +81,16 @@
         </div>
 
         <!-- Novo bloco lateral -->
-        <!-- <div class="batter-info">
-          <img src="bat.png" class="bat-icon" alt="Ícone de taco de baseball" />
-          <div class="batter-order"><mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="counter_9"></mat-icon> M. Kushyama</div>
-          <div class="batter-result">HR,GO, FO</div>
-        </div> -->
+        <div class="batter-info" *ngIf="game && game.batting.length > 0">
+          <img src="assets/bat.png" class="bat-icon" alt="Ícone de taco de baseball" />
+          <div class="batter-order">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="counter_{{game.battingOrder + 1}}"></mat-icon>
+            {{ game.batting[game.battingOrder]?.playerId }}
+          </div>
+          <div class="batter-result">
+            {{ game.batting[game.battingOrder]?.battingResult?.join(', ') }}
+          </div>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>

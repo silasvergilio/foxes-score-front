@@ -11,6 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../services/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from '../../services/loader.service';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'game-card-adm',
@@ -22,6 +24,8 @@ import { LoaderService } from '../../services/loader.service';
     MatProgressSpinnerModule,
     GameIndicatorComponent,
     MatButtonModule,
+    MatInputModule,
+    FormsModule,
   ],
   templateUrl: './game-card-adm.component.html',
   styleUrl: './game-card-adm.component.scss',
@@ -120,6 +124,34 @@ export class GameCardAdminComponent {
       });
     } else {
       throw new Error(`Property "${String(key)}" is not a boolean.`);
+    }
+  }
+
+  public addAtBatResult(result: string): void {
+    if (this.game && result) {
+      this.game.batting[this.game.battingOrder].battingResult.push(result);
+      this.api.put<any>('game', this.game).subscribe((data) => {
+      });
+    }
+  }
+
+  public clearAtBatResults(): void {
+    if (this.game) {
+      this.game.batting[this.game.battingOrder].battingResult = [];
+      this.api.put<any>('game', this.game).subscribe((data) => {
+      });
+    }
+  }
+
+  public nextBatter(): void {
+    if (this.game) {
+      if (this.game.battingOrder < this.game.batting.length - 1) {
+        this.game.battingOrder++;
+      } else {
+        this.game.battingOrder = 0;
+      }
+      this.api.put<any>('game', this.game).subscribe((data) => {
+      });
     }
   }
 }
