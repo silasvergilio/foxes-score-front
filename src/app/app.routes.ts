@@ -10,6 +10,7 @@ import { GameScheduleComponent } from './pages/game-schedule/game-schedule.compo
 import { StandingsComponent } from './pages/standings/standings.component';
 import { BracketComponent } from './pages/bracket/bracket.component';
 import { AwardsComponent } from './pages/awards/awards.component';
+import { ScoreGameComponent } from './pages/score-game/score-game.component';
 
 export const routes: Routes = [
   {
@@ -56,6 +57,10 @@ export const routes: Routes = [
   {
     path: 'game-results',
     component: GameResultsComponent
+  },
+  {
+    path: 'score/:gameId',
+    component: ScoreGameComponent,
   },
   {
     path: 'teams',

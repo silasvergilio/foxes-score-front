@@ -1,0 +1,165 @@
+<div class="score-page">
+
+  <!-- Loading / error states -->
+  <div class="full-state" *ngIf="loading">
+    <mat-spinner diameter="36" color="accent"></mat-spinner>
+    <p>Carregando jogo…</p>
+  </div>
+
+  <div class="full-state" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button class="ghost-btn" (click)="exit()">Voltar</button>
+  </div>
+
+  <ng-container *ngIf="!loading && !error && game">
+
+    <!-- ============================================================
+         TOP SCOREBOARD (Away / Home + Inning + Outs + BSO)
+         ============================================================ -->
+    <header class="scoreboard-strip">
+      <div class="score-block">
+        <span class="lbl">AWAY</span>
+        <span class="num">{{ game.awayScore ?? 0 }}</span>
+      </div>
+
+      <div class="score-block">
+        <span class="lbl">HOME</span>
+        <span class="num">{{ game.homeScore ?? 0 }}</span>
+      </div>
+
+      <div class="inning-block">
+        <span class="inning-arrow">{{ formatInningHalf() || '▼1' }}</span>
+      </div>
+
+      <div class="outs-block">
+        <span class="lbl">OUT</span>
+        <span class="num">{{ game.outs ?? 0 }}</span>
+      </div>
+
+      <div class="bs-block">
+        <div class="bs-row">
+          <span class="bs-label">B</span>
+          <span class="dot" *ngFor="let d of dots(game.balls ?? 0, 3)" [class.filled]="d.filled"></span>
+        </div>
+        <div class="bs-row">
+          <span class="bs-label">S</span>
+          <span class="dot" *ngFor="let d of dots(game.strikes ?? 0, 2)" [class.filled]="d.filled"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================================================
+         LINESCORE (innings + R H E L totals)
+         ============================================================ -->
+    <section class="linescore">
+      <table>
+        <thead>
+          <tr>
+            <th class="team-col"></th>
+            <th class="inn" *ngFor="let n of innings">{{ n }}</th>
+            <th class="total">R</th>
+            <th class="total">H</th>
+            <th class="total">E</th>
+            <th class="total">L</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="team-col">
+              <span class="team-num">1</span>
+              <span class="team-code">{{ game.awayTeam?.code || 'AWAY' }}</span>
+            </td>
+            <td class="inn" *ngFor="let n of innings">{{ inningCell(game.awayInnings, n) }}</td>
+            <td class="total">{{ game.awayScore ?? 0 }}</td>
+            <td class="total">{{ totalHits(game.awayInnings) }}</td>
+            <td class="total">0</td>
+            <td class="total">0</td>
+          </tr>
+          <tr>
+            <td class="team-col">
+              <span class="team-num">2</span>
+              <span class="team-code">{{ game.homeTeam?.code || 'HOME' }}</span>
+            </td>
+            <td class="inn" *ngFor="let n of innings">{{ inningCell(game.homeInnings, n) }}</td>
+            <td class="total">{{ game.homeScore ?? 0 }}</td>
+            <td class="total">{{ totalHits(game.homeInnings) }}</td>
+            <td class="total">0</td>
+            <td class="total">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================
+         FIELD + ZONE COUNTERS
+         ============================================================ -->
+    <section class="field">
+      <span class="signal-corner">
+        <mat-icon>cell_tower</mat-icon>
+        <span>{{ 0 }}</span>
+      </span>
+      <span class="elapsed-corner">{{ elapsedLabel }}</span>
+
+      <svg viewBox="0 0 400 320" class="field-svg" preserveAspectRatio="xMidYMid meet">
+        <!-- Outfield arc -->
+        <path d="M 30 280 A 200 200 0 0 1 370 280 L 200 280 Z" fill="#3f7a3f"/>
+        <!-- Infield diamond + dirt -->
+        <polygon points="200,90 290,180 200,270 110,180" fill="#9c6b3a" opacity="0.85"/>
+        <!-- Infield grass cutout -->
+        <polygon points="200,120 260,180 200,240 140,180" fill="#3f7a3f"/>
+        <!-- Bases -->
+        <rect x="195" y="265" width="10" height="10" transform="rotate(45 200 270)" fill="#ffffff"/>
+        <rect x="285" y="175" width="10" height="10" transform="rotate(45 290 180)" fill="#ffffff"/>
+        <rect x="195" y="85"  width="10" height="10" transform="rotate(45 200 90)"  fill="#ffffff"/>
+        <rect x="105" y="175" width="10" height="10" transform="rotate(45 110 180)" fill="#ffffff"/>
+        <!-- Pitcher's mound -->
+        <circle cx="200" cy="200" r="14" fill="#a07549"/>
+      </svg>
+
+      <!-- Zone counter overlays. Absolutely positioned with %-coords so
+           they scale with the field illustration. -->
+      <div class="zone z-cf">{{ zoneCounters['cf'] }}</div>
+      <div class="zone z-lf">{{ zoneCounters['lf'] }}</div>
+      <div class="zone z-rf">{{ zoneCounters['rf'] }}</div>
+      <div class="zone z-ss highlight">{{ zoneCounters['ss'] }}</div>
+      <div class="zone z-p">{{ zoneCounters['p'] }}</div>
+      <div class="zone z-th">{{ zoneCounters['th'] }}</div>
+      <div class="zone z-fr">{{ zoneCounters['fr'] }}</div>
+      <div class="zone z-sb">{{ zoneCounters['sb'] }}</div>
+      <div class="zone z-c">{{ zoneCounters['c'] }}</div>
+
+      <!-- Current batter card (placeholder — real data comes from line-up cards) -->
+      <div class="batter-card">
+        <div class="batter-line1">— FOR —</div>
+        <div class="batter-line2">SINGLE, WALK, KS, WALK</div>
+        <div class="batter-name">
+          <span class="batter-num">0</span>
+          A definir
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ACTION BUTTONS (BALL · STRIKE · FOUL · OUT · IN PLAY)
+         ============================================================ -->
+    <section class="actions">
+      <button class="act-btn" (click)="onBall()">BALL</button>
+      <button class="act-btn" (click)="onStrike()">STRIKE</button>
+      <button class="act-btn" (click)="onFoul()">FOUL</button>
+      <button class="act-btn" (click)="onOut()">OUT</button>
+      <button class="act-btn" (click)="onInPlay()">IN PLAY</button>
+    </section>
+
+    <!-- ============================================================
+         BOTTOM UTILITY BAR (EXIT · UNDO · REDO)
+         ============================================================ -->
+    <footer class="util-bar">
+      <button class="util-btn" (click)="exit()">EXIT</button>
+      <button class="util-btn" (click)="onUndo()">UNDO</button>
+      <button class="util-btn" (click)="onRedo()">REDO</button>
+    </footer>
+
+  </ng-container>
+
+</div>

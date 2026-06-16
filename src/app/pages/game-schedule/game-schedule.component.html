@@ -92,6 +92,15 @@
             <span class="game-date">{{ formatGameDate(game.date) }}</span>
             <span class="status-tag" [class]="game.status">{{ statusLabel(game.status) }}</span>
             <span class="field-tag" *ngIf="game.field">{{ game.field }}</span>
+            <a
+              class="score-btn"
+              [routerLink]="['/score', game._id]"
+              title="Abrir tela de marcação"
+              aria-label="Marcar jogo"
+            >
+              <mat-icon>edit_note</mat-icon>
+              <span>Marcar jogo</span>
+            </a>
           </div>
 
           <!-- Linescore: runs per inning. Renders once innings have been recorded. -->
