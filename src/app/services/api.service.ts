@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = '';
+  private baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {
-    if (window.location.hostname === 'localhost') {
-      this.baseUrl = 'http://localhost:3000';
-    } else {
-      this.baseUrl = 'https://foxes-score-backend-19a6f4f9b2c5.herokuapp.com'; // <-- coloque aqui sua URL de produção
-    }
-  }
+  constructor(private http: HttpClient) {}
 
   // GET
   get<T>(endpoint: string): Observable<T> {
