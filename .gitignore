@@ -40,3 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Working architecture / design docs (not version-controlled; we keep a
+# local diagram we evolve alongside the code without polluting the repo).
+/architecture/
