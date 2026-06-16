@@ -4,6 +4,27 @@ import { Team } from './team.interface';
 export type GameStatus = 'scheduled' | 'live' | 'finished';
 export type InningHalf = 'top' | 'bottom';
 
+/** All valid lineup positions — 9 defensive spots + DH + EH. */
+export type LineupPosition =
+  | 'P' | 'C'
+  | '1B' | '2B' | '3B' | 'SS'
+  | 'LF' | 'CF' | 'RF'
+  | 'DH' | 'EH';
+
+/**
+ * One entry on a team's lineup card. Player can come back as either a
+ * raw ObjectId string (unpopulated) or a populated Player object — the
+ * scoring screen reads it both ways depending on which endpoint hydrated
+ * the game.
+ */
+export interface LineupEntry {
+  player: string | { _id: string; name: string; jerseyNumber?: number; nickname?: string };
+  /** 1..12 for starters; substitutes leave this unset until they enter the game. */
+  battingOrder?: number;
+  position?: LineupPosition;
+  isStarter?: boolean;
+}
+
 /**
  * Current Game model matching the redesigned backend schema.
  * homeTeam/awayTeam are populated Team objects (selected fields only:
@@ -41,6 +62,9 @@ export interface Game {
     second: boolean;
     third: boolean;
   };
+  /** Starting lineup + in-game roster, set via the lineup builder. */
+  homeLineup?: LineupEntry[];
+  awayLineup?: LineupEntry[];
   createdAt?: string;
   updatedAt?: string;
 }

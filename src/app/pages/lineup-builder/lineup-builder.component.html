@@ -1,0 +1,123 @@
+<div class="lineup-page">
+
+  <!-- Header -->
+  <header class="page-hero">
+    <div class="hero-content">
+      <button class="back-btn" (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Voltar</span>
+      </button>
+      <h1 class="hero-title">Escalações</h1>
+      <p class="hero-subtitle" *ngIf="game">
+        <span>{{ teamCode('away') }}</span>
+        <span class="vs">&#64;</span>
+        <span>{{ teamCode('home') }}</span>
+      </p>
+    </div>
+  </header>
+
+  <!-- Loading / error -->
+  <div class="page-state" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Carregando escalações…</p>
+  </div>
+
+  <div class="page-state error" *ngIf="error && !loading">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button class="ghost-btn" (click)="back()">Voltar</button>
+  </div>
+
+  <!-- Two lineup cards side-by-side -->
+  <div class="lineup-grid" *ngIf="!loading && !error && game">
+
+    <ng-container *ngFor="let side of sides">
+      <section class="lineup-card">
+
+        <header class="lineup-card-header">
+          <div class="header-left">
+            <span class="side-pill">{{ side === 'home' ? 'Casa' : 'Visitante' }}</span>
+            <h2 class="team-name">{{ teamName(side) }}</h2>
+            <span class="team-code-sub">{{ teamCode(side) }}</span>
+          </div>
+          <button
+            class="save-btn"
+            [disabled]="saving[side]"
+            (click)="save(side)"
+          >
+            <mat-spinner *ngIf="saving[side]" diameter="16"></mat-spinner>
+            <span *ngIf="!saving[side]">Salvar</span>
+            <span *ngIf="saving[side]">Salvando…</span>
+          </button>
+        </header>
+
+        <div class="empty-roster" *ngIf="rosterFor(side).length === 0">
+          <mat-icon>person_off</mat-icon>
+          <p>Sem jogadores cadastrados neste time.</p>
+        </div>
+
+        <ol class="lineup-list" *ngIf="rosterFor(side).length > 0">
+          <li
+            class="slot"
+            *ngFor="let slot of draftFor(side); let i = index; trackBy: trackByIdx"
+            [class.dup-player]="slot.playerId && duplicatePlayers(side).has(slot.playerId)"
+            [class.dup-pos]="slot.position && duplicateFieldingPositions(side).has($any(slot.position))"
+          >
+            <span class="order-num">{{ i + 1 }}</span>
+
+            <select
+              class="player-pick"
+              [value]="slot.playerId"
+              (change)="onPickPlayer(side, i, $any($event.target).value)"
+            >
+              <option value="">— Escolha jogador —</option>
+              <option *ngFor="let p of rosterFor(side); trackBy: trackByPlayer" [value]="p._id">
+                {{ p.jerseyNumber ?? '?' }} · {{ p.nickname || p.name }}
+              </option>
+            </select>
+
+            <select
+              class="pos-pick"
+              [value]="slot.position"
+              (change)="onPickPosition(side, i, $any($event.target).value)"
+            >
+              <option value="">POS</option>
+              <option *ngFor="let p of positions" [value]="p">{{ p }}</option>
+            </select>
+
+            <div class="slot-actions">
+              <button
+                class="icon-btn"
+                title="Mover para cima"
+                [disabled]="i === 0"
+                (click)="moveSlot(side, i, -1)"
+              ><mat-icon>arrow_upward</mat-icon></button>
+              <button
+                class="icon-btn"
+                title="Mover para baixo"
+                [disabled]="i === draftFor(side).length - 1"
+                (click)="moveSlot(side, i, 1)"
+              ><mat-icon>arrow_downward</mat-icon></button>
+              <button
+                class="icon-btn danger"
+                title="Remover slot"
+                [disabled]="draftFor(side).length <= 9"
+                (click)="removeSlot(side, i)"
+              ><mat-icon>close</mat-icon></button>
+            </div>
+          </li>
+        </ol>
+
+        <div class="add-slot" *ngIf="draftFor(side).length < 11 && rosterFor(side).length > 0">
+          <button class="ghost-btn small" (click)="addExtraSlot(side)">
+            <mat-icon>add</mat-icon>
+            Adicionar slot ({{ draftFor(side).length === 9 ? 'DH' : 'EH' }})
+          </button>
+        </div>
+
+      </section>
+    </ng-container>
+
+  </div>
+
+</div>

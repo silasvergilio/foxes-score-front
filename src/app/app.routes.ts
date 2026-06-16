@@ -11,6 +11,7 @@ import { StandingsComponent } from './pages/standings/standings.component';
 import { BracketComponent } from './pages/bracket/bracket.component';
 import { AwardsComponent } from './pages/awards/awards.component';
 import { ScoreGameComponent } from './pages/score-game/score-game.component';
+import { LineupBuilderComponent } from './pages/lineup-builder/lineup-builder.component';
 
 export const routes: Routes = [
   {
@@ -61,6 +62,10 @@ export const routes: Routes = [
   {
     path: 'score/:gameId',
     component: ScoreGameComponent,
+  },
+  {
+    path: 'lineup/:gameId',
+    component: LineupBuilderComponent,
   },
   {
     path: 'teams',

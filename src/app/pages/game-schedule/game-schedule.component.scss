@@ -309,24 +309,26 @@
   border-radius: 4px;
 }
 
-/* "Marcar jogo" — entry point into the live scoring screen.
-   Compact next to the date/status/field column so it doesn't dominate
-   the row. Becomes a small icon-only chip on tight viewports. */
+/* Action chips on each game row. Compact, stack below the date/status
+   column. Two distinct entry points:
+   - "Escalações" (outlined navy) opens the lineup builder
+   - "Marcar jogo" (filled navy) opens the live scoring screen
+   Filled chip is the primary call-to-action; the outlined one is a
+   prerequisite step the user runs once per game. */
+.lineup-btn,
 .score-btn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   margin-top: 4px;
   padding: 4px 9px;
-  background: #002d72;
-  color: #ffffff;
   text-decoration: none;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.3px;
   white-space: nowrap;
-  transition: background 0.15s ease, transform 0.05s ease;
+  transition: background 0.15s ease, transform 0.05s ease, border-color 0.15s ease;
   cursor: pointer;
 
   mat-icon {
@@ -335,12 +337,28 @@
     height: 14px;
   }
 
+  &:active { transform: translateY(1px); }
+}
+
+.lineup-btn {
+  background: #ffffff;
+  color: #002d72;
+  border: 1px solid rgba(0, 45, 114, 0.35);
+
+  &:hover {
+    background: #f0f4ff;
+    border-color: #002d72;
+  }
+}
+
+.score-btn {
+  background: #002d72;
+  color: #ffffff;
+  border: 1px solid #002d72;
+
   &:hover {
     background: #1a4db3;
-  }
-
-  &:active {
-    transform: translateY(1px);
+    border-color: #1a4db3;
   }
 }
 

@@ -93,6 +93,15 @@
             <span class="status-tag" [class]="game.status">{{ statusLabel(game.status) }}</span>
             <span class="field-tag" *ngIf="game.field">{{ game.field }}</span>
             <a
+              class="lineup-btn"
+              [routerLink]="['/lineup', game._id]"
+              title="Definir escalações"
+              aria-label="Escalações"
+            >
+              <mat-icon>groups</mat-icon>
+              <span>Escalações</span>
+            </a>
+            <a
               class="score-btn"
               [routerLink]="['/score', game._id]"
               title="Abrir tela de marcação"
