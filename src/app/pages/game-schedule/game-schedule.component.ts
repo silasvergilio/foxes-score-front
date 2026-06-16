@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +23,7 @@ interface ScheduleGroup {
 @Component({
   selector: 'app-game-schedule',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [CommonModule, RouterLink, MatIconModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './game-schedule.component.html',
   styleUrl: './game-schedule.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
