@@ -13,9 +13,11 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
+  /* Sunny daylight feel: warm sunlight top → pale sky → grass green at the bottom edge */
   background:
-    radial-gradient(ellipse at 50% 90%, #1a3d6b 0%, #0a1a33 60%, #050d1f 100%);
-  color: #ffffff;
+    radial-gradient(ellipse at 50% 100%, rgba(124, 193, 99, 0.35) 0%, transparent 70%),
+    linear-gradient(180deg, #fff6c5 0%, #e3f2ff 38%, #c9e6ff 100%);
+  color: #1f2937;
   overflow: hidden;
 }
 
@@ -29,7 +31,7 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: #1f2937;
 
   mat-icon { font-size: 40px; width: 40px; height: 40px; color: #d50032; }
   p { margin: 0; font-size: 14px; }
@@ -38,13 +40,15 @@
 .ghost-btn {
   margin-top: 8px;
   padding: 10px 22px;
-  background: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: #ffffff;
+  color: #002d72;
+  border: 1px solid rgba(0, 45, 114, 0.3);
   border-radius: 10px;
   font-weight: 700;
   letter-spacing: 0.5px;
   cursor: pointer;
+
+  &:hover { background: #f0f4ff; }
 }
 
 /* ============================================================
@@ -54,34 +58,35 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 16px 8px;
-  background: rgba(0, 0, 0, 0.35);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 14px 8px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0, 45, 114, 0.15);
 }
 
 .score-block {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 
   .lbl {
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 800;
-    letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.6px;
+    color: #002d72;
+    text-transform: uppercase;
   }
 
   .num {
-    min-width: 56px;
-    padding: 6px 10px;
-    background: rgba(0, 0, 0, 0.55);
+    min-width: 50px;
+    padding: 4px 10px;
+    background: #002d72;
     border-radius: 6px;
     text-align: center;
     font-size: 22px;
     font-weight: 800;
     color: #ffffff;
     letter-spacing: 0.5px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -93,8 +98,8 @@
 
   .inning-arrow {
     font-size: 22px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.95);
+    font-weight: 800;
+    color: #d50032;
     letter-spacing: 1px;
   }
 }
@@ -102,31 +107,33 @@
 .outs-block {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 
   .lbl {
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 800;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
+    color: #002d72;
+    text-transform: uppercase;
   }
 
   .num {
-    min-width: 40px;
-    padding: 6px 8px;
-    background: rgba(0, 0, 0, 0.55);
+    min-width: 36px;
+    padding: 4px 8px;
+    background: #002d72;
     border-radius: 6px;
     text-align: center;
     font-size: 22px;
     font-weight: 800;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
   }
 }
 
 .bs-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-left: 6px;
+  gap: 3px;
+  margin-left: 4px;
 }
 
 .bs-row {
@@ -138,8 +145,8 @@
 .bs-label {
   width: 10px;
   font-size: 10px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
+  font-weight: 800;
+  color: #002d72;
 }
 
 .dot {
@@ -147,11 +154,11 @@
   height: 12px;
   border-radius: 50%;
   background: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(0, 45, 114, 0.45);
 
   &.filled {
-    background: #ffffff;
-    border-color: #ffffff;
+    background: #002d72;
+    border-color: #002d72;
   }
 }
 
@@ -160,8 +167,8 @@
    ============================================================ */
 .linescore {
   padding: 6px 10px 10px;
-  background: rgba(0, 0, 0, 0.25);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(0, 45, 114, 0.12);
 
   table {
     width: 100%;
@@ -172,15 +179,15 @@
   th, td {
     padding: 4px 6px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(0, 45, 114, 0.18);
+    color: #1f2937;
+    background: #ffffff;
   }
 
   th {
-    background: rgba(0, 0, 0, 0.35);
+    background: #f5f8ff;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.85);
+    color: #002d72;
   }
 
   td.inn {
@@ -189,7 +196,8 @@
   }
 
   td.total, th.total {
-    background: rgba(0, 0, 0, 0.5);
+    background: #002d72;
+    color: #ffffff;
     font-weight: 800;
     min-width: 32px;
   }
@@ -198,51 +206,51 @@
     text-align: left;
     padding-left: 10px;
     width: 110px;
+    background: #f5f8ff;
 
     .team-num {
       display: inline-block;
       width: 18px;
       font-weight: 800;
-      color: rgba(255, 255, 255, 0.65);
+      color: #6b7280;
     }
 
     .team-code {
       font-weight: 800;
+      color: #002d72;
       letter-spacing: 0.4px;
     }
   }
 
   thead th.team-col {
-    background: rgba(0, 0, 0, 0.35);
+    background: #e6eeff;
   }
 }
 
 /* ============================================================
-   3 · FIELD AREA (with zone counters + batter card)
+   3 · FIELD AREA (with position chips + corner overlays)
    ============================================================ */
 .field {
   flex: 1;
   position: relative;
   min-height: 0;            /* allow flex-shrink so the field doesn't push actions off-screen */
   overflow: hidden;
-  padding: 12px;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%),
-    radial-gradient(ellipse at 50% 40%, #1d4670 0%, #0a1a33 70%);
 }
 
 .signal-corner {
   position: absolute;
-  top: 14px;
-  left: 18px;
+  top: 12px;
+  left: 14px;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.5);
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 45, 114, 0.2);
   border-radius: 16px;
-  color: #ffffff;
-  font-weight: 700;
+  color: #002d72;
+  font-weight: 800;
   font-size: 13px;
 
   mat-icon { font-size: 16px; width: 16px; height: 16px; }
@@ -250,13 +258,16 @@
 
 .elapsed-corner {
   position: absolute;
-  top: 14px;
-  right: 18px;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
   padding: 4px 10px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 45, 114, 0.2);
   border-radius: 8px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 13px;
+  color: #002d72;
 }
 
 .field-svg {
@@ -266,62 +277,101 @@
   max-height: 100%;
 }
 
-/* Zone counter chips — positioned in % so they ride the SVG */
-.zone {
+/* Position chips. Anatomically correct anchors over the field SVG. */
+.pos {
   position: absolute;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  height: 36px;
-  padding: 0 8px;
-  background: rgba(245, 245, 240, 0.92);
+  gap: 4px;
+  min-width: 50px;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 45, 114, 0.2);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
   color: #1f2937;
-  border-radius: 8px;
-  font-weight: 800;
-  font-size: 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transform: translate(-50%, -50%);
   pointer-events: none;
+  white-space: nowrap;
+
+  .pos-code {
+    font-weight: 800;
+    color: #002d72;
+    letter-spacing: 0.4px;
+  }
+
+  .pos-count {
+    margin-left: 2px;
+    padding: 0 6px;
+    background: #f5f8ff;
+    border-radius: 6px;
+    font-weight: 800;
+    color: #1f2937;
+    min-width: 18px;
+    text-align: center;
+  }
 
   &.highlight {
-    background: rgba(245, 245, 240, 0.96);
-    border: 2px solid #22c55e;
-    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
+    background: #fffbe6;
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
+
+    .pos-code { color: #b45309; }
   }
 }
 
-/* Approximate iScore zone placements over the field SVG */
-.z-cf { top: 28%; left: 50%; transform: translate(-50%, -50%); }
-.z-lf { top: 36%; left: 22%; transform: translate(-50%, -50%); }
-.z-rf { top: 36%; left: 78%; transform: translate(-50%, -50%); }
-.z-ss { top: 42%; left: 38%; transform: translate(-50%, -50%); }
-.z-p  { top: 50%; left: 62%; transform: translate(-50%, -50%); }
-.z-th { top: 60%; left: 22%; transform: translate(-50%, -50%); }
-.z-fr { top: 60%; left: 78%; transform: translate(-50%, -50%); }
-.z-sb { top: 70%; left: 50%; transform: translate(-50%, -50%); }
-.z-c  { top: 88%; left: 50%; transform: translate(-50%, -50%); }
+/* Anchor each chip on its real fielding spot.
+   Coordinates are %s of the 400×360 SVG viewBox:
+     CF  top 18%   left 50%
+     LF  top 26%   left 23%
+     RF  top 26%   left 77%
+     SS  top 53%   left 41%
+     2B  top 53%   left 59%
+     3B  top 67%   left 28%
+     1B  top 67%   left 72%
+     P   top 67%   left 50%   (pitcher's mound)
+     C   top 93%   left 50%   (catcher behind plate) */
+.pos-cf { top: 18%; left: 50%; }
+.pos-lf { top: 26%; left: 23%; }
+.pos-rf { top: 26%; left: 77%; }
+.pos-ss { top: 53%; left: 41%; }
+.pos-2b { top: 53%; left: 59%; }
+.pos-3b { top: 67%; left: 28%; }
+.pos-1b { top: 67%; left: 72%; }
+.pos-p  { top: 67%; left: 50%; }
+.pos-c  { top: 93%; left: 50%; }
 
-/* Current batter card — sits flush bottom-left over the field */
+/* Subtle drop shadows on the silhouettes so they read against the dirt */
+:host ::ng-deep .field-svg .batter-silhouette,
+:host ::ng-deep .field-svg .catcher-silhouette {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+}
+
+/* Current batter card — bottom-left over the field but on a light tile */
 .batter-card {
   position: absolute;
   left: 14px;
   bottom: 14px;
+  z-index: 3;
   max-width: 65%;
   padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 10px;
-  color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 45, 114, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: #1f2937;
 
   .batter-line1 {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.95);
+    color: #002d72;
+    text-transform: uppercase;
   }
 
   .pos-chip {
@@ -331,30 +381,28 @@
     min-width: 22px;
     height: 18px;
     padding: 0 5px;
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: #002d72;
     border-radius: 4px;
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.4px;
     color: #ffffff;
-    text-shadow: none;
   }
 
   .batter-line2 {
     margin-top: 2px;
     font-size: 11px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.8);
+    color: #4b5563;
     line-height: 1.3;
   }
 
   .batter-name {
     margin-top: 4px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 800;
-    color: #f59e0b;
-    letter-spacing: 0.4px;
+    color: #1f2937;
+    letter-spacing: 0.2px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -363,13 +411,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 18px;
-      padding: 0 4px;
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.45);
+      min-width: 22px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: #d50032;
       color: #ffffff;
       font-size: 12px;
-      text-shadow: none;
+      font-weight: 800;
     }
   }
 
@@ -377,17 +425,17 @@
     margin-top: 4px;
     font-size: 11px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.78);
+    color: #6b7280;
 
     strong {
-      color: #ffffff;
+      color: #002d72;
       font-weight: 800;
     }
   }
 
   &.empty {
-    border: 1px dashed rgba(255, 255, 255, 0.25);
-    background: rgba(0, 0, 0, 0.45);
+    border: 1px dashed rgba(0, 45, 114, 0.3);
+    background: rgba(255, 255, 255, 0.9);
   }
 
   .define-lineup-link {
@@ -403,7 +451,6 @@
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.5px;
-    text-shadow: none;
     text-transform: uppercase;
 
     mat-icon {
@@ -424,25 +471,32 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 8px;
   padding: 10px 12px 6px;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.85);
+  border-top: 1px solid rgba(0, 45, 114, 0.12);
 }
 
 .act-btn {
-  padding: 18px 8px;
-  background: linear-gradient(180deg, #4d8a4d 0%, #2f5d2f 100%);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
+  padding: 16px 6px;
+  background: #ffffff;
+  color: #002d72;
+  border: 1.5px solid #002d72;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.6px;
   cursor: pointer;
-  transition: transform 0.05s ease, filter 0.15s ease;
+  transition: background 0.1s ease, transform 0.05s ease;
   text-transform: uppercase;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 0 rgba(0, 45, 114, 0.25);
 
-  &:hover { filter: brightness(1.08); }
-  &:active { transform: translateY(1px); }
+  &:hover {
+    background: #f0f4ff;
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
 }
 
 /* ============================================================
@@ -452,36 +506,37 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  padding: 8px 14px 14px;
-  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 14px 12px;
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .util-btn {
-  padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 28px;
+  padding: 10px 12px;
+  background: #f5f8ff;
+  color: #002d72;
+  border: 1px solid rgba(0, 45, 114, 0.2);
+  border-radius: 24px;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0.6px;
   cursor: pointer;
   text-transform: uppercase;
 
-  &:hover { background: rgba(255, 255, 255, 0.18); }
+  &:hover { background: #e6eeff; }
 }
 
 /* ============================================================
    RESPONSIVE — keep core layout, tighten paddings
    ============================================================ */
 @media (max-width: 440px) {
-  .scoreboard-strip { padding: 10px 10px 6px; gap: 6px; }
-  .score-block .num, .outs-block .num { min-width: 44px; font-size: 18px; padding: 4px 6px; }
-  .score-block .lbl, .outs-block .lbl { font-size: 12px; }
+  .scoreboard-strip { padding: 8px 10px 6px; gap: 6px; }
+  .score-block .num, .outs-block .num { min-width: 40px; font-size: 18px; padding: 3px 6px; }
+  .score-block .lbl, .outs-block .lbl { font-size: 10px; }
   .inning-block .inning-arrow { font-size: 18px; }
-  .actions { grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 8px; }
-  .act-btn { font-size: 12px; padding: 14px 4px; letter-spacing: 0.4px; }
-  .util-btn { padding: 10px; font-size: 12px; }
-  .zone { min-width: 36px; height: 30px; font-size: 13px; }
-  .batter-card { max-width: 70%; }
+  .actions { gap: 6px; padding: 8px; }
+  .act-btn { font-size: 12px; padding: 12px 4px; letter-spacing: 0.4px; }
+  .util-btn { padding: 8px 10px; font-size: 11px; }
+  .pos { min-width: 42px; font-size: 11px; padding: 2px 6px; }
+  .pos .pos-count { padding: 0 4px; }
+  .batter-card { max-width: 72%; padding: 6px 10px; }
 }

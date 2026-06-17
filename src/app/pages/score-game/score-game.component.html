@@ -101,33 +101,114 @@
       </span>
       <span class="elapsed-corner">{{ elapsedLabel }}</span>
 
-      <svg viewBox="0 0 400 320" class="field-svg" preserveAspectRatio="xMidYMid meet">
-        <!-- Outfield arc -->
-        <path d="M 30 280 A 200 200 0 0 1 370 280 L 200 280 Z" fill="#3f7a3f"/>
-        <!-- Infield diamond + dirt -->
-        <polygon points="200,90 290,180 200,270 110,180" fill="#9c6b3a" opacity="0.85"/>
+      <!-- viewBox sized so home plate sits near the bottom-center.
+           Standard center-field-cam orientation: HP at bottom, 2B base
+           at top of the diamond, outfield arcing up further. -->
+      <svg viewBox="0 0 400 360" class="field-svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="sky" cx="50%" cy="0%" r="120%">
+            <stop offset="0%"  stop-color="#fff7d4"/>
+            <stop offset="55%" stop-color="#e3f2ff"/>
+            <stop offset="100%" stop-color="#c9e6ff"/>
+          </radialGradient>
+          <radialGradient id="grassFar" cx="50%" cy="100%" r="95%">
+            <stop offset="0%"  stop-color="#6fb858"/>
+            <stop offset="100%" stop-color="#5aa244"/>
+          </radialGradient>
+          <pattern id="grassNoise" patternUnits="userSpaceOnUse" width="6" height="6">
+            <rect width="6" height="6" fill="#7cc163"/>
+            <circle cx="2" cy="3" r="0.6" fill="#6fb858" opacity="0.4"/>
+          </pattern>
+        </defs>
+
+        <!-- Sky -->
+        <rect width="400" height="120" fill="url(#sky)"/>
+        <!-- Far grass + outfield arc shading -->
+        <rect y="80" width="400" height="280" fill="url(#grassFar)"/>
+        <!-- Outfield boundary fence (warning track edge) -->
+        <path d="M 18 320 Q 200 30 382 320" fill="url(#grassNoise)" stroke="#ffffff"
+              stroke-width="2" stroke-dasharray="5,4" opacity="0.95"/>
+
+        <!-- Infield dirt diamond (sandy tan) -->
+        <polygon points="200,140 300,240 200,340 100,240" fill="#e3b88a" stroke="#c9a070" stroke-width="1"/>
         <!-- Infield grass cutout -->
-        <polygon points="200,120 260,180 200,240 140,180" fill="#3f7a3f"/>
-        <!-- Bases -->
-        <rect x="195" y="265" width="10" height="10" transform="rotate(45 200 270)" fill="#ffffff"/>
-        <rect x="285" y="175" width="10" height="10" transform="rotate(45 290 180)" fill="#ffffff"/>
-        <rect x="195" y="85"  width="10" height="10" transform="rotate(45 200 90)"  fill="#ffffff"/>
-        <rect x="105" y="175" width="10" height="10" transform="rotate(45 110 180)" fill="#ffffff"/>
-        <!-- Pitcher's mound -->
-        <circle cx="200" cy="200" r="14" fill="#a07549"/>
+        <polygon points="200,168 272,240 200,312 128,240" fill="#7cc163"/>
+
+        <!-- Foul lines (white chalk) -->
+        <line x1="200" y1="340" x2="20"  y2="160" stroke="#ffffff" stroke-width="2"/>
+        <line x1="200" y1="340" x2="380" y2="160" stroke="#ffffff" stroke-width="2"/>
+
+        <!-- Base paths -->
+        <line x1="200" y1="340" x2="300" y2="240" stroke="#ffffff" stroke-width="1.5" opacity="0.85"/>
+        <line x1="300" y1="240" x2="200" y2="140" stroke="#ffffff" stroke-width="1.5" opacity="0.85"/>
+        <line x1="200" y1="140" x2="100" y2="240" stroke="#ffffff" stroke-width="1.5" opacity="0.85"/>
+        <line x1="100" y1="240" x2="200" y2="340" stroke="#ffffff" stroke-width="1.5" opacity="0.85"/>
+
+        <!-- Bases (3 white squares + the home plate pentagon) -->
+        <rect x="295" y="235" width="10" height="10" transform="rotate(45 300 240)" fill="#ffffff" stroke="#1f2937" stroke-width="0.4"/>
+        <rect x="195" y="135" width="10" height="10" transform="rotate(45 200 140)" fill="#ffffff" stroke="#1f2937" stroke-width="0.4"/>
+        <rect x="95"  y="235" width="10" height="10" transform="rotate(45 100 240)" fill="#ffffff" stroke="#1f2937" stroke-width="0.4"/>
+        <polygon points="200,332 207,338 204,346 196,346 193,338" fill="#ffffff" stroke="#1f2937" stroke-width="0.4"/>
+
+        <!-- Pitcher's mound: light dirt circle with rubber -->
+        <circle cx="200" cy="240" r="20" fill="#e3b88a" stroke="#c9a070" stroke-width="1.2"/>
+        <rect x="195" y="237" width="10" height="6" fill="#ffffff" rx="0.5"/>
+
+        <!-- Batter's boxes flanking home plate -->
+        <rect x="178" y="332" width="12" height="22" fill="none" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+        <rect x="210" y="332" width="12" height="22" fill="none" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+
+        <!-- Batter silhouette in the right-handed batter's box -->
+        <g transform="translate(216, 344)" class="batter-silhouette">
+          <!-- helmet -->
+          <circle cx="0" cy="-22" r="4.5" fill="#1f2937"/>
+          <!-- torso -->
+          <path d="M-4,-17 L4,-17 L5.5,-3 L-5.5,-3 Z" fill="#002d72"/>
+          <!-- pants -->
+          <rect x="-5" y="-3" width="10" height="3" fill="#1f2937"/>
+          <!-- bat -->
+          <line x1="4" y1="-16" x2="16" y2="-28" stroke="#a07549" stroke-width="2.4" stroke-linecap="round"/>
+          <!-- bat handle grip -->
+          <circle cx="4" cy="-16" r="1.5" fill="#1f2937"/>
+        </g>
+
+        <!-- Catcher silhouette behind home plate -->
+        <g transform="translate(200, 352)" class="catcher-silhouette">
+          <circle cx="0" cy="0" r="3.5" fill="#374151"/>
+          <path d="M-4,4 L4,4 L5,10 L-5,10 Z" fill="#4b5563"/>
+        </g>
       </svg>
 
-      <!-- Zone counter overlays. Absolutely positioned with %-coords so
-           they scale with the field illustration. -->
-      <div class="zone z-cf">{{ zoneCounters['cf'] }}</div>
-      <div class="zone z-lf">{{ zoneCounters['lf'] }}</div>
-      <div class="zone z-rf">{{ zoneCounters['rf'] }}</div>
-      <div class="zone z-ss highlight">{{ zoneCounters['ss'] }}</div>
-      <div class="zone z-p">{{ zoneCounters['p'] }}</div>
-      <div class="zone z-th">{{ zoneCounters['th'] }}</div>
-      <div class="zone z-fr">{{ zoneCounters['fr'] }}</div>
-      <div class="zone z-sb">{{ zoneCounters['sb'] }}</div>
-      <div class="zone z-c">{{ zoneCounters['c'] }}</div>
+      <!-- Position chips overlaid in their real anatomical spots.
+           Each shows the position code + the batted-ball location
+           counter for that zone. Highlighted chip = currently focused. -->
+      <div class="pos pos-cf" [class.highlight]="highlightedZone === 'CF'">
+        <span class="pos-code">CF</span><span class="pos-count">{{ zoneCounters['CF'] }}</span>
+      </div>
+      <div class="pos pos-lf" [class.highlight]="highlightedZone === 'LF'">
+        <span class="pos-code">LF</span><span class="pos-count">{{ zoneCounters['LF'] }}</span>
+      </div>
+      <div class="pos pos-rf" [class.highlight]="highlightedZone === 'RF'">
+        <span class="pos-code">RF</span><span class="pos-count">{{ zoneCounters['RF'] }}</span>
+      </div>
+      <div class="pos pos-ss" [class.highlight]="highlightedZone === 'SS'">
+        <span class="pos-code">SS</span><span class="pos-count">{{ zoneCounters['SS'] }}</span>
+      </div>
+      <div class="pos pos-2b" [class.highlight]="highlightedZone === '2B'">
+        <span class="pos-code">2B</span><span class="pos-count">{{ zoneCounters['2B'] }}</span>
+      </div>
+      <div class="pos pos-3b" [class.highlight]="highlightedZone === '3B'">
+        <span class="pos-code">3B</span><span class="pos-count">{{ zoneCounters['3B'] }}</span>
+      </div>
+      <div class="pos pos-1b" [class.highlight]="highlightedZone === '1B'">
+        <span class="pos-code">1B</span><span class="pos-count">{{ zoneCounters['1B'] }}</span>
+      </div>
+      <div class="pos pos-p"  [class.highlight]="highlightedZone === 'P'">
+        <span class="pos-code">P</span><span class="pos-count">{{ zoneCounters['P'] }}</span>
+      </div>
+      <div class="pos pos-c"  [class.highlight]="highlightedZone === 'C'">
+        <span class="pos-code">C</span><span class="pos-count">{{ zoneCounters['C'] }}</span>
+      </div>
 
       <!-- Current batter card — resolved from the batting team's lineup -->
       <div class="batter-card" *ngIf="currentBatter; else noLineup">

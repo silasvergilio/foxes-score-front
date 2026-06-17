@@ -66,22 +66,20 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
   private tickSub?: Subscription;
 
   /**
-   * Pitch-location zone counters. Placeholder values for v1 so the field
-   * SVG isn't blank. Real values will come from the scoring state machine.
-   * Layout matches the 9 zones on the field roughly (catcher / pitcher /
-   * infield / outfield).
+   * Batted-ball location counters per defensive position. Placeholder
+   * values for v1 so the field isn't blank — real values land with the
+   * scoring state machine. Keys match standard position codes so the
+   * template can render them in place alongside the position label.
+   *
+   * `highlight` is the position currently focused (mirrors iScore's
+   * "selected zone" — the next pitch will associate with it).
    */
   zoneCounters: Record<string, number> = {
-    cf: 25, // center field
-    lf: 17,
-    rf: 0,
-    ss: 40, // around pitcher mound — shown highlighted in iScore reference
-    p:  4,
-    th: 8,  // 3B
-    fr: 31, // 1B
-    sb: 10, // 2B area / behind mound
-    c:  0,  // catcher / behind plate
+    P: 4, C: 0,
+    '1B': 31, '2B': 10, '3B': 8, SS: 40,
+    LF: 17, CF: 25, RF: 0,
   };
+  highlightedZone: string = 'SS';
 
   constructor(
     private route: ActivatedRoute,
