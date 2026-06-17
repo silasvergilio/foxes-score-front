@@ -234,6 +234,19 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * The number shown on the chip itself — the fielder's jersey number,
+   * or "—" when the lineup slot is empty. We deliberately do NOT show
+   * `zoneCounters[pos]` here: those are placeholder batted-ball counts
+   * that won't be real until the scoring state machine lands. Showing
+   * a fake count next to a real jersey in the popover made the two
+   * numbers look like they should match.
+   */
+  chipNumber(pos: LineupPosition): string {
+    const fielder = this.fielderMap.get(pos);
+    return fielder?.jerseyNumber != null ? `#${fielder.jerseyNumber}` : '—';
+  }
+
+  /**
    * Tap-to-toggle: tap a chip → its popover opens; tap the same chip
    * again → popover closes; tap a different chip → that one opens.
    * Stops propagation so the host-level click that closes the popover

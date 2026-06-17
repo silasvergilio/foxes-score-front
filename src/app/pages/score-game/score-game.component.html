@@ -170,7 +170,7 @@
              [class.active]="activePos === pos"
              (click)="togglePos(pos, $event)">
           <span class="pos-code">{{ pos }}</span>
-          <span class="pos-count">{{ zoneCounters[pos] }}</span>
+          <span class="pos-count">{{ chipNumber(pos) }}</span>
 
           <!-- Tap-to-toggle popover. Only rendered for the active chip. -->
           <div class="fielder-popover" *ngIf="activePos === pos" (click)="$event.stopPropagation()">
