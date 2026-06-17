@@ -103,32 +103,10 @@
 
       <!-- viewBox sized so home plate sits near the bottom-center.
            Standard center-field-cam orientation: HP at bottom, 2B base
-           at top of the diamond, outfield arcing up further. -->
+           at top of the diamond. Background is transparent — the .field
+           section's gradient supplies the sky+grass behind everything so
+           there's no visible seam between the SVG and the panel edges. -->
       <svg viewBox="0 0 400 360" class="field-svg" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <radialGradient id="sky" cx="50%" cy="0%" r="120%">
-            <stop offset="0%"  stop-color="#fff7d4"/>
-            <stop offset="55%" stop-color="#e3f2ff"/>
-            <stop offset="100%" stop-color="#c9e6ff"/>
-          </radialGradient>
-          <radialGradient id="grassFar" cx="50%" cy="100%" r="95%">
-            <stop offset="0%"  stop-color="#6fb858"/>
-            <stop offset="100%" stop-color="#5aa244"/>
-          </radialGradient>
-          <pattern id="grassNoise" patternUnits="userSpaceOnUse" width="6" height="6">
-            <rect width="6" height="6" fill="#7cc163"/>
-            <circle cx="2" cy="3" r="0.6" fill="#6fb858" opacity="0.4"/>
-          </pattern>
-        </defs>
-
-        <!-- Sky -->
-        <rect width="400" height="120" fill="url(#sky)"/>
-        <!-- Far grass + outfield arc shading -->
-        <rect y="80" width="400" height="280" fill="url(#grassFar)"/>
-        <!-- Outfield boundary (solid wall edge, no chalk) -->
-        <path d="M 18 320 Q 200 40 382 320" fill="none" stroke="#3e7c2d"
-              stroke-width="3" stroke-linecap="round"/>
-
         <!-- Infield dirt diamond (sandy tan) -->
         <polygon points="200,140 300,240 200,340 100,240" fill="#e3b88a" stroke="#c9a070" stroke-width="1"/>
         <!-- Infield grass cutout -->

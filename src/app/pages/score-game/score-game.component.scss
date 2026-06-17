@@ -235,16 +235,10 @@
   position: relative;
   min-height: 0;            /* allow flex-shrink so the field doesn't push actions off-screen */
   overflow: hidden;
-  /* Grass/sky behind the SVG. The SVG inside is `xMidYMid meet`, so its own
-     400×360 sky+grass only covers a centred box — the area on either side
-     would otherwise fall through to the page gradient. Match the SVG's
-     palette here so the whole section reads as one continuous field. */
-  background:
-    linear-gradient(180deg,
-      #e3f2ff 0%,
-      #c9e6ff 28%,
-      #7cc163 40%,
-      #5aa244 100%);
+  /* The SVG is now transparent — this gradient is the *only* source of
+     sky and grass color. One smooth, even transition top-to-bottom so
+     there's no visible seam between the SVG and the surrounding panel. */
+  background: linear-gradient(180deg, #d6edff 0%, #b6dfff 18%, #7cc163 42%, #6bb651 100%);
 }
 
 .signal-corner {
