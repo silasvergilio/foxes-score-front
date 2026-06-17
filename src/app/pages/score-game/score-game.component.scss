@@ -281,7 +281,9 @@
   max-height: 100%;
 }
 
-/* Position chips. Anatomically correct anchors over the field SVG. */
+/* Position chips. Anatomically correct anchors over the field SVG.
+   Tap-to-toggle: clicking opens a small fielder popover. Works on
+   both mouse and touch — no hover dependency. */
 .pos {
   position: absolute;
   display: inline-flex;
@@ -298,8 +300,14 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   transform: translate(-50%, -50%);
   white-space: nowrap;
-  cursor: help;
-  /* hover for the matTooltip — pointer-events stays default (auto) */
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.08s ease, box-shadow 0.15s ease;
+
+  &:active {
+    transform: translate(-50%, -50%) scale(0.96);
+  }
 
   .pos-code {
     font-weight: 800;
@@ -325,6 +333,95 @@
 
     .pos-code { color: #b45309; }
   }
+
+  &.active {
+    background: #002d72;
+    border-color: #002d72;
+    box-shadow: 0 0 0 3px rgba(0, 45, 114, 0.25), 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 5;
+
+    .pos-code { color: #ffffff; }
+    .pos-count {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+    }
+  }
+}
+
+/* Fielder popover — anchored to the active chip, sits above it.
+   z-index ensures it floats over other chips and the SVG. */
+.fielder-popover {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  min-width: 160px;
+  max-width: 220px;
+  padding: 8px 12px;
+  background: #002d72;
+  color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  white-space: normal;
+  text-align: center;
+  z-index: 50;
+  animation: fielderPopIn 0.12s ease-out;
+  cursor: default;
+}
+
+.popover-arrow {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #002d72;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 2px;
+}
+
+.popover-pos {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.popover-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.popover-jersey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  padding: 1px 6px;
+  background: #d50032;
+  color: #ffffff;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.popover-empty {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+@keyframes fielderPopIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* Anchor each chip on its real fielding spot.

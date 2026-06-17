@@ -160,44 +160,34 @@
       <!-- Position chips overlaid in their real anatomical spots.
            Each shows the position code + the batted-ball location
            counter for that zone. Highlighted chip = currently focused.
-           Hover shows the fielder currently in that spot (from the
-           defensive team's lineup). -->
-      <div class="pos pos-cf" [class.highlight]="highlightedZone === 'CF'"
-           [matTooltip]="fielderTooltip('CF')" matTooltipPosition="above">
-        <span class="pos-code">CF</span><span class="pos-count">{{ zoneCounters['CF'] }}</span>
-      </div>
-      <div class="pos pos-lf" [class.highlight]="highlightedZone === 'LF'"
-           [matTooltip]="fielderTooltip('LF')" matTooltipPosition="above">
-        <span class="pos-code">LF</span><span class="pos-count">{{ zoneCounters['LF'] }}</span>
-      </div>
-      <div class="pos pos-rf" [class.highlight]="highlightedZone === 'RF'"
-           [matTooltip]="fielderTooltip('RF')" matTooltipPosition="above">
-        <span class="pos-code">RF</span><span class="pos-count">{{ zoneCounters['RF'] }}</span>
-      </div>
-      <div class="pos pos-ss" [class.highlight]="highlightedZone === 'SS'"
-           [matTooltip]="fielderTooltip('SS')" matTooltipPosition="above">
-        <span class="pos-code">SS</span><span class="pos-count">{{ zoneCounters['SS'] }}</span>
-      </div>
-      <div class="pos pos-2b" [class.highlight]="highlightedZone === '2B'"
-           [matTooltip]="fielderTooltip('2B')" matTooltipPosition="above">
-        <span class="pos-code">2B</span><span class="pos-count">{{ zoneCounters['2B'] }}</span>
-      </div>
-      <div class="pos pos-3b" [class.highlight]="highlightedZone === '3B'"
-           [matTooltip]="fielderTooltip('3B')" matTooltipPosition="above">
-        <span class="pos-code">3B</span><span class="pos-count">{{ zoneCounters['3B'] }}</span>
-      </div>
-      <div class="pos pos-1b" [class.highlight]="highlightedZone === '1B'"
-           [matTooltip]="fielderTooltip('1B')" matTooltipPosition="above">
-        <span class="pos-code">1B</span><span class="pos-count">{{ zoneCounters['1B'] }}</span>
-      </div>
-      <div class="pos pos-p"  [class.highlight]="highlightedZone === 'P'"
-           [matTooltip]="fielderTooltip('P')" matTooltipPosition="above">
-        <span class="pos-code">P</span><span class="pos-count">{{ zoneCounters['P'] }}</span>
-      </div>
-      <div class="pos pos-c"  [class.highlight]="highlightedZone === 'C'"
-           [matTooltip]="fielderTooltip('C')" matTooltipPosition="above">
-        <span class="pos-code">C</span><span class="pos-count">{{ zoneCounters['C'] }}</span>
-      </div>
+           Tap a chip to toggle a small popover showing the fielder
+           currently in that slot (from the defensive team's lineup).
+           Tap-to-toggle works on both mouse and touch — no hover needed. -->
+      <ng-container *ngFor="let pos of fieldingPositions">
+        <div class="pos"
+             [class]="'pos-' + pos.toLowerCase()"
+             [class.highlight]="highlightedZone === pos"
+             [class.active]="activePos === pos"
+             (click)="togglePos(pos, $event)">
+          <span class="pos-code">{{ pos }}</span>
+          <span class="pos-count">{{ zoneCounters[pos] }}</span>
+
+          <!-- Tap-to-toggle popover. Only rendered for the active chip. -->
+          <div class="fielder-popover" *ngIf="activePos === pos" (click)="$event.stopPropagation()">
+            <div class="popover-arrow"></div>
+            <div class="popover-pos">{{ pos }}</div>
+            <ng-container *ngIf="fielderFor(pos) as fielder; else emptyFielder">
+              <div class="popover-name">
+                <span class="popover-jersey">#{{ fielder.jerseyNumber ?? '?' }}</span>
+                {{ fielder.displayName }}
+              </div>
+            </ng-container>
+            <ng-template #emptyFielder>
+              <div class="popover-empty">Sem jogador na escalação</div>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
 
       <!-- Current batter card — resolved from the batting team's lineup -->
       <div class="batter-card" *ngIf="currentBatter; else noLineup">

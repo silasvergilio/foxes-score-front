@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin, interval, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { Game, LineupEntry, LineupPosition } from '../../interfaces/game.interface';
 import { Player } from '../../interfaces/player.interface';
 import { ApiService } from '../../services/api.service';
@@ -36,7 +35,7 @@ interface ResolvedBatter {
 @Component({
   selector: 'app-score-game',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
+  imports: [CommonModule, RouterLink, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './score-game.component.html',
   styleUrl: './score-game.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,10 +62,22 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
 
   /**
    * Defensive position → resolved fielder. Populated from the *fielding*
-   * team's lineup (opposite of who's batting). Drives the hover tooltip
-   * on the position chips over the field SVG.
+   * team's lineup (opposite of who's batting). Drives the tap-to-toggle
+   * popover on the position chips over the field SVG.
    */
   private fielderMap = new Map<LineupPosition, ResolvedBatter>();
+
+  /**
+   * Which position chip's popover is currently open. Null = none.
+   * Tapping a chip toggles it; tapping anywhere else (host click)
+   * dismisses. Designed for touch + mouse parity — no hover needed.
+   */
+  activePos: LineupPosition | null = null;
+
+  /** Order matches the visual top→bottom of the field SVG. */
+  readonly fieldingPositions: LineupPosition[] = [
+    'CF', 'LF', 'RF', 'SS', '2B', '3B', '1B', 'P', 'C',
+  ];
 
   /** Elapsed time since the page mounted — placeholder until status='live' starts at the backend. */
   elapsedLabel = '0h 00m';
@@ -215,15 +226,41 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Tooltip text for a position chip. Looks up the player in the
-   * defensive lineup; returns a friendly fallback when the slot is
-   * empty so the hover still feels intentional.
+   * Resolved fielder for a position, or null if the lineup slot is empty.
+   * The template uses this to render the popover body.
    */
-  fielderTooltip(pos: LineupPosition): string {
-    const fielder = this.fielderMap.get(pos);
-    if (!fielder) return `${pos} · Sem jogador`;
-    const num = fielder.jerseyNumber != null ? `#${fielder.jerseyNumber}` : '';
-    return `${pos} · ${num} ${fielder.displayName}`.trim();
+  fielderFor(pos: LineupPosition): ResolvedBatter | null {
+    return this.fielderMap.get(pos) ?? null;
+  }
+
+  /**
+   * Tap-to-toggle: tap a chip → its popover opens; tap the same chip
+   * again → popover closes; tap a different chip → that one opens.
+   * Stops propagation so the host-level click that closes the popover
+   * doesn't immediately fire on the same tap.
+   */
+  togglePos(pos: LineupPosition, ev?: Event) {
+    ev?.stopPropagation();
+    this.activePos = this.activePos === pos ? null : pos;
+    this.cdr.markForCheck();
+  }
+
+  /** Close any open popover when tapping anywhere outside a chip. */
+  closePos() {
+    if (this.activePos !== null) {
+      this.activePos = null;
+      this.cdr.markForCheck();
+    }
+  }
+
+  /**
+   * Host-level click closes any open chip popover. The chip's own click
+   * stops propagation so it won't immediately close itself; same for the
+   * popover body's click handler.
+   */
+  @HostListener('click')
+  onHostClick() {
+    this.closePos();
   }
 
   private resolveEntry(
