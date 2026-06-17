@@ -343,12 +343,12 @@
 /* SS / 2B: middle infielders, just above (deeper than) 2nd base */
 .pos-ss { top: 48%; left: 42%; }
 .pos-2b { top: 48%; left: 58%; }
-/* 1B / 3B: sit right at their bases (bases are at 25% / 75% × 67%).
-   Anchor on the base itself rather than where the fielder shades
-   toward — the user wanted the chip to clearly identify which base
-   it belongs to. */
-.pos-3b { top: 67%; left: 25%; }
-.pos-1b { top: 67%; left: 75%; }
+/* 1B / 3B: the SVG sits centred inside the wider .field panel
+   (xMidYMid meet), so 25%/75% of the panel width lands *outside*
+   the diamond on wide viewports. Pulled inward to 33%/67% so the
+   chip visually sits right on the base on typical viewports. */
+.pos-3b { top: 67%; left: 33%; }
+.pos-1b { top: 67%; left: 67%; }
 .pos-p  { top: 67%; left: 50%; }
 .pos-c  { top: 93%; left: 50%; }
 
