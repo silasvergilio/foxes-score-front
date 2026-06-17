@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin, interval, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Game, LineupEntry, LineupPosition } from '../../interfaces/game.interface';
 import { Player } from '../../interfaces/player.interface';
 import { ApiService } from '../../services/api.service';
@@ -35,7 +36,7 @@ interface ResolvedBatter {
 @Component({
   selector: 'app-score-game',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIconModule, MatProgressSpinnerModule],
+  imports: [CommonModule, RouterLink, MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
   templateUrl: './score-game.component.html',
   styleUrl: './score-game.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +60,13 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
    *  batting team's lineup. Null if the lineup isn't set yet. */
   currentBatter: ResolvedBatter | null = null;
   onDeckBatter: ResolvedBatter | null = null;
+
+  /**
+   * Defensive position → resolved fielder. Populated from the *fielding*
+   * team's lineup (opposite of who's batting). Drives the hover tooltip
+   * on the position chips over the field SVG.
+   */
+  private fielderMap = new Map<LineupPosition, ResolvedBatter>();
 
   /** Elapsed time since the page mounted — placeholder until status='live' starts at the backend. */
   elapsedLabel = '0h 00m';
@@ -170,21 +178,52 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
   private resolveBatters() {
     this.currentBatter = null;
     this.onDeckBatter = null;
+    this.fielderMap.clear();
     if (!this.game) return;
 
-    const side: Side = this.game.inningHalf === 'top' ? 'away' : 'home';
-    const lineup: LineupEntry[] =
-      (side === 'home' ? this.game.homeLineup : this.game.awayLineup) ?? [];
-    const roster = side === 'home' ? this.homeRoster : this.awayRoster;
-    if (lineup.length === 0 || roster.length === 0) return;
+    const battingSide: Side = this.game.inningHalf === 'top' ? 'away' : 'home';
+    const battingLineup: LineupEntry[] =
+      (battingSide === 'home' ? this.game.homeLineup : this.game.awayLineup) ?? [];
+    const battingRoster = battingSide === 'home' ? this.homeRoster : this.awayRoster;
 
-    const byId = new Map(roster.map((p) => [p._id, p]));
-    const starters = lineup
-      .filter((e) => e.isStarter !== false && e.battingOrder != null)
-      .sort((a, b) => (a.battingOrder ?? 99) - (b.battingOrder ?? 99));
+    if (battingLineup.length > 0 && battingRoster.length > 0) {
+      const byId = new Map(battingRoster.map((p) => [p._id, p]));
+      const starters = battingLineup
+        .filter((e) => e.isStarter !== false && e.battingOrder != null)
+        .sort((a, b) => (a.battingOrder ?? 99) - (b.battingOrder ?? 99));
 
-    this.currentBatter = this.resolveEntry(starters[0], byId);
-    this.onDeckBatter = this.resolveEntry(starters[1], byId);
+      this.currentBatter = this.resolveEntry(starters[0], byId);
+      this.onDeckBatter = this.resolveEntry(starters[1], byId);
+    }
+
+    // Defensive lineup is the OTHER side. Each position chip on the
+    // field SVG looks up its player here for the hover tooltip.
+    const fieldingSide: Side = battingSide === 'home' ? 'away' : 'home';
+    const fieldingLineup: LineupEntry[] =
+      (fieldingSide === 'home' ? this.game.homeLineup : this.game.awayLineup) ?? [];
+    const fieldingRoster = fieldingSide === 'home' ? this.homeRoster : this.awayRoster;
+    if (fieldingLineup.length > 0 && fieldingRoster.length > 0) {
+      const byId = new Map(fieldingRoster.map((p) => [p._id, p]));
+      for (const entry of fieldingLineup) {
+        if (!entry.position) continue;
+        const resolved = this.resolveEntry(entry, byId);
+        if (resolved) {
+          this.fielderMap.set(entry.position, resolved);
+        }
+      }
+    }
+  }
+
+  /**
+   * Tooltip text for a position chip. Looks up the player in the
+   * defensive lineup; returns a friendly fallback when the slot is
+   * empty so the hover still feels intentional.
+   */
+  fielderTooltip(pos: LineupPosition): string {
+    const fielder = this.fielderMap.get(pos);
+    if (!fielder) return `${pos} · Sem jogador`;
+    const num = fielder.jerseyNumber != null ? `#${fielder.jerseyNumber}` : '';
+    return `${pos} · ${num} ${fielder.displayName}`.trim();
   }
 
   private resolveEntry(

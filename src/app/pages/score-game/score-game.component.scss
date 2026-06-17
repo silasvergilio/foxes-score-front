@@ -297,8 +297,9 @@
   color: #1f2937;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   transform: translate(-50%, -50%);
-  pointer-events: none;
   white-space: nowrap;
+  cursor: help;
+  /* hover for the matTooltip — pointer-events stays default (auto) */
 
   .pos-code {
     font-weight: 800;
