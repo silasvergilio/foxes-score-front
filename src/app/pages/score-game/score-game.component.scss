@@ -329,26 +329,6 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Push the signal indicator over so the menu button has its own slot. */
-.signal-corner {
-  position: absolute;
-  top: 16px;
-  left: 60px;            /* sits to the right of the 36px menu button + 10px gap */
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(0, 45, 114, 0.2);
-  border-radius: 16px;
-  color: #002d72;
-  font-weight: 800;
-  font-size: 13px;
-
-  mat-icon { font-size: 16px; width: 16px; height: 16px; }
-}
-
 .elapsed-corner {
   position: absolute;
   top: 12px;
