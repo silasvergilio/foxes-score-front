@@ -661,17 +661,82 @@
   font-weight: 800;
   letter-spacing: 0.6px;
   cursor: pointer;
-  transition: background 0.1s ease, transform 0.05s ease;
+  transition: background 0.1s ease, transform 0.05s ease, opacity 0.15s ease;
   text-transform: uppercase;
   box-shadow: 0 2px 0 rgba(0, 45, 114, 0.25);
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: #f0f4ff;
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(1px);
     box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+}
+
+/* Start-game CTA — replaces the action grid until the game is live. */
+.start-cta {
+  grid-template-columns: 1fr;
+  padding: 16px 14px;
+}
+
+.big-start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 24px;
+  background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(20, 83, 45, 0.5);
+  transition: transform 0.05s ease, filter 0.15s ease;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  &:hover:not(:disabled) { filter: brightness(1.08); }
+  &:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(20, 83, 45, 0.5);
+  }
+  &:disabled { opacity: 0.6; cursor: wait; }
+}
+
+/* "Jogo finalizado" banner — replaces the action grid when game is over. */
+.finished-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 14px;
+  background: rgba(0, 45, 114, 0.08);
+  color: #002d72;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #16a34a;
   }
 }
 
@@ -679,11 +744,12 @@
    5 · BOTTOM UTILITY BAR (EXIT · UNDO · REDO)
    ============================================================ */
 .util-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 10px;
   padding: 6px 14px 12px;
   background: rgba(255, 255, 255, 0.85);
+
+  .util-btn { flex: 1; }
 }
 
 .util-btn {
@@ -697,8 +763,25 @@
   letter-spacing: 0.6px;
   cursor: pointer;
   text-transform: uppercase;
+  transition: background 0.12s ease, opacity 0.15s ease;
 
-  &:hover { background: #e6eeff; }
+  &:hover:not(:disabled) { background: #e6eeff; }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  &.danger {
+    background: #ffffff;
+    color: #b91c1c;
+    border-color: rgba(213, 0, 50, 0.4);
+
+    &:hover:not(:disabled) {
+      background: #fff1f1;
+      border-color: #d50032;
+    }
+  }
 }
 
 /* ============================================================

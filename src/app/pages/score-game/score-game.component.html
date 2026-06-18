@@ -237,23 +237,45 @@
     </section>
 
     <!-- ============================================================
-         ACTION BUTTONS (BALL · STRIKE · FOUL · OUT · IN PLAY)
+         ACTION BAR — varies by game.status:
+           scheduled  → single "Iniciar jogo" CTA
+           live       → BALL / STRIKE / FOUL / OUT / IN PLAY
+           finished   → read-only banner
          ============================================================ -->
-    <section class="actions">
-      <button class="act-btn" (click)="onBall()">BALL</button>
-      <button class="act-btn" (click)="onStrike()">STRIKE</button>
-      <button class="act-btn" (click)="onFoul()">FOUL</button>
-      <button class="act-btn" (click)="onOut()">OUT</button>
-      <button class="act-btn" (click)="onInPlay()">IN PLAY</button>
+
+    <section class="actions start-cta" *ngIf="game.status === 'scheduled'">
+      <button class="big-start" [disabled]="busy" (click)="startGame()">
+        <mat-icon>play_arrow</mat-icon>
+        <span>Iniciar jogo</span>
+      </button>
+    </section>
+
+    <section class="actions" *ngIf="game.status === 'live'">
+      <button class="act-btn" [disabled]="busy" (click)="onBall()">BALL</button>
+      <button class="act-btn" [disabled]="busy" (click)="onStrike()">STRIKE</button>
+      <button class="act-btn" [disabled]="busy" (click)="onFoul()">FOUL</button>
+      <button class="act-btn" [disabled]="busy" (click)="onOut()">OUT</button>
+      <button class="act-btn" [disabled]="busy" (click)="onInPlay()" title="Em breve">IN PLAY</button>
+    </section>
+
+    <section class="actions finished-banner" *ngIf="game.status === 'finished'">
+      <mat-icon>check_circle</mat-icon>
+      <span>Jogo finalizado</span>
     </section>
 
     <!-- ============================================================
-         BOTTOM UTILITY BAR (EXIT · UNDO · REDO)
+         BOTTOM UTILITY BAR
+         scheduled  → EXIT only
+         live       → EXIT · UNDO · REDO · FINALIZAR
+         finished   → EXIT only
          ============================================================ -->
     <footer class="util-bar">
       <button class="util-btn" (click)="exit()">EXIT</button>
-      <button class="util-btn" (click)="onUndo()">UNDO</button>
-      <button class="util-btn" (click)="onRedo()">REDO</button>
+      <ng-container *ngIf="game.status === 'live'">
+        <button class="util-btn" [disabled]="busy" (click)="onUndo()">UNDO</button>
+        <button class="util-btn" [disabled]="busy" (click)="onRedo()">REDO</button>
+        <button class="util-btn danger" [disabled]="busy" (click)="endGame()">FINALIZAR</button>
+      </ng-container>
     </footer>
 
   </ng-container>

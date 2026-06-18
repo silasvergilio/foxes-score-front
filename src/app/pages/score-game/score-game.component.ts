@@ -4,9 +4,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin, interval, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Socket } from 'ngx-socket-io';
 import { Game, LineupEntry, LineupPosition } from '../../interfaces/game.interface';
 import { Player } from '../../interfaces/player.interface';
 import { ApiService } from '../../services/api.service';
+import { ScoringService, PitchType } from '../../services/scoring.service';
 
 type Side = 'home' | 'away';
 
@@ -121,12 +123,20 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
   };
   highlightedZone: string = 'SS';
 
+  /** Mid-flight gating so a double-tap doesn't fire two events. */
+  busy = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private api: ApiService,
+    private scoring: ScoringService,
+    private socket: Socket,
     private cdr: ChangeDetectorRef
   ) {}
+
+  /** Live updates from gameUpdate (server broadcasts after every event). */
+  private socketSub?: Subscription;
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('gameId');
@@ -141,10 +151,22 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
       this.elapsedLabel = this.formatElapsed(Date.now() - this.startedAt);
       this.cdr.markForCheck();
     });
+
+    // Server broadcasts the populated game on every event. We accept
+    // updates for THIS game only — broadcasts for other games on the
+    // same socket connection are ignored.
+    this.socketSub = this.socket.fromEvent('gameUpdate').subscribe((g: any) => {
+      if (g && g._id === id) {
+        this.game = g;
+        this.resolveBatters();
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   ngOnDestroy() {
     this.tickSub?.unsubscribe();
+    this.socketSub?.unsubscribe();
   }
 
   fetch(id: string) {
@@ -381,16 +403,79 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ────────── Action handlers (v1: no-ops with console log) ──────────
-  onBall()   { this.todo('BALL'); }
-  onStrike() { this.todo('STRIKE'); }
-  onFoul()   { this.todo('FOUL'); }
-  onOut()    { this.todo('OUT'); }
-  onInPlay() { this.todo('IN PLAY'); }
-  onUndo()   { this.todo('UNDO'); }
-  onRedo()   { this.todo('REDO'); }
+  // ────────── Scoring actions (wired to /game/:id/events) ──────────
+  //
+  // Each handler is a thin call into ScoringService. The server returns
+  // the updated populated Game; we replace local state with it (also
+  // covered by the gameUpdate socket subscription, but doing it inline
+  // makes the UI feel instant rather than waiting for the socket
+  // round-trip).
 
-  private todo(action: string) {
-    console.warn(`[score-game] ${action} clicked — scoring state machine not implemented yet`);
+  private get gameId(): string | null {
+    return this.game?._id ?? this.route.snapshot.paramMap.get('gameId');
+  }
+
+  private dispatch(label: string, op: () => any) {
+    const id = this.gameId;
+    if (!id) return;
+    if (this.busy) return;
+    this.busy = true;
+    this.cdr.markForCheck();
+    op()
+      .subscribe?.({
+        next: (resp: any) => {
+          if (resp?.game) {
+            this.game = resp.game;
+            this.resolveBatters();
+          }
+          this.busy = false;
+          this.cdr.markForCheck();
+        },
+        error: (err: unknown) => {
+          console.error(`[score-game] ${label} failed`, err);
+          this.busy = false;
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  /** Visible only while status === 'scheduled'. */
+  startGame() {
+    this.dispatch('start', () => this.scoring.start(this.gameId!));
+  }
+
+  /** Visible only while status === 'live'. */
+  endGame() {
+    if (!confirm('Finalizar o jogo? Não será mais possível marcar jogadas.')) return;
+    this.dispatch('end', () => this.scoring.end(this.gameId!));
+  }
+
+  private pitch(t: PitchType) {
+    if (this.game?.status !== 'live') return;
+    this.dispatch(t, () => this.scoring.pitch(this.gameId!, t));
+  }
+
+  onBall()   { this.pitch('ball'); }
+  onStrike() { this.pitch('strike'); }
+  onFoul()   { this.pitch('foul'); }
+
+  onOut() {
+    if (this.game?.status !== 'live') return;
+    this.dispatch('OUT', () => this.scoring.paResult(this.gameId!, 'OUT'));
+  }
+
+  onInPlay() {
+    // IN PLAY needs the outcome+location picker — coming in Phase 3.
+    // For now, show a placeholder hint so the button isn't dead.
+    if (this.game?.status !== 'live') return;
+    console.warn('[score-game] IN PLAY picker pending — Phase 3');
+  }
+
+  onUndo() {
+    this.dispatch('UNDO', () => this.scoring.undo(this.gameId!));
+  }
+
+  onRedo() {
+    this.dispatch('REDO', () => this.scoring.redo(this.gameId!));
   }
 }
