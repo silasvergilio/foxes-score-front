@@ -95,6 +95,28 @@
          FIELD + ZONE COUNTERS
          ============================================================ -->
     <section class="field">
+      <!-- Discreet nav trigger — opens a small panel with main app routes.
+           EXIT in the util bar still handles "back"; this is for jumping
+           to any other page without leaving the scoring flow first. -->
+      <button class="menu-corner" type="button"
+              [class.active]="menuOpen"
+              (click)="toggleMenu($event)"
+              aria-label="Menu de navegação">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <div class="nav-menu" *ngIf="menuOpen" (click)="$event.stopPropagation()">
+        <a
+          *ngFor="let r of navRoutes"
+          class="nav-menu-link"
+          [routerLink]="r.path"
+          queryParamsHandling="preserve"
+        >
+          <mat-icon>{{ r.icon }}</mat-icon>
+          <span>{{ r.label }}</span>
+        </a>
+      </div>
+
       <span class="signal-corner">
         <mat-icon>cell_tower</mat-icon>
         <span>{{ 0 }}</span>

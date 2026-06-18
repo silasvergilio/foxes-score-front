@@ -79,6 +79,27 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
     'CF', 'LF', 'RF', 'SS', '2B', '3B', '1B', 'P', 'C',
   ];
 
+  /**
+   * Whether the discreet nav menu (top-left of the field) is showing.
+   * Same tap-outside-to-close pattern as the fielder popover.
+   */
+  menuOpen = false;
+
+  /**
+   * Quick-nav targets — mirrors the global drawer items so the scorer
+   * can hop to any main page without exiting first. EXIT is still the
+   * "back" action; this is for forward navigation.
+   */
+  readonly navRoutes: ReadonlyArray<{ path: string; icon: string; label: string }> = [
+    { path: '/teams',          icon: 'groups_3',       label: 'Equipes' },
+    { path: '/game-schedule',  icon: 'table',          label: 'Tabela de Jogos' },
+    { path: '/game-results',   icon: 'sports_baseball', label: 'Jogos e Resultados' },
+    { path: '/standings',      icon: 'leaderboard',    label: 'Classificação' },
+    { path: '/bracket',        icon: 'military_tech',  label: 'Eliminatórias' },
+    { path: '/stats',          icon: 'analytics',      label: 'Estatísticas' },
+    { path: '/awards',         icon: 'emoji_events',   label: 'Premiações' },
+  ];
+
   /** Elapsed time since the page mounted — placeholder until status='live' starts at the backend. */
   elapsedLabel = '0h 00m';
   private startedAt = Date.now();
@@ -266,14 +287,31 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Discreet quick-nav menu — same tap-to-toggle UX as the chip popover. */
+  toggleMenu(ev?: Event) {
+    ev?.stopPropagation();
+    this.menuOpen = !this.menuOpen;
+    // Closing chip popover when menu opens keeps only one overlay at a time.
+    if (this.menuOpen) this.activePos = null;
+    this.cdr.markForCheck();
+  }
+
+  closeMenu() {
+    if (this.menuOpen) {
+      this.menuOpen = false;
+      this.cdr.markForCheck();
+    }
+  }
+
   /**
-   * Host-level click closes any open chip popover. The chip's own click
-   * stops propagation so it won't immediately close itself; same for the
-   * popover body's click handler.
+   * Host-level click closes any open overlay (chip popover or menu).
+   * The trigger elements stop propagation so they don't immediately
+   * close themselves on the same tap that opened them.
    */
   @HostListener('click')
   onHostClick() {
     this.closePos();
+    this.closeMenu();
   }
 
   private resolveEntry(

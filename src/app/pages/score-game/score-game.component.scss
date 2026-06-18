@@ -241,10 +241,99 @@
   background: linear-gradient(180deg, #d6edff 0%, #b6dfff 18%, #7cc163 42%, #6bb651 100%);
 }
 
-.signal-corner {
+/* Discreet quick-nav trigger — sits in the top-left corner of the field
+   area. Same visual language as the chip popover so they read as one
+   interaction family. */
+.menu-corner {
   position: absolute;
   top: 12px;
   left: 14px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 45, 114, 0.2);
+  border-radius: 50%;
+  color: #002d72;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s ease, transform 0.08s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+  &:hover { background: #f0f4ff; }
+  &:active { transform: scale(0.95); }
+
+  &.active {
+    background: #002d72;
+    color: #ffffff;
+    border-color: #002d72;
+    box-shadow: 0 0 0 3px rgba(0, 45, 114, 0.2), 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Nav panel anchored under the menu trigger. */
+.nav-menu {
+  position: absolute;
+  top: 56px;
+  left: 14px;
+  z-index: 50;
+  min-width: 200px;
+  padding: 6px;
+  background: #002d72;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: navMenuIn 0.12s ease-out;
+  cursor: default;
+}
+
+.nav-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: background 0.1s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.18);
+  }
+}
+
+@keyframes navMenuIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Push the signal indicator over so the menu button has its own slot. */
+.signal-corner {
+  position: absolute;
+  top: 16px;
+  left: 60px;            /* sits to the right of the 36px menu button + 10px gap */
   z-index: 2;
   display: flex;
   align-items: center;
