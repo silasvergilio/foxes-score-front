@@ -3,7 +3,8 @@ import { Socket } from 'ngx-socket-io';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, RouterModule, Router } from '@angular/router';
+import { filter, map, startWith } from 'rxjs/operators';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -38,6 +39,18 @@ export class AppComponent implements OnInit {
   editions: TournamentEdition[] = [];
   current: TournamentKey;
 
+  /**
+   * True when the current route is a fullscreen-takeover page (the scoring
+   * screen). Drives whether the global toolbar + drawer container render
+   * at all — the score-game component uses position:fixed and a high
+   * z-index, but it sits inside the mat-drawer-container's stacking
+   * context, so the toolbar would otherwise still float above it.
+   */
+  chromeHidden = false;
+
+  /** Routes that hide the global app chrome entirely. */
+  private readonly fullscreenRoutes = [/^\/score(\/|$)/];
+
   constructor(
     private socket: Socket,
     private router: Router,
@@ -49,6 +62,23 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Toggle the app chrome based on the current route. Fires once on
+    // mount with the initial URL so a direct navigation to /score/:id
+    // already hides the toolbar without flashing it first.
+    this.router.events
+      .pipe(
+        filter((ev): ev is NavigationEnd => ev instanceof NavigationEnd),
+        map((ev) => ev.urlAfterRedirects),
+        startWith(this.router.url)
+      )
+      .subscribe((url) => {
+        const hide = this.fullscreenRoutes.some((re) => re.test(url));
+        if (hide !== this.chromeHidden) {
+          this.chromeHidden = hide;
+          this.cdr.markForCheck();
+        }
+      });
+
     this.tournaments.load().subscribe(() => {
       this.editions = this.tournaments['_editions'].value;
       this.current = this.tournaments.current;

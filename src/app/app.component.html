@@ -1,5 +1,12 @@
 <app-loader></app-loader>
 
+<!-- Fullscreen-takeover routes (scoring screen) render the router-outlet
+     on its own so the toolbar + drawer don't compete for z-index or
+     viewport real estate. -->
+<router-outlet *ngIf="chromeHidden"></router-outlet>
+
+<ng-container *ngIf="!chromeHidden">
+
 <mat-toolbar class="app-toolbar">
   <button (click)="drawer.toggle()" mat-icon-button aria-label="Abrir menu">
     <mat-icon>menu</mat-icon>
@@ -72,3 +79,5 @@
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
+
+</ng-container>
