@@ -1,0 +1,85 @@
+<!-- Backdrop click cancels. Sheet click stays. -->
+<div class="picker-backdrop" (click)="onCancel()"></div>
+
+<div class="picker-sheet" (click)="$event.stopPropagation()">
+
+  <header class="picker-header">
+    <h3>Resultado da jogada</h3>
+    <button class="picker-close" type="button" (click)="onCancel()" aria-label="Fechar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <!-- ===== Outcome grid ===== -->
+  <section class="picker-section">
+    <h4 class="section-label">Outcome</h4>
+
+    <div class="outcome-row" *ngFor="let group of ['hit', 'walk', 'out', 'special', 'sac']">
+      <button
+        *ngFor="let o of outcomes; trackBy: trackByCode"
+        type="button"
+        class="outcome-btn"
+        [class]="'g-' + o.group"
+        [class.selected]="selected === o.code"
+        [hidden]="o.group !== group"
+        (click)="pickOutcome(o.code)"
+        [title]="o.hint || o.code"
+      >
+        {{ o.label }}
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== Location (defensive position the ball was hit to) ===== -->
+  <section class="picker-section" *ngIf="selected">
+    <h4 class="section-label">Local da jogada <span class="opt">(opcional)</span></h4>
+    <div class="loc-grid">
+      <button
+        *ngFor="let p of positions; trackBy: trackByPos"
+        type="button"
+        class="loc-btn"
+        [class.selected]="location === p"
+        (click)="pickLocation(p)"
+      >{{ p }}</button>
+    </div>
+  </section>
+
+  <!-- ===== RBI + Earned ===== -->
+  <section class="picker-section row" *ngIf="selected">
+    <div class="rbi-block">
+      <h4 class="section-label">RBI</h4>
+      <div class="counter">
+        <button type="button" class="counter-btn" (click)="bumpRBI(-1)" [disabled]="rbi === 0">−</button>
+        <span class="counter-val">{{ rbi }}</span>
+        <button type="button" class="counter-btn" (click)="bumpRBI(1)" [disabled]="rbi >= 4">+</button>
+      </div>
+    </div>
+
+    <div class="earned-block">
+      <h4 class="section-label">Run earned?</h4>
+      <button
+        type="button"
+        class="earned-toggle"
+        [class.on]="earned"
+        (click)="toggleEarned()"
+      >
+        <mat-icon>{{ earned ? 'check_circle' : 'cancel' }}</mat-icon>
+        <span>{{ earned ? 'Earned' : 'Unearned' }}</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== Confirm ===== -->
+  <footer class="picker-actions">
+    <button type="button" class="action-btn ghost" (click)="onCancel()">Cancelar</button>
+    <button
+      type="button"
+      class="action-btn primary"
+      [disabled]="!canConfirm"
+      (click)="onConfirm()"
+    >
+      Confirmar jogada
+    </button>
+  </footer>
+
+</div>

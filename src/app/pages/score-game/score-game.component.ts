@@ -9,6 +9,10 @@ import { Game, LineupEntry, LineupPosition } from '../../interfaces/game.interfa
 import { Player } from '../../interfaces/player.interface';
 import { ApiService } from '../../services/api.service';
 import { ScoringService, PitchType } from '../../services/scoring.service';
+import {
+  InPlayPickerComponent,
+  InPlaySelection,
+} from './in-play-picker/in-play-picker.component';
 
 type Side = 'home' | 'away';
 
@@ -37,7 +41,13 @@ interface ResolvedBatter {
 @Component({
   selector: 'app-score-game',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIconModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    InPlayPickerComponent,
+  ],
   templateUrl: './score-game.component.html',
   styleUrl: './score-game.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -125,6 +135,9 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
 
   /** Mid-flight gating so a double-tap doesn't fire two events. */
   busy = false;
+
+  /** True while the IN PLAY outcome picker is open. */
+  pickerOpen = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -465,10 +478,37 @@ export class ScoreGameComponent implements OnInit, OnDestroy {
   }
 
   onInPlay() {
-    // IN PLAY needs the outcome+location picker — coming in Phase 3.
-    // For now, show a placeholder hint so the button isn't dead.
     if (this.game?.status !== 'live') return;
-    console.warn('[score-game] IN PLAY picker pending — Phase 3');
+    this.pickerOpen = true;
+    // Close any chip/menu overlay so the sheet doesn't open over them.
+    this.activePos = null;
+    this.menuOpen = false;
+    this.cdr.markForCheck();
+  }
+
+  /** How many runners are currently on base — passed to the picker so
+   *  it can suggest a sensible default RBI count. */
+  get runnersOn(): number {
+    const b = this.game?.bases;
+    if (!b) return 0;
+    return (b.first ? 1 : 0) + (b.second ? 1 : 0) + (b.third ? 1 : 0);
+  }
+
+  onPickerCancel() {
+    this.pickerOpen = false;
+    this.cdr.markForCheck();
+  }
+
+  onPickerConfirm(sel: InPlaySelection) {
+    this.pickerOpen = false;
+    this.cdr.markForCheck();
+    this.dispatch(sel.outcome, () =>
+      this.scoring.paResult(this.gameId!, sel.outcome, {
+        rbi: sel.rbi,
+        earned: sel.earned,
+        location: sel.location,
+      })
+    );
   }
 
   onUndo() {

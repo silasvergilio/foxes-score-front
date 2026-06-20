@@ -280,4 +280,13 @@
 
   </ng-container>
 
+  <!-- IN PLAY outcome picker — slides up from the bottom when the
+       scorer taps IN PLAY. Confirms a pa_result with the full payload. -->
+  <app-in-play-picker
+    *ngIf="pickerOpen"
+    [runnersOn]="runnersOn"
+    (confirm)="onPickerConfirm($event)"
+    (cancel)="onPickerCancel()"
+  ></app-in-play-picker>
+
 </div>

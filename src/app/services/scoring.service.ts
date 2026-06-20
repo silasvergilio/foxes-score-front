@@ -21,7 +21,22 @@ export type PaOutcome =
   | 'BB' | 'IBB' | 'HBP'
   | 'K' | 'Kc'
   | 'OUT' | 'GO' | 'FO' | 'LO' | 'PO'
+  | 'FC' | 'DP' | 'ROE'
   | 'SF' | 'SH';
+
+/** Payload extras the picker can pass alongside an outcome. */
+export interface PaExtras {
+  batter?: string;
+  pitcher?: string;
+  /** Manual RBI override (default: server-computed from runsScored). */
+  rbi?: number;
+  /** Manual runsScored override (default: heuristic from current bases). */
+  runsScored?: number;
+  /** false = runs hit pitcher.R but not pitcher.ER. Defaults to true. */
+  earned?: boolean;
+  /** Defensive position the ball was hit to — for spray-chart use later. */
+  location?: string;
+}
 
 export interface EventResponse {
   game: Game;
@@ -59,7 +74,7 @@ export class ScoringService {
   paResult(
     gameId: string,
     outcome: PaOutcome,
-    extra: { batter?: string; pitcher?: string; rbi?: number; runsScored?: number } = {}
+    extra: PaExtras = {}
   ): Observable<EventResponse> {
     return this.api.post<EventResponse>(`game/${gameId}/events`, {
       type: 'pa_result',
